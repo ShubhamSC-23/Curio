@@ -25,6 +25,8 @@ import Terms from "./pages/public/Terms";
 // Auth Pages
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
+import ForgotPassword from "./pages/auth/ForgotPassword";
+import ResetPassword from "./pages/auth/ResetPassword";
 
 // User Pages
 import Profile from "./pages/user/Profile";
@@ -69,6 +71,11 @@ function App() {
               {/* Auth Routes */}
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route
+                path="/reset-password/:token"
+                element={<ResetPassword />}
+              />
               {/* Admin Routes - Require admin role */}
               <Route
                 path="/admin"

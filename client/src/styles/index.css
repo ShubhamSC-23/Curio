@@ -2,63 +2,110 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Merriweather:wght@300;400;700;900&display=swap');
+/* ============================================
+   FONTS - Modern & Elegant
+   ============================================ */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap');
 
-
-/* React Quill Styles */
+/* React Quill Editor Styles */
 @import 'react-quill/dist/quill.snow.css';
 
-/* Custom Quill Dark Mode */
-.dark .ql-toolbar {
-  background: #1f2937;
-  border-color: #374151;
-}
+/* ============================================
+   CSS VARIABLES - Enhanced Color System
+   ============================================ */
 
-.dark .ql-container {
-  background: #1f2937;
-  border-color: #374151;
-  color: #f9fafb;
-}
-
-.dark .ql-editor.ql-blank::before {
-  color: #9ca3af;
-}
-
-.dark .ql-stroke {
-  stroke: #9ca3af;
-}
-
-.dark .ql-fill {
-  fill: #9ca3af;
-}
-
-.dark .ql-picker-label {
-  color: #9ca3af;
-}
-
-
-/* Dark mode variables */
 :root {
-  --bg-primary: #ffffff;
-  --bg-secondary: #f9fafb;
-  --text-primary: #111827;
-  --text-secondary: #6b7280;
+  /* ===== PRIMARY COLORS ===== */
+  --color-primary-50: 238 242 255;
+  --color-primary-100: 224 231 255;
+  --color-primary-200: 199 210 254;
+  --color-primary-300: 165 180 252;
+  --color-primary-400: 129 140 248;
+  --color-primary-500: 99 102 241;
+  --color-primary-600: 79 70 229;
+  --color-primary-700: 67 56 202;
+  --color-primary-800: 55 48 163;
+  --color-primary-900: 49 46 129;
+  
+  /* ===== BACKGROUND COLORS ===== */
+  --bg-primary: 255 255 255;
+  --bg-secondary: 249 250 251;
+  --bg-tertiary: 243 244 246;
+  --bg-elevated: 255 255 255;
+  
+  /* ===== TEXT COLORS ===== */
+  --text-primary: 17 24 39;
+  --text-secondary: 75 85 99;
+  --text-tertiary: 156 163 175;
+  --text-inverse: 255 255 255;
+  
+  /* ===== BORDER COLORS ===== */
+  --border-primary: 229 231 235;
+  --border-secondary: 209 213 219;
+  --border-focus: 99 102 241;
+  
+  /* ===== STATUS COLORS ===== */
+  --color-success: 34 197 94;
+  --color-warning: 251 146 60;
+  --color-error: 239 68 68;
+  --color-info: 59 130 246;
+  
+  /* ===== SHADOWS ===== */
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+  
+  /* ===== TRANSITIONS ===== */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* ===== SPACING ===== */
+  --navbar-height: 64px;
+  --container-max-width: 1280px;
 }
 
-.dark {
-  --bg-primary: #1f2937;
-  --bg-secondary: #111827;
-  --text-primary: #f9fafb;
-  --text-secondary: #9ca3af;
-}
+/* ============================================
+   DARK MODE - Beautiful & Consistent
+   ============================================ */
 
-/* Apply dark mode to body */
 .dark {
+  /* ===== BACKGROUND COLORS ===== */
+  --bg-primary: 17 24 39;
+  --bg-secondary: 31 41 55;
+  --bg-tertiary: 55 65 81;
+  --bg-elevated: 31 41 55;
+  
+  /* ===== TEXT COLORS ===== */
+  --text-primary: 249 250 251;
+  --text-secondary: 209 213 219;
+  --text-tertiary: 156 163 175;
+  --text-inverse: 17 24 39;
+  
+  /* ===== BORDER COLORS ===== */
+  --border-primary: 55 65 81;
+  --border-secondary: 75 85 99;
+  --border-focus: 129 140 248;
+  
+  /* ===== SHADOWS (Darker for dark mode) ===== */
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+  --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.3);
+  
   color-scheme: dark;
 }
 
-
-
+/* ============================================
+   BASE STYLES
+   ============================================ */
 
 * {
   margin: 0;
@@ -66,42 +113,145 @@
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: rgb(var(--bg-secondary));
+  color: rgb(var(--text-primary));
+  transition: background-color var(--transition-slow), color var(--transition-slow);
+  line-height: 1.6;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Merriweather', serif;
+  font-family: 'Playfair Display', 'Merriweather', serif;
+  font-weight: 700;
+  line-height: 1.2;
+  color: rgb(var(--text-primary));
+  letter-spacing: -0.025em;
 }
 
-/* Custom scrollbar */
+a {
+  color: rgb(var(--color-primary-600));
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.dark a {
+  color: rgb(var(--color-primary-400));
+}
+
+a:hover {
+  color: rgb(var(--color-primary-700));
+}
+
+.dark a:hover {
+  color: rgb(var(--color-primary-300));
+}
+
+/* ============================================
+   CUSTOM SCROLLBAR - Beautiful Design
+   ============================================ */
+
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 12px;
+  height: 12px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: rgb(var(--bg-secondary));
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 4px;
+  background: rgb(var(--color-primary-400) / 0.4);
+  border-radius: 6px;
+  border: 3px solid rgb(var(--bg-secondary));
+  transition: background var(--transition-base);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: rgb(var(--color-primary-500) / 0.6);
 }
 
-/* Animations */
+.dark ::-webkit-scrollbar-thumb {
+  background: rgb(var(--color-primary-500) / 0.3);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgb(var(--color-primary-400) / 0.5);
+}
+
+/* ============================================
+   REACT QUILL - Dark Mode Support
+   ============================================ */
+
+.ql-toolbar.ql-snow {
+  background: rgb(var(--bg-elevated));
+  border-color: rgb(var(--border-primary));
+  border-radius: 8px 8px 0 0;
+}
+
+.ql-container.ql-snow {
+  background: rgb(var(--bg-elevated));
+  border-color: rgb(var(--border-primary));
+  color: rgb(var(--text-primary));
+  border-radius: 0 0 8px 8px;
+  min-height: 300px;
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+.dark .ql-toolbar.ql-snow {
+  background: rgb(var(--bg-tertiary));
+  border-color: rgb(var(--border-primary));
+}
+
+.dark .ql-container.ql-snow {
+  background: rgb(var(--bg-tertiary));
+  border-color: rgb(var(--border-primary));
+}
+
+.dark .ql-editor.ql-blank::before {
+  color: rgb(var(--text-tertiary));
+}
+
+.dark .ql-stroke {
+  stroke: rgb(var(--text-secondary));
+}
+
+.dark .ql-fill {
+  fill: rgb(var(--text-secondary));
+}
+
+.dark .ql-picker-label {
+  color: rgb(var(--text-secondary));
+}
+
+.dark .ql-picker-options {
+  background: rgb(var(--bg-tertiary));
+  border-color: rgb(var(--border-primary));
+}
+
+.ql-editor {
+  font-family: 'Inter', sans-serif;
+}
+
+.ql-editor h1, .ql-editor h2, .ql-editor h3 {
+  font-family: 'Playfair Display', serif;
+}
+
+/* ============================================
+   ANIMATIONS - Smooth & Professional
+   ============================================ */
+
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @keyframes slideUp {
@@ -115,6 +265,70 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
+@keyframes slideDown {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes shimmer {
+  0% { background-position: -1000px 0; }
+  100% { background-position: 1000px 0; }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Animation Classes */
 .animate-fadeIn {
   animation: fadeIn 0.5s ease-in-out;
 }
@@ -123,14 +337,267 @@ h1, h2, h3, h4, h5, h6 {
   animation: slideUp 0.5s ease-out;
 }
 
-/* Custom utilities */
+.animate-slideDown {
+  animation: slideDown 0.5s ease-out;
+}
+
+.animate-slideInLeft {
+  animation: slideInLeft 0.5s ease-out;
+}
+
+.animate-slideInRight {
+  animation: slideInRight 0.5s ease-out;
+}
+
+.animate-scaleIn {
+  animation: scaleIn 0.3s ease-out;
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite;
+  background: linear-gradient(
+    90deg,
+    rgb(var(--bg-secondary)) 0%,
+    rgb(var(--bg-tertiary)) 50%,
+    rgb(var(--bg-secondary)) 100%
+  );
+  background-size: 1000px 100%;
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.animate-bounce {
+  animation: bounce 1s infinite;
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+
+/* Glass Effect */
+.glass-effect {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.dark .glass-effect {
+  background: rgba(31, 41, 55, 0.8);
+  border: 1px solid rgba(75, 85, 99, 0.3);
+}
+
+/* Gradient Backgrounds */
+.gradient-primary {
+  background: linear-gradient(135deg, rgb(var(--color-primary-600)), rgb(var(--color-primary-400)));
+}
+
+.gradient-secondary {
+  background: linear-gradient(135deg, #ec4899, #8b5cf6);
+}
+
+.gradient-success {
+  background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, rgb(var(--color-primary-600)), rgb(var(--color-primary-400)));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.dark .gradient-text {
+  background: linear-gradient(135deg, rgb(var(--color-primary-400)), rgb(var(--color-primary-300)));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Card Hover Effect */
+.card-hover {
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-xl);
+}
+
+/* Text Balance */
 .text-balance {
   text-wrap: balance;
 }
 
-
-/* Fix React Quill height */
-.ql-container {
-  min-height: 300px;
+/* Focus Ring */
+.focus-ring {
+  transition: box-shadow var(--transition-fast);
 }
 
+.focus-ring:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgb(var(--color-primary-500) / 0.3);
+}
+
+.dark .focus-ring:focus {
+  box-shadow: 0 0 0 3px rgb(var(--color-primary-400) / 0.3);
+}
+
+/* Link with Underline Animation */
+.link-underline {
+  position: relative;
+  display: inline-block;
+}
+
+.link-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: rgb(var(--color-primary-600));
+  transition: width var(--transition-base);
+}
+
+.link-underline:hover::after {
+  width: 100%;
+}
+
+.dark .link-underline::after {
+  background: rgb(var(--color-primary-400));
+}
+
+/* Selection Color */
+::selection {
+  background-color: rgb(var(--color-primary-500) / 0.3);
+  color: rgb(var(--text-primary));
+}
+
+/* Page Transition */
+.page-transition {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Skeleton Loading */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgb(var(--bg-secondary)) 0%,
+    rgb(var(--bg-tertiary)) 50%,
+    rgb(var(--bg-secondary)) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 4px;
+}
+
+/* ============================================
+   RESPONSIVE TYPOGRAPHY
+   ============================================ */
+
+.text-responsive-xs {
+  font-size: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
+}
+
+.text-responsive-sm {
+  font-size: clamp(0.875rem, 0.8rem + 0.375vw, 1rem);
+}
+
+.text-responsive-base {
+  font-size: clamp(1rem, 0.9rem + 0.5vw, 1.125rem);
+}
+
+.text-responsive-lg {
+  font-size: clamp(1.125rem, 1rem + 0.625vw, 1.25rem);
+}
+
+.text-responsive-xl {
+  font-size: clamp(1.25rem, 1.1rem + 0.75vw, 1.5rem);
+}
+
+.text-responsive-2xl {
+  font-size: clamp(1.5rem, 1.3rem + 1vw, 2rem);
+}
+
+.text-responsive-3xl {
+  font-size: clamp(1.875rem, 1.6rem + 1.375vw, 2.5rem);
+}
+
+.text-responsive-4xl {
+  font-size: clamp(2.25rem, 1.9rem + 1.75vw, 3rem);
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Focus Visible for Keyboard Navigation */
+.focus-visible:focus-visible {
+  outline: 2px solid rgb(var(--color-primary-600));
+  outline-offset: 2px;
+}
+
+.dark .focus-visible:focus-visible {
+  outline-color: rgb(var(--color-primary-400));
+}
+
+/* Reduce Motion for Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ============================================
+   TOASTER CUSTOMIZATION
+   ============================================ */
+
+.Toaster__toast {
+  border-radius: 8px !important;
+  backdrop-filter: blur(10px);
+}
+
+.dark .Toaster__toast {
+  background: rgb(var(--bg-elevated)) !important;
+  color: rgb(var(--text-primary)) !important;
+  border: 1px solid rgb(var(--border-primary));
+}
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  
+  body {
+    background: white;
+    color: black;
+  }
+  
+  a {
+    text-decoration: underline;
+  }
+}
