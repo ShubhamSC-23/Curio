@@ -20,7 +20,7 @@ exports.getDashboard = async (req, res, next) => {
     );
     const [categories] = await db.query('SELECT COUNT(*) as total FROM categories');
     const [comments] = await db.query('SELECT COUNT(*) as total FROM comments');
-    
+
     // Get pending author applications
     const [pendingAuthors] = await db.query(
       'SELECT COUNT(*) as total FROM author_profiles WHERE author_status = ?',
@@ -631,12 +631,12 @@ exports.getReportedArticles = async (req, res, next) => {
 
     // Parse JSON reports
     const articlesWithReports = articles.map(article => ({
-  ...article,
-  reports:
-    typeof article.reports === "string"
-      ? JSON.parse(article.reports)
-      : article.reports || []
-}));
+      ...article,
+      reports:
+        typeof article.reports === "string"
+          ? JSON.parse(article.reports)
+          : article.reports || []
+    }));
 
 
     res.json({
@@ -695,6 +695,55 @@ exports.dismissAllArticleReports = async (req, res, next) => {
 
 
 
+
+/**
+ * @desc    Toggle featured status of an article
+ * @route   PUT /api/v1/admin/articles/:id/feature
+ * @access  Private (Admin only)
+ */
+exports.toggleFeatured = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    // Check article exists
+    const [articles] = await db.query(
+      'SELECT article_id, title, is_featured, status FROM articles WHERE article_id = ?',
+      [id]
+    );
+
+    if (articles.length === 0) {
+      return res.status(404).json({ success: false, message: 'Article not found' });
+    }
+
+    const article = articles[0];
+
+    // Only published articles can be featured
+    if (article.status !== 'published') {
+      return res.status(400).json({
+        success: false,
+        message: 'Only published articles can be featured'
+      });
+    }
+
+    const newFeatured = !article.is_featured;
+
+    await db.query(
+      'UPDATE articles SET is_featured = ? WHERE article_id = ?',
+      [newFeatured, id]
+    );
+
+    res.json({
+      success: true,
+      message: newFeatured
+        ? `"${article.title}" is now featured`
+        : `"${article.title}" removed from featured`,
+      data: { is_featured: newFeatured }
+    });
+  } catch (error) {
+    console.error('Toggle featured error:', error);
+    next(error);
+  }
+};
 
 exports.deleteArticle = async (req, res, next) => {
   try {

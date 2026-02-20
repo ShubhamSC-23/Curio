@@ -27,6 +27,7 @@ const {
   deleteComment,
   getReportedComments,
   dismissAllCommentReports,
+  toggleFeatured,
 } = require('../controllers/adminController');
 
 // ===== APPLY MIDDLEWARE TO ALL ADMIN ROUTES =====
@@ -55,6 +56,7 @@ router.get('/articles', getAllArticles);
 router.get('/articles/pending', getPendingArticles);
 router.put('/articles/:id/approve', approveArticle);
 router.put('/articles/:id/reject', rejectArticle);
+router.put('/articles/:id/feature', toggleFeatured);
 router.delete('/articles/:id', deleteArticle);
 
 // ===== ARTICLE REPORTS =====

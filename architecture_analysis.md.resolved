@@ -1,0 +1,264 @@
+# Curio — Full-Stack Architecture Analysis
+
+> **Indian Heritage Hub** · MERN Stack · Analysed 2026-02-20
+
+---
+
+## Overview
+
+Curio is a **full-stack article-publishing platform** focused on Indian heritage and culture. It supports three distinct user roles (reader, author, admin) and ships features ranging from article CRUD and rich-text editing to a badge/gamification system, following/feed mechanics, bookmarks, a reading list, and an admin moderation panel.
+
+```mermaid
+graph LR
+    Browser["React 18 SPA\n(port 3000)"] -->|REST / JSON| API["Express 4 API\n(port 5000)"]
+    API -->|mysql2 pool| DB[(MySQL)]
+    API -->|multer| FS["/uploads\nFile System"]
+    API -->|nodemailer| SMTP[SMTP / Email]
+```
+
+---
+
+## Backend
+
+### Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Runtime | Node.js ≥ 14 |
+| Framework | Express 4.18 |
+| Database | MySQL (via `mysql2` promise pool, limit 10) |
+| Auth | JWT (`jsonwebtoken`) + bcrypt password hashing |
+| File Uploads | Multer → `/uploads` static folder |
+| Email | Nodemailer (password reset) |
+| Slug generation | `slugify` |
+| IDs | `uuid` v9 |
+| Security | `helmet`, `cors`, `express-rate-limit`, `compression` |
+| Logging | `morgan` (dev/combined) |
+| Dev tooling | `nodemon` |
+
+### Entry Point — [server.js](file:///s:/MERN/indian_heritage_hub/server/src/server.js)
+
+- Mounts all middleware in correct order: helmet → compression → CORS → body parsers → cookie-parser → morgan → static `/uploads`
+- Versioned API base: `/api/v1/`
+- Health check at `GET /api/v1/health`
+- Graceful shutdown on `SIGTERM`, `unhandledRejection`, `uncaughtException`
+
+### Authentication & Authorization — [middleware/auth.js](file:///s:/MERN/indian_heritage_hub/server/src/middleware/auth.js)
+
+Four exported middleware functions:
+
+| Middleware | Purpose |
+|---|---|
+| [protect](file:///s:/MERN/indian_heritage_hub/server/src/middleware/auth.js#4-72) | Verifies JWT (header or cookie), re-queries DB, checks `is_active` |
+| [authorize(...roles)](file:///s:/MERN/indian_heritage_hub/server/src/middleware/auth.js#73-96) | Role gate — e.g. [authorize('author', 'admin')](file:///s:/MERN/indian_heritage_hub/server/src/middleware/auth.js#73-96) |
+| [optionalAuth](file:///s:/MERN/indian_heritage_hub/server/src/middleware/auth.js#118-160) | Same as protect but passes through without token (for public+personalised routes) |
+| [isVerified](file:///s:/MERN/indian_heritage_hub/server/src/middleware/auth.js#97-117) | Checks `is_verified` flag |
+
+Token is accepted from **both** `Authorization: Bearer <token>` header and `token` cookie.
+
+### Rate Limiting — [middleware/rateLimiter.js](file:///s:/MERN/indian_heritage_hub/server/src/middleware/rateLimiter.js)
+
+| Limiter | Window | Max |
+|---|---|---|
+| `apiLimiter` | 15 min | 100 |
+| `authLimiter` | 15 min | 5 (skips successes) |
+| `createLimiter` | 1 hour | 20 |
+| `uploadLimiter` | 1 hour | 10 |
+| `passwordResetLimiter` | 1 hour | 3 |
+
+### Route Groups (14 files)
+
+| Route prefix | File | Auth |
+|---|---|---|
+| `/auth` | [authRoutes.js](file:///s:/MERN/indian_heritage_hub/server/src/routes/authRoutes.js) | Public + [protect](file:///s:/MERN/indian_heritage_hub/server/src/middleware/auth.js#4-72) |
+| `/users` | `userRoutes.js` | Mixed |
+| `/articles` | `articleRoutes.js` | `optionalAuth` / `protect` / `authorize` |
+| `/categories` | `categoryRoutes.js` | Mixed |
+| `/comments` | `commentRoutes.js` | `protect` |
+| `/admin` | `adminRoutes.js` | `protect` + `authorize('admin')` |
+| `/author` | `authorRoutes.js` | `protect` + `authorize('author','admin')` |
+| `/search` | `searchRoutes.js` | Public |
+| `/upload` | `uploadRoutes.js` | `protect` + multer |
+| `/notifications` | `notificationRoutes.js` | `protect` |
+| `/reading-list` | `readingListRoutes.js` | `protect` |
+| `/bookmarks` | `bookmarkRoutes.js` | `protect` |
+| `/contact` | `contactRoutes.js` | Public |
+| `/` + `/health` | `server.js` inline | Public |
+
+### Controllers (18 files)
+
+`authController`, `userController`, `articleController`, `categoryController`, `commentController`, `adminController`, `authorController`, `searchController`, `uploadController`, `notificationController`, `readingListController`, `bookmarkController`, `contactController`, `passwordResetController` + `errorHandler`, `notFound`, `rateLimiter`, `upload` (multer config).
+
+### Article Routes Detail
+
+```
+GET    /articles              → getArticles       (optionalAuth)
+GET    /articles/following-feed → getFollowingFeed (protect)
+GET    /articles/:slug        → getArticle        (optionalAuth)
+GET    /articles/:id/like-status → getLikeStatus  (protect)
+POST   /articles/:id/like     → likeArticle       (protect)
+POST   /articles/:id/bookmark → bookmarkArticle   (protect)
+POST   /articles/:id/report   → reportArticle     (protect)
+POST   /articles/             → createArticle     (protect + authorize author/admin + createLimiter)
+PUT    /articles/:id          → updateArticle     (protect + authorize author/admin)
+DELETE /articles/:slug        → deleteArticle     (protect + authorize author/admin)
+```
+
+### Database
+
+- MySQL via `mysql2/promise` connection pool (limit 10, queued)
+- No ORM — raw parameterised SQL queries
+- Tables inferred: `users`, `articles`, `categories`, `comments`, `bookmarks`, `reading_list`, `notifications`, `follows` (or similar)
+
+---
+
+## Frontend
+
+### Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Framework | React 18.2 |
+| Routing | React Router DOM v7 |
+| Styling | Tailwind CSS 3.4 + custom CSS variables (light/dark) |
+| State | **Zustand** 5 (auth store) |
+| Server state | **@tanstack/react-query** 5 |
+| Animations | **Framer Motion** 12 |
+| Icons | Lucide React |
+| HTTP | Axios 1.x |
+| Forms | React Hook Form 7 |
+| Rich Text Editor | React Quill 2 |
+| Charts | **Recharts** 3 (author/admin dashboards) |
+| Toasts | React Hot Toast |
+| Date utils | date-fns 4 |
+| Testing | @testing-library/react + jest-dom |
+
+### State Management
+
+**Zustand `authStore`** — single store persisting `user` + `token` to `localStorage`. Actions: `login`, `register`, `logout`, `updateUser`.
+
+No global server state store — each page fetches its own data locally via Axios or through the `api/` modules. **React Query** is installed but appears underutilised (not wired to a QueryClientProvider in current `App.jsx`).
+
+### Theme System
+
+- `ThemeContext` + `ThemeToggle` component
+- Three modes: `light`, `dark`, `system`
+- Dark mode via Tailwind's `dark:` prefix classes throughout
+- CSS variables in `index.css` for `--bg-primary`, `--text-primary`, etc.
+
+### Routing — `App.jsx` (31 routes)
+
+Wrapped in `ErrorBoundary` → `Router` → `Navbar` + `main` + `Footer`.
+
+```
+Public (10):   / articles /:slug search /user/:username categories about contact privacy terms
+Auth (4):      login register forgot-password reset-password/:token
+User (6):      /profile /settings /bookmarks /reading-list /feed /discover-authors
+Author (4):    /dashboard /dashboard/articles /dashboard/articles/create /dashboard/articles/edit/:slug
+Admin (5):     /admin /admin/users /admin/articles /admin/comments /admin/categories
+```
+
+**`ProtectedRoute`** accepts an optional `requiredRole` prop; admin routes require `role === 'admin'`.
+
+> ⚠️ **Bug**: `/reading-list` is registered twice — once as an unprotected public route (line 60) and once correctly wrapped in `<ProtectedRoute>` (line 136-143). The first, unprotected registration wins.
+
+### Pages — 34 files across 5 groups
+
+| Group | Pages |
+|---|---|
+| `public/` | Home, Articles, ArticleDetail, Search, UserProfile, Categories, About, Contact, Privacy, Terms |
+| `auth/` | Login, Register, ForgotPassword, ResetPassword |
+| `user/` | Profile, Settings, Bookmarks, ReadingList, FollowingFeed, DiscoverAuthors, NotificationsPage |
+| `dashboard/` | AuthorDashboard, CreateArticle, EditArticle |
+| `admin/` | AdminDashboard, UserManagement, ArticleModeration, CommentModeration, CategoryManagement |
+
+### API Layer — `client/src/api/`
+
+Five modules wrapping Axios:
+
+| File | Covers |
+|---|---|
+| `auth.js` | login, register, logout, getMe |
+| `articles.js` | CRUD, like, bookmark, following feed |
+| `categories.js` | list, get by slug |
+| `comments.js` | list, create, delete |
+| `axios.js` | shared Axios instance (base URL, token interceptor) |
+
+### Components — 29 files across 9 groups
+
+| Group | Components |
+|---|---|
+| `layout/` | Navbar, Footer, Container |
+| `common/` | Button, Card, Input, Spinner, LodingSkeletons |
+| `auth/` | ProtectedRoute |
+| `editor/` | RichTextEditor (React Quill) |
+| `comment/` | CommentForm, CommentItem, CommentList |
+| `badges/` | BadgesSystem (BADGES config + Badge + BadgesDisplay + calculateEarnedBadges) |
+| `theme/` | ThemeToggle |
+| `notification/` | NotificationBell |
+| `user/` | ProfileImageUpload |
+| `error/` | ErrorBoundary, ErrorComponents (NotFound, EmptyState) |
+
+---
+
+## Data Flow: Article Read (with auth)
+
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant R as React Page
+    participant AX as Axios (api/articles.js)
+    participant EX as Express /articles/:slug
+    participant MW as optionalAuth
+    participant DB as MySQL
+
+    U->>R: Navigate to /articles/:slug
+    R->>AX: GET /articles/:slug
+    AX->>EX: HTTP + Bearer token (optional)
+    EX->>MW: optionalAuth
+    MW->>DB: SELECT user WHERE user_id = decoded.id
+    MW-->>EX: req.user (or null)
+    EX->>DB: SELECT article + like/bookmark status for user
+    DB-->>EX: article row(s)
+    EX-->>AX: { success, data: article }
+    AX-->>R: response.data
+    R-->>U: Render ArticleDetail
+```
+
+---
+
+## Role Model
+
+| Role | Can Do |
+|---|---|
+| **reader** (default) | Read articles, like, bookmark, comment, follow authors, reading list |
+| **author** | + Create/edit/delete own articles, view author dashboard, see article analytics |
+| **admin** | + All author perms, user management, article/comment moderation, category management |
+
+---
+
+## Identified Issues & Observations
+
+### 🐛 Bugs
+1. **Duplicate `/reading-list` route** in `App.jsx` — unprotected route wins over the protected one (lines 60 vs 136)
+2. **`authStore` has no `updateUser` method** — `Profile.jsx` and `Settings.jsx` call `updateUser(updatedUser)` but only `login`, `register`, and `logout` are defined in the store
+3. **React Query not wired** — `@tanstack/react-query` is installed but no `<QueryClientProvider>` wraps the app, so any component trying to use `useQuery` would error
+
+### ⚠️ Potential Improvements
+1. **Refresh token / token expiry** — auth middleware only checks token validity; no refresh-token flow, so users are silently logged out when JWT expires
+2. **No input validation on frontend** — React Hook Form is installed but not used uniformly; most forms validate ad hoc
+3. **`optionalAuth` logs to console** — `console.log('Optional auth: Invalid token')` on every request with a bad token will pollute server logs in production
+4. **Direct localStorage raw reads** — many pages do `localStorage.getItem("token")` directly rather than reading from the Zustand store, creating a single source of truth inconsistency
+5. **`models/` directory is empty** — all DB queries are inlined inside controllers; no query-builder or model layer
+6. **`NotificationsPage` not in routing** — `user/NotificationsPage.jsx` exists but is not registered in `App.jsx`
+7. **Typo** — `LodingSkeletons.jsx` (missing 'a' in Loading)
+
+### ✅ Strengths
+- Clean, versioned REST API structure with good separation of concerns
+- Comprehensive rate limiting across all sensitive routes
+- `optionalAuth` pattern is excellent for public+personalised hybrid routes
+- Tailwind dark mode implementation is thorough and consistent across recently updated pages
+- Badge/gamification system is well-architected with a declarative `BADGES` config
+- Graceful server shutdown handled correctly
+- `helmet` + `cors` + `compression` are all correctly configured
+- `framer-motion` animations are used tastefully for page transitions and stagger effects
