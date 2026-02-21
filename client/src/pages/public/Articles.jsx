@@ -471,7 +471,7 @@ const Articles = () => {
                         <div className="flex flex-wrap items-center gap-4 text-sm pt-4 border-t border-gray-100 dark:border-gray-700">
                           <div className="flex items-center gap-1.5 text-gray-700 dark:text-gray-300">
                             <span className="font-medium">
-                              {article.username}
+                              {article.full_name || article.username}
                             </span>
                           </div>
 

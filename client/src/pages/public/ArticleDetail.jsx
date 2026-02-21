@@ -275,7 +275,7 @@ const ArticleDetail = () => {
                     </div>
                     <div>
                       <Link
-                        to={`/author/${article.username}`}
+                        to={`/user/${article.username}`}
                         className="font-semibold text-gray-900 dark:text-white hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
                       >
                         {article.full_name || article.username}

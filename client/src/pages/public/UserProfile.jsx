@@ -22,6 +22,7 @@ import {
 } from "../../components/badges/BadgesSystem";
 import { useAuthStore } from "../../store/authStore";
 import { formatDate, formatRelativeTime } from "../../utils/formatDate";
+import { getImageUrl } from "../../utils/imageUtils";
 import toast from "react-hot-toast";
 
 const UserProfile = () => {
@@ -169,7 +170,7 @@ const UserProfile = () => {
                 <div className="flex-shrink-0">
                   {profile.profile_image ? (
                     <img
-                      src={profile.profile_image}
+                      src={getImageUrl(profile.profile_image)}
                       alt={profile.full_name}
                       className="h-24 w-24 rounded-full object-cover"
                     />
@@ -284,7 +285,7 @@ const UserProfile = () => {
                     <Card hover>
                       {article.featured_image && (
                         <img
-                          src={article.featured_image}
+                          src={getImageUrl(article.featured_image)}
                           alt={article.title}
                           className="w-full h-48 object-cover"
                         />

@@ -578,7 +578,7 @@ const Search = () => {
                       {/* Meta */}
                       <div className="flex flex-wrap items-center gap-4 text-sm pt-4 border-t border-gray-100 dark:border-gray-700">
                         <span className="font-medium text-gray-700 dark:text-gray-300">
-                          {article.username}
+                          {article.full_name || article.username}
                         </span>
 
                         <div className="flex items-center gap-4 text-gray-500 dark:text-gray-400 ml-auto">

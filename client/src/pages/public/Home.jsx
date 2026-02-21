@@ -14,6 +14,7 @@ import Button from "../../components/common/Button";
 import Card, { CardBody } from "../../components/common/Card";
 import { PageLoader } from "../../components/common/Spinner";
 import { formatRelativeTime } from "../../utils/formatDate";
+import { getImageUrl } from "../../utils/imageUtils";
 
 const Home = () => {
   const [featuredArticles, setFeaturedArticles] = useState([]);
@@ -242,7 +243,7 @@ const Home = () => {
                       {article.featured_image && (
                         <div className="relative overflow-hidden h-48 bg-gray-100 dark:bg-gray-700">
                           <img
-                            src={article.featured_image}
+                            src={getImageUrl(article.featured_image)}
                             alt={article.title}
                             className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
                           />
@@ -258,7 +259,7 @@ const Home = () => {
                         </p>
                         <div className="flex items-center justify-between text-sm">
                           <span className="text-gray-700 dark:text-gray-300 font-medium">
-                            {article.username}
+                            {article.full_name || article.username}
                           </span>
                           <span className="text-gray-500 dark:text-gray-500">
                             {formatRelativeTime(article.published_at)}
@@ -312,12 +313,24 @@ const Home = () => {
                   hover
                   className="h-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-primary-300 dark:hover:border-primary-700 transition-all duration-300"
                 >
-                  <CardBody className="p-6">
-                    {article.category_name && (
-                      <span className="inline-block px-3 py-1 bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400 text-xs font-semibold rounded-full mb-3 border border-primary-200 dark:border-primary-800">
-                        {article.category_name}
-                      </span>
+                  <CardBody className="p-0 overflow-hidden">
+                    {article.featured_image && (
+                      <div className="relative overflow-hidden h-48 bg-gray-100 dark:bg-gray-700">
+                        <img
+                          src={getImageUrl(article.featured_image)}
+                          alt={article.title}
+                          className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
+                        />
+                        {article.category_name && (
+                          <div className="absolute top-4 left-4">
+                            <span className="inline-block px-3 py-1 bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm text-primary-700 dark:text-primary-400 text-xs font-bold rounded-full border border-primary-100 dark:border-primary-800 shadow-sm">
+                              {article.category_name}
+                            </span>
+                          </div>
+                        )}
+                      </div>
                     )}
+                    <div className="p-6">
                     <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 line-clamp-2 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
                       {article.title}
                     </h3>
@@ -326,11 +339,12 @@ const Home = () => {
                     </p>
                     <div className="flex items-center justify-between text-sm pt-4 border-t border-gray-100 dark:border-gray-700">
                       <span className="text-gray-700 dark:text-gray-300 font-medium">
-                        {article.username}
+                        {article.full_name || article.username}
                       </span>
                       <span className="text-gray-500 dark:text-gray-500">
                         {article.reading_time} min read
                       </span>
+                      </div>
                     </div>
                   </CardBody>
                 </Card>
