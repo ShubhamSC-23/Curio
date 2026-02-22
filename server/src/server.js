@@ -24,7 +24,11 @@ app.use(compression()); // Compress responses
 // CORS CONFIGURATION
 // ========================================
 const corsOptions = {
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  origin: [
+    process.env.FRONTEND_URL || 'http://localhost:3000',
+    'http://192.168.1.100:8081', // Expo dev server
+    'http://localhost:8081',
+  ],
   credentials: true,
   optionsSuccessStatus: 200
 };
