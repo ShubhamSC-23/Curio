@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import {
     View,
     Text,
@@ -7,12 +7,14 @@ import {
     FlatList
 } from 'react-native';
 import { MessageCircle } from 'lucide-react-native';
-import { colors } from '../theme/colors';
+import { useTheme } from '../theme/useTheme';
 import { commentsAPI } from '../api/comments';
 import CommentItem from './CommentItem';
 import CommentForm from './CommentForm';
 
 const CommentList = ({ articleId }) => {
+    const colors = useTheme();
+    const styles = useMemo(() => makeStyles(colors), [colors]);
     const [comments, setComments] = useState([]);
     const [loading, setLoading] = useState(true);
     const [totalCount, setTotalCount] = useState(0);
@@ -99,7 +101,7 @@ const CommentList = ({ articleId }) => {
     );
 };
 
-const styles = StyleSheet.create({
+const makeStyles = (colors) => StyleSheet.create({
     container: {
         marginTop: 24,
     },

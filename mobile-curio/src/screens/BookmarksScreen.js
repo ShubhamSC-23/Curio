@@ -1,31 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import {
-    View,
-    Text,
-    StyleSheet,
-    FlatList,
-    Image,
-    TouchableOpacity,
-    ActivityIndicator,
-    Alert
+    View, Text, StyleSheet, FlatList, Image, TouchableOpacity,
+    ActivityIndicator, RefreshControl, Alert
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Bookmark, Trash2, BookOpen } from 'lucide-react-native';
-import { colors } from '../theme/colors';
+import { Bookmark, Trash2, Clock, Eye } from 'lucide-react-native';
+import { useTheme } from '../theme/useTheme';
 import { userAPI } from '../api/user';
 import { articlesAPI } from '../api/articles';
 import { getImageUrl } from '../utils/imageUtils';
 import { formatRelativeTime } from '../utils/formatDate';
-import Container from '../components/Container';
-import { Card, CardBody } from '../components/Card';
 
 const BookmarksScreen = ({ navigation }) => {
+    const colors = useTheme();
+    const styles = useMemo(() => makeStyles(colors), [colors]);
     const [bookmarks, setBookmarks] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [refreshing, setRefreshing] = useState(false);
 
-    useEffect(() => {
-        fetchBookmarks();
-    }, []);
+    useEffect(() => { fetchBookmarks(); }, []);
 
     const fetchBookmarks = async () => {
         try {
@@ -34,78 +27,91 @@ const BookmarksScreen = ({ navigation }) => {
             setBookmarks(data.data || []);
         } catch (error) {
             console.error('Error fetching bookmarks:', error);
-            Alert.alert('Error', 'Failed to load bookmarks');
         } finally {
             setLoading(false);
         }
     };
 
-    const handleRemove = async (articleId) => {
-        try {
-            await articlesAPI.bookmarkArticle(articleId); // Toggles bookmark
-            setBookmarks(prev => prev.filter(item => item.article_id !== articleId));
-        } catch (error) {
-            console.error('Error removing bookmark:', error);
-        }
+    const onRefresh = async () => {
+        setRefreshing(true);
+        await fetchBookmarks();
+        setRefreshing(false);
+    };
+
+    const handleRemove = (articleId) => {
+        Alert.alert('Remove Bookmark', 'Remove this article from bookmarks?', [
+            { text: 'Cancel', style: 'cancel' },
+            {
+                text: 'Remove', style: 'destructive',
+                onPress: async () => {
+                    try {
+                        await articlesAPI.bookmarkArticle(articleId);
+                        setBookmarks(prev => prev.filter(i => i.article_id !== articleId));
+                    } catch (error) {
+                        console.error('Error removing bookmark:', error);
+                    }
+                }
+            }
+        ]);
     };
 
     const renderItem = ({ item }) => (
         <TouchableOpacity
+            style={styles.card}
             onPress={() => navigation.navigate('ArticleDetail', { slug: item.slug })}
-            style={styles.cardContainer}
+            activeOpacity={0.85}
         >
-            <Card>
-                <CardBody style={styles.cardBody}>
-                    {!!item.featured_image && (
-                        <Image
-                            source={{ uri: getImageUrl(item.featured_image) }}
-                            style={styles.thumbnail}
-                        />
+            <View style={styles.cardRow}>
+                {!!item.featured_image && (
+                    <Image
+                        source={{ uri: getImageUrl(item.featured_image) }}
+                        style={styles.thumb}
+                        resizeMode="cover"
+                    />
+                )}
+                <View style={styles.cardContent}>
+                    {!!item.category_name && (
+                        <Text style={styles.category}>{item.category_name}</Text>
                     )}
-                    <View style={styles.textContainer}>
-                        {!!item.category_name && (
-                            <Text style={styles.category}>{item.category_name}</Text>
-                        )}
-                        <Text style={styles.title} numberOfLines={2}>{item.title}</Text>
-                        <View style={styles.meta}>
-                            <Text style={styles.metaText}>{item.username}</Text>
-                            <Text style={styles.dot}>•</Text>
-                            <Text style={styles.metaText}>{formatRelativeTime(item.published_at)}</Text>
-                        </View>
+                    <Text style={styles.title} numberOfLines={2}>{item.title}</Text>
+                    <View style={styles.meta}>
+                        <Text style={styles.author}>{item.full_name || item.username}</Text>
+                        <Text style={styles.dot}>·</Text>
+                        <Text style={styles.time}>{formatRelativeTime(item.published_at)}</Text>
                     </View>
-                    <TouchableOpacity
-                        style={styles.removeBtn}
-                        onPress={() => handleRemove(item.article_id)}
-                    >
-                        <Trash2 size={20} color={colors.status.error} />
-                    </TouchableOpacity>
-                </CardBody>
-            </Card>
+                </View>
+                <TouchableOpacity
+                    style={styles.removeBtn}
+                    onPress={() => handleRemove(item.article_id)}
+                    hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+                >
+                    <Trash2 size={18} color={colors.status.error} />
+                </TouchableOpacity>
+            </View>
         </TouchableOpacity>
     );
 
     return (
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={styles.container} edges={['top']}>
             <View style={styles.header}>
-                <Container>
+                <Bookmark size={22} color={colors.primary[600]} />
+                <View style={{ flex: 1, marginLeft: 12 }}>
                     <Text style={styles.headerTitle}>Bookmarks</Text>
-                    <Text style={styles.headerSubtitle}>{bookmarks.length} saved articles</Text>
-                </Container>
+                    {bookmarks.length > 0 && (
+                        <Text style={styles.headerSub}>{bookmarks.length} saved</Text>
+                    )}
+                </View>
             </View>
 
             {loading ? (
-                <View style={styles.center}>
-                    <ActivityIndicator size="large" color={colors.primary[600]} />
-                </View>
+                <View style={styles.center}><ActivityIndicator size="large" color={colors.primary[600]} /></View>
             ) : bookmarks.length === 0 ? (
-                <View style={styles.center}>
-                    <Bookmark size={48} color={colors.text.tertiary} />
-                    <Text style={styles.emptyText}>No bookmarks yet.</Text>
-                    <TouchableOpacity
-                        style={styles.browseBtn}
-                        onPress={() => navigation.navigate('Articles')}
-                    >
-                        <Text style={styles.browseText}>Browse Articles</Text>
+                <View style={styles.empty}>
+                    <Bookmark size={56} color={colors.border.secondary} />
+                    <Text style={styles.emptyTitle}>No bookmarks yet</Text>
+                    <Text style={styles.emptyText}>Articles you save will appear here</Text>
+                    <TouchableOpacity style={styles.cta} onPress={() => navigation.navigate('Articles')}>
+                        <Text style={styles.ctaText}>Browse Articles</Text>
                     </TouchableOpacity>
                 </View>
             ) : (
@@ -113,105 +119,59 @@ const BookmarksScreen = ({ navigation }) => {
                     data={bookmarks}
                     keyExtractor={item => item.article_id.toString()}
                     renderItem={renderItem}
-                    contentContainerStyle={styles.listContent}
+                    contentContainerStyle={styles.list}
+                    refreshControl={
+                        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={colors.primary[600]} />
+                    }
                 />
             )}
         </SafeAreaView>
     );
 };
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: colors.background.secondary,
-    },
+const makeStyles = (colors) => StyleSheet.create({
+    container: { flex: 1, backgroundColor: colors.background.secondary },
     header: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: 20,
+        paddingVertical: 16,
         backgroundColor: colors.background.primary,
-        paddingVertical: 20,
         borderBottomWidth: 1,
         borderBottomColor: colors.border.primary,
     },
-    headerTitle: {
-        fontSize: 28,
-        fontWeight: '800',
-        color: colors.text.primary,
+    headerTitle: { fontSize: 20, fontWeight: '800', color: colors.text.primary },
+    headerSub: { fontSize: 12, color: colors.text.tertiary, marginTop: 2 },
+    list: { padding: 16, gap: 12 },
+    card: {
+        backgroundColor: colors.background.primary,
+        borderRadius: 14,
+        borderWidth: 1,
+        borderColor: colors.border.primary,
+        overflow: 'hidden',
     },
-    headerSubtitle: {
-        fontSize: 14,
-        color: colors.text.tertiary,
-        marginTop: 4,
-    },
-    listContent: {
-        padding: 16,
-    },
-    cardContainer: {
-        marginBottom: 16,
-    },
-    cardBody: {
-        flexDirection: 'row',
-        padding: 12,
-    },
-    thumbnail: {
-        width: 80,
-        height: 80,
-        borderRadius: 12,
-        marginRight: 12,
-    },
-    textContainer: {
-        flex: 1,
-    },
+    cardRow: { flexDirection: 'row', alignItems: 'center' },
+    thumb: { width: 90, height: 90 },
+    cardContent: { flex: 1, padding: 12 },
     category: {
-        fontSize: 10,
-        fontWeight: '700',
-        color: colors.primary[600],
-        textTransform: 'uppercase',
-        marginBottom: 4,
+        fontSize: 10, fontWeight: '700', color: colors.primary[500],
+        textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 4,
     },
-    title: {
-        fontSize: 16,
-        fontWeight: '700',
-        color: colors.text.primary,
-        marginBottom: 6,
-        lineHeight: 22,
+    title: { fontSize: 14, fontWeight: '700', color: colors.text.primary, lineHeight: 20, marginBottom: 8 },
+    meta: { flexDirection: 'row', alignItems: 'center', gap: 6 },
+    author: { fontSize: 12, color: colors.primary[600], fontWeight: '600' },
+    dot: { color: colors.text.tertiary },
+    time: { fontSize: 12, color: colors.text.tertiary },
+    removeBtn: { padding: 12 },
+    center: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+    empty: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 32, gap: 8 },
+    emptyTitle: { fontSize: 20, fontWeight: '700', color: colors.text.primary, marginTop: 16 },
+    emptyText: { fontSize: 14, color: colors.text.tertiary, textAlign: 'center' },
+    cta: {
+        marginTop: 16, backgroundColor: colors.primary[600],
+        paddingHorizontal: 28, paddingVertical: 12, borderRadius: 30,
     },
-    meta: {
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    metaText: {
-        fontSize: 12,
-        color: colors.text.tertiary,
-    },
-    dot: {
-        marginHorizontal: 4,
-        color: colors.text.tertiary,
-    },
-    removeBtn: {
-        padding: 8,
-        justifyContent: 'center',
-    },
-    center: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: 20,
-    },
-    emptyText: {
-        marginTop: 12,
-        fontSize: 16,
-        color: colors.text.tertiary,
-        marginBottom: 20,
-    },
-    browseBtn: {
-        backgroundColor: colors.primary[600],
-        paddingHorizontal: 24,
-        paddingVertical: 12,
-        borderRadius: 8,
-    },
-    browseText: {
-        color: '#fff',
-        fontWeight: '700',
-    }
+    ctaText: { color: '#fff', fontWeight: '700', fontSize: 15 },
 });
 
 export default BookmarksScreen;

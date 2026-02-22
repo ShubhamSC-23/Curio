@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
     View,
     Text,
@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Search as SearchIcon, X, SlidersHorizontal, Clock, Eye, TrendingUp, Sparkles, BookOpen } from 'lucide-react-native';
-import { colors } from '../theme/colors';
+import { useTheme } from '../theme/useTheme';
 import { articlesAPI } from '../api/articles';
 import { categoriesAPI } from '../api/categories';
 import { getImageUrl } from '../utils/imageUtils';
@@ -21,6 +21,8 @@ import Container from '../components/Container';
 import { Card, CardBody } from '../components/Card';
 
 const SearchScreen = ({ navigation }) => {
+    const colors = useTheme();
+    const styles = useMemo(() => makeStyles(colors), [colors]);
     const [query, setQuery] = useState('');
     const [articles, setArticles] = useState([]);
     const [categories, setCategories] = useState([]);
@@ -42,23 +44,27 @@ const SearchScreen = ({ navigation }) => {
         }
     };
 
-    const handleSearch = async () => {
-        if (!query.trim() && !selectedCategory) return;
+    const handleSearch = async (override = {}) => {
+        const activeQuery = override.query !== undefined ? override.query : query;
+        const activeCategory = override.category !== undefined ? override.category : selectedCategory;
+        const activeSort = override.sortBy !== undefined ? override.sortBy : sortBy;
+
+        if (!activeQuery.trim() && !activeCategory) return;
 
         try {
             setLoading(true);
             setHasSearched(true);
 
             const params = {
-                search: query.trim() || undefined,
-                category: selectedCategory || undefined,
+                search: activeQuery.trim() || undefined,
+                category: activeCategory || undefined,
                 limit: 20
             };
 
-            if (sortBy === 'popular') {
+            if (activeSort === 'popular') {
                 params.sortBy = 'view_count';
                 params.order = 'desc';
-            } else if (sortBy === 'trending') {
+            } else if (activeSort === 'trending') {
                 params.sortBy = 'like_count';
                 params.order = 'desc';
             }
@@ -125,7 +131,7 @@ const SearchScreen = ({ navigation }) => {
                             placeholder="Discover Indian Heritage..."
                             value={query}
                             onChangeText={setQuery}
-                            onSubmitEditing={handleSearch}
+                            onSubmitEditing={() => handleSearch()}
                             placeholderTextColor={colors.text.tertiary}
                         />
                         {query.length > 0 && (
@@ -148,7 +154,7 @@ const SearchScreen = ({ navigation }) => {
                                 style={[styles.filterChip, sortBy === opt.id && styles.filterChipActive]}
                                 onPress={() => {
                                     setSortBy(opt.id);
-                                    if (hasSearched) handleSearch();
+                                    if (hasSearched) handleSearch({ sortBy: opt.id });
                                 }}
                             >
                                 <opt.icon size={14} color={sortBy === opt.id ? '#fff' : colors.text.secondary} style={styles.chipIcon} />
@@ -168,8 +174,9 @@ const SearchScreen = ({ navigation }) => {
                                 key={cat.category_id}
                                 style={[styles.filterChip, selectedCategory === cat.slug && styles.filterChipActive]}
                                 onPress={() => {
-                                    setSelectedCategory(selectedCategory === cat.slug ? null : cat.slug);
-                                    if (hasSearched) handleSearch();
+                                    const newCategory = selectedCategory === cat.slug ? null : cat.slug;
+                                    setSelectedCategory(newCategory);
+                                    handleSearch({ category: newCategory });
                                 }}
                             >
                                 <Text style={[styles.filterChipText, selectedCategory === cat.slug && styles.filterChipTextActive]}>
@@ -203,7 +210,7 @@ const SearchScreen = ({ navigation }) => {
                                     style={styles.suggestionTag}
                                     onPress={() => {
                                         setQuery(tag);
-                                        handleSearch();
+                                        handleSearch({ query: tag });
                                     }}
                                 >
                                     <Text style={styles.suggestionText}>{tag}</Text>
@@ -233,7 +240,7 @@ const SearchScreen = ({ navigation }) => {
     );
 };
 
-const styles = StyleSheet.create({
+const makeStyles = (colors) => StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: colors.background.secondary,

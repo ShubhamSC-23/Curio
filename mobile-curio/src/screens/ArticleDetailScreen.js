@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import {
     View,
     Text,
@@ -19,9 +19,10 @@ import {
     Heart,
     Bookmark,
     Share2,
-    ArrowLeft
+    ArrowLeft,
+    BookOpen
 } from 'lucide-react-native';
-import { colors } from '../theme/colors';
+import { useTheme } from '../theme/useTheme';
 import { articlesAPI } from '../api/articles';
 import { getImageUrl } from '../utils/imageUtils';
 import { formatDate } from '../utils/formatDate';
@@ -34,6 +35,8 @@ import { useAuthStore } from '../store/authStore';
 const ArticleDetailScreen = ({ route, navigation }) => {
     const { slug } = route.params;
     const { width } = useWindowDimensions();
+    const colors = useTheme();
+    const styles = useMemo(() => makeStyles(colors), [colors]);
     const { user, isAuthenticated } = useAuthStore();
     const [article, setArticle] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -60,9 +63,9 @@ const ArticleDetailScreen = ({ route, navigation }) => {
                     articlesAPI.getBookmarkStatus(art.article_id),
                     articlesAPI.getReadingListStatus(art.article_id)
                 ]);
-                setLiked(lStatus.data?.liked || false);
-                setBookmarked(bStatus.data?.bookmarked || false);
-                setInReadingList(rStatus.data?.in_list || false);
+                setLiked(lStatus.data?.isLiked || false);
+                setBookmarked(bStatus.data?.isBookmarked || false);
+                setInReadingList(rStatus.data?.inReadingList || false);
             }
         } catch (error) {
             console.error('Error fetching article details:', error);
@@ -148,14 +151,30 @@ const ArticleDetailScreen = ({ route, navigation }) => {
         : Array.isArray(article.tags) ? article.tags : [];
 
     return (
-        <SafeAreaView style={styles.container}>
-            <ScrollView>
-                {!!article.featured_image && (
-                    <Image source={{ uri: getImageUrl(article.featured_image) }} style={styles.featuredImage} />
-                )}
+        <SafeAreaView style={styles.container} edges={['bottom']}>
+            <ScrollView showsVerticalScrollIndicator={false}>
+                {/* Hero Image with back/share overlay */}
+                <View style={styles.heroWrapper}>
+                    {!!article.featured_image ? (
+                        <Image source={{ uri: getImageUrl(article.featured_image) }} style={styles.featuredImage} resizeMode="cover" />
+                    ) : (
+                        <View style={[styles.featuredImage, { backgroundColor: colors.primary[700] }]} />
+                    )}
+                    <View style={styles.heroOverlay} />
+                    <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
+                        <ArrowLeft size={20} color="#fff" />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.shareBtn} onPress={handleShare}>
+                        <Share2 size={20} color="#fff" />
+                    </TouchableOpacity>
+                    {!!article.category_name && (
+                        <View style={styles.categoryBadge}>
+                            <Text style={styles.categoryBadgeText}>{article.category_name}</Text>
+                        </View>
+                    )}
+                </View>
 
                 <Container style={styles.contentContainer}>
-                    <Text style={styles.categoryBadge}>{article.category_name}</Text>
                     <Text style={styles.title}>{article.title}</Text>
 
                     <View style={styles.metaRow}>
@@ -191,10 +210,24 @@ const ArticleDetailScreen = ({ route, navigation }) => {
                     <RenderHtml
                         contentWidth={width - 32}
                         source={{ html: article.content }}
+                        baseStyle={{ color: colors.text.primary }}
                         tagsStyles={{
-                            p: { color: colors.text.primary, fontSize: 16, lineHeight: 24, marginBottom: 16 },
-                            h2: { color: colors.text.primary, fontSize: 22, fontWeight: 'bold', marginTop: 24, marginBottom: 12 },
-                            h3: { color: colors.text.primary, fontSize: 18, fontWeight: 'bold', marginTop: 20, marginBottom: 8 },
+                            p: { color: colors.text.primary, fontSize: 17, lineHeight: 28, marginBottom: 16 },
+                            h1: { color: colors.text.primary, fontSize: 26, fontWeight: '800', marginTop: 32, marginBottom: 16 },
+                            h2: { color: colors.text.primary, fontSize: 22, fontWeight: '800', marginTop: 28, marginBottom: 12 },
+                            h3: { color: colors.text.primary, fontSize: 19, fontWeight: '700', marginTop: 22, marginBottom: 10 },
+                            h4: { color: colors.text.primary, fontSize: 17, fontWeight: '700', marginTop: 18, marginBottom: 8 },
+                            h5: { color: colors.text.primary, fontSize: 16, fontWeight: '700', marginTop: 16, marginBottom: 8 },
+                            h6: { color: colors.text.primary, fontSize: 14, fontWeight: '700', marginTop: 16, marginBottom: 8 },
+                            blockquote: { borderLeftWidth: 4, borderLeftColor: colors.primary[400], paddingLeft: 12, color: colors.text.secondary, fontStyle: 'italic' },
+                            a: { color: colors.primary[600], textDecorationLine: 'underline' },
+                            li: { color: colors.text.primary, fontSize: 16, lineHeight: 26, marginBottom: 6 },
+                            span: { color: colors.text.primary },
+                            div: { color: colors.text.primary },
+                            strong: { color: colors.text.primary, fontWeight: 'bold' },
+                            b: { color: colors.text.primary, fontWeight: 'bold' },
+                            em: { color: colors.text.primary, fontStyle: 'italic' },
+                            i: { color: colors.text.primary, fontStyle: 'italic' },
                         }}
                         renderers={{
                             img: (props) => {
@@ -202,12 +235,7 @@ const ArticleDetailScreen = ({ route, navigation }) => {
                                 return (
                                     <Image
                                         source={{ uri: getImageUrl(src) }}
-                                        style={{
-                                            width: width - 32,
-                                            height: (width - 32) * 0.6,
-                                            borderRadius: 8,
-                                            marginVertical: 12
-                                        }}
+                                        style={{ width: width - 32, height: (width - 32) * 0.6, borderRadius: 10, marginVertical: 16 }}
                                         resizeMode="cover"
                                     />
                                 );
@@ -227,38 +255,33 @@ const ArticleDetailScreen = ({ route, navigation }) => {
                         </View>
                     )}
 
-                    <View style={styles.actionsContainer}>
+                    {/* Floating Action Row */}
+                    <View style={styles.actionBar}>
                         <TouchableOpacity
-                            style={[styles.actionButton, liked && styles.actionButtonActive]}
+                            style={[styles.actionBtn, liked && styles.actionBtnActive]}
                             onPress={handleLike}
                         >
-                            <Heart size={20} color={liked ? '#fff' : colors.text.primary} fill={liked ? '#fff' : 'none'} />
-                            <Text style={[styles.actionText, liked && styles.actionTextActive]}>
-                                {likeCount}
-                            </Text>
+                            <Heart size={18} color={liked ? '#fff' : colors.text.secondary} fill={liked ? '#fff' : 'none'} />
+                            <Text style={[styles.actionBtnText, liked && { color: '#fff' }]}>{likeCount}</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity
-                            style={[styles.actionButton, bookmarked && styles.actionButtonActive]}
+                            style={[styles.actionBtn, bookmarked && styles.actionBtnActive]}
                             onPress={handleBookmark}
                         >
-                            <Bookmark size={20} color={bookmarked ? '#fff' : colors.text.primary} fill={bookmarked ? '#fff' : 'none'} />
-                            <Text style={[styles.actionText, bookmarked && styles.actionTextActive]}>{bookmarked ? 'Saved' : 'Save'}</Text>
+                            <Bookmark size={18} color={bookmarked ? '#fff' : colors.text.secondary} fill={bookmarked ? '#fff' : 'none'} />
+                            <Text style={[styles.actionBtnText, bookmarked && { color: '#fff' }]}>{bookmarked ? 'Saved' : 'Save'}</Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity style={styles.actionButton} onPress={handleShare}>
-                            <Share2 size={20} color={colors.text.primary} />
-                            <Text style={styles.actionText}>Share</Text>
+                        <TouchableOpacity
+                            style={[styles.actionBtn, inReadingList && styles.actionBtnActive]}
+                            onPress={handleReadingList}
+                        >
+                            <BookOpen size={18} color={inReadingList ? '#fff' : colors.text.secondary} />
+                            <Text style={[styles.actionBtnText, inReadingList && { color: '#fff' }]}>{inReadingList ? 'In List' : 'Read Later'}</Text>
                         </TouchableOpacity>
                     </View>
 
-                    <Button
-                        variant={inReadingList ? 'outline' : 'primary'}
-                        style={styles.readingListBtn}
-                        onPress={handleReadingList}
-                    >
-                        {inReadingList ? 'In Reading List' : 'Add to Reading List'}
-                    </Button>
                 </Container>
                 <View style={styles.footerSpace} />
             </ScrollView>
@@ -266,7 +289,7 @@ const ArticleDetailScreen = ({ route, navigation }) => {
     );
 };
 
-const styles = StyleSheet.create({
+const makeStyles = (colors) => StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: colors.background.primary,
@@ -277,19 +300,59 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         backgroundColor: colors.background.primary,
     },
-    featuredImage: {
+    heroWrapper: {
+        position: 'relative',
         width: '100%',
-        height: 250,
+        height: 280,
     },
     contentContainer: {
         paddingVertical: 24,
     },
+    featuredImage: {
+        width: '100%',
+        height: '100%',
+    },
+    heroOverlay: {
+        ...StyleSheet.absoluteFillObject,
+        backgroundColor: 'rgba(0,0,0,0.35)',
+    },
+    backBtn: {
+        position: 'absolute',
+        top: 48,
+        left: 16,
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    shareBtn: {
+        position: 'absolute',
+        top: 48,
+        right: 16,
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
     categoryBadge: {
-        color: colors.primary[600],
+        position: 'absolute',
+        bottom: 20,
+        left: 16,
+        backgroundColor: colors.primary[600],
+        paddingHorizontal: 12,
+        paddingVertical: 6,
+        borderRadius: 16,
+    },
+    categoryBadgeText: {
+        color: '#fff',
         fontWeight: '700',
-        fontSize: 14,
+        fontSize: 12,
         textTransform: 'uppercase',
-        marginBottom: 12,
+        letterSpacing: 0.5,
     },
     title: {
         fontSize: 28,
@@ -307,13 +370,17 @@ const styles = StyleSheet.create({
     metaItem: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginRight: 16,
-        marginBottom: 8,
     },
     metaText: {
         fontSize: 13,
         color: colors.text.tertiary,
         marginLeft: 6,
+    },
+    metaDot: {
+        marginHorizontal: 10,
+        color: colors.border.tertiary,
+        fontSize: 18,
+        lineHeight: 18,
     },
     authorCard: {
         flexDirection: 'row',
@@ -368,39 +435,36 @@ const styles = StyleSheet.create({
         fontSize: 13,
         color: colors.text.secondary,
     },
-    actionsContainer: {
+    actionBar: {
         flexDirection: 'row',
+        alignItems: 'center',
         justifyContent: 'space-between',
-        marginTop: 24,
+        marginTop: 32,
+        paddingTop: 24,
+        borderTopWidth: 1,
+        borderTopColor: colors.border.primary,
+        gap: 12,
     },
-    actionButton: {
+    actionBtn: {
+        flex: 1,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: colors.background.secondary,
-        paddingHorizontal: 12,
-        paddingVertical: 10,
-        borderRadius: 8,
+        height: 48,
+        borderRadius: 24,
+        backgroundColor: colors.background.tertiary,
         borderWidth: 1,
         borderColor: colors.border.primary,
-        flex: 1,
-        marginHorizontal: 4,
+        gap: 8,
     },
-    readingListBtn: {
-        marginTop: 16,
-    },
-    actionButtonActive: {
+    actionBtnActive: {
         backgroundColor: colors.primary[600],
         borderColor: colors.primary[600],
     },
-    actionText: {
-        marginLeft: 8,
+    actionBtnText: {
         fontSize: 14,
         fontWeight: '600',
         color: colors.text.primary,
-    },
-    actionTextActive: {
-        color: '#fff',
     },
     errorText: {
         fontSize: 18,

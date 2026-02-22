@@ -42,7 +42,7 @@ export const articlesAPI = {
     },
 
     addToReadingList: async (id) => {
-        const response = await api.post('/reading-list', { article_id: id });
+        const response = await api.post(`/reading-list/${id}`);
         return response.data;
     },
 

@@ -62,6 +62,8 @@ export const useAuthStore = create(
             },
 
             setLoading: (loading) => set({ isLoading: loading }),
+
+            updateUser: (updatedUser) => set({ user: updatedUser }),
         }),
         {
             name: 'auth-storage',

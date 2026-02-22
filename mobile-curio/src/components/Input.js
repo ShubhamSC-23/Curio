@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { View, Text, TextInput, StyleSheet } from 'react-native';
-import { colors } from '../theme/colors';
+import { useTheme } from '../theme/useTheme';
 
 const Input = ({
     label,
@@ -10,6 +10,9 @@ const Input = ({
     inputStyle,
     ...props
 }) => {
+    const colors = useTheme();
+    const styles = useMemo(() => makeStyles(colors), [colors]);
+
     return (
         <View style={[styles.container, containerStyle]}>
             {!!label && <Text style={styles.label}>{label}</Text>}
@@ -36,7 +39,7 @@ const Input = ({
     );
 };
 
-const styles = StyleSheet.create({
+const makeStyles = (colors) => StyleSheet.create({
     container: {
         marginBottom: 16,
     },

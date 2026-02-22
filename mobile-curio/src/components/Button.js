@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { TouchableOpacity, Text, StyleSheet, ActivityIndicator } from 'react-native';
-import { colors } from '../theme/colors';
+import { useTheme } from '../theme/useTheme';
 
 const Button = ({
     children,
@@ -12,38 +12,31 @@ const Button = ({
     style,
     textStyle
 }) => {
+    const colors = useTheme();
+    const styles = useMemo(() => makeStyles(colors), [colors]);
+
     const getVariantStyle = () => {
         switch (variant) {
-            case 'secondary':
-                return styles.secondary;
-            case 'outline':
-                return styles.outline;
-            case 'ghost':
-                return styles.ghost;
-            default:
-                return styles.primary;
+            case 'secondary': return styles.secondary;
+            case 'outline': return styles.outline;
+            case 'ghost': return styles.ghost;
+            default: return styles.primary;
         }
     };
 
     const getTextStyle = () => {
         switch (variant) {
-            case 'outline':
-                return { color: colors.primary[600] };
-            case 'ghost':
-                return { color: colors.text.secondary };
-            default:
-                return { color: colors.text.inverse };
+            case 'outline': return { color: colors.primary[600] };
+            case 'ghost': return { color: colors.text.secondary };
+            default: return { color: colors.text.inverse };
         }
     };
 
     const getSizeStyle = () => {
         switch (size) {
-            case 'sm':
-                return styles.sm;
-            case 'lg':
-                return styles.lg;
-            default:
-                return styles.md;
+            case 'sm': return styles.sm;
+            case 'lg': return styles.lg;
+            default: return styles.md;
         }
     };
 
@@ -73,7 +66,7 @@ const Button = ({
     );
 };
 
-const styles = StyleSheet.create({
+const makeStyles = (colors) => StyleSheet.create({
     base: {
         borderRadius: 8,
         flexDirection: 'row',

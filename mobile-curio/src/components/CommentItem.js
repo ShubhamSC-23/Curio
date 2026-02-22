@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
     View,
     Text,
@@ -7,13 +7,15 @@ import {
     Alert
 } from 'react-native';
 import { Heart, MessageCircle, Flag, Trash2, Edit } from 'lucide-react-native';
-import { colors } from '../theme/colors';
+import { useTheme } from '../theme/useTheme';
 import { useAuthStore } from '../store/authStore';
 import { commentsAPI } from '../api/comments';
 import { formatRelativeTime } from '../utils/formatDate';
 import CommentForm from './CommentForm';
 
 const CommentItem = ({ comment, onUpdate, onDelete, level = 0 }) => {
+    const colors = useTheme();
+    const styles = useMemo(() => makeStyles(colors), [colors]);
     const { user, isAuthenticated } = useAuthStore();
     const [showReplyForm, setShowReplyForm] = useState(false);
     const [liked, setLiked] = useState(false);
@@ -166,11 +168,11 @@ const CommentItem = ({ comment, onUpdate, onDelete, level = 0 }) => {
     );
 };
 
-const styles = StyleSheet.create({
+const makeStyles = (colors) => StyleSheet.create({
     container: {
         paddingVertical: 12,
         borderBottomWidth: 1,
-        borderBottomColor: colors.border.tertiary,
+        borderBottomColor: colors.border.primary,
     },
     nested: {
         marginLeft: 16,

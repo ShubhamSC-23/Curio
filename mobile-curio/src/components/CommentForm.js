@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
     View,
     Text,
@@ -9,12 +9,14 @@ import {
     Alert
 } from 'react-native';
 import { Send } from 'lucide-react-native';
-import { colors } from '../theme/colors';
+import { useTheme } from '../theme/useTheme';
 import { useAuthStore } from '../store/authStore';
 import { commentsAPI } from '../api/comments';
 import Button from './Button';
 
 const CommentForm = ({ articleId, parentId = null, onSuccess, onCancel }) => {
+    const colors = useTheme();
+    const styles = useMemo(() => makeStyles(colors), [colors]);
     const { isAuthenticated, isLoading: authLoading } = useAuthStore();
     const [content, setContent] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -84,7 +86,7 @@ const CommentForm = ({ articleId, parentId = null, onSuccess, onCancel }) => {
     );
 };
 
-const styles = StyleSheet.create({
+const makeStyles = (colors) => StyleSheet.create({
     container: {
         backgroundColor: colors.background.primary,
         borderRadius: 12,
@@ -108,7 +110,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginTop: 8,
         borderTopWidth: 1,
-        borderTopColor: colors.border.tertiary,
+        borderTopColor: colors.border.primary,
         paddingTop: 8,
     },
     submitBtn: {

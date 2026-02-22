@@ -31,9 +31,21 @@ export const userAPI = {
         return response.data;
     },
 
-    // Follow/Unfollow user
+    // Follow user
     followUser: async (userId) => {
         const response = await api.post(`/users/${userId}/follow`);
+        return response.data;
+    },
+
+    // Unfollow user
+    unfollowUser: async (userId) => {
+        const response = await api.delete(`/users/${userId}/follow`);
+        return response.data;
+    },
+
+    // Get list of authors
+    getAuthors: async (params = {}) => {
+        const response = await api.get('/users/authors', { params });
         return response.data;
     },
 
