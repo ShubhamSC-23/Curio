@@ -1,0 +1,344 @@
+{
+  "common": {
+    "loading": "लोड होत आहे...",
+    "error": "त्रुटी",
+    "success": "यश",
+    "save": "जतन करा",
+    "cancel": "रद्द करा",
+    "delete": "हटवा",
+    "edit": "संपादित करा",
+    "close": "बंद करा",
+    "submit": "सबमिट करा",
+    "search": "शोधा",
+    "back": "मागे",
+    "next": "पुढे",
+    "previous": "मागील",
+    "confirm": "पुष्टी करा",
+    "yes": "होय",
+    "no": "नाही",
+    "ok": "ठीक आहे",
+    "done": "पूर्ण",
+    "view": "पहा",
+    "share": "शेअर करा",
+    "copy": "कॉपी करा",
+    "download": "डाउनलोड करा",
+    "upload": "अपलोड करा",
+    "remove": "काढा",
+    "add": "जोडा",
+    "update": "अद्यतनित करा",
+    "refresh": "रिफ्रेश करा",
+    "filter": "फिल्टर",
+    "sort": "क्रमवारी लावा",
+    "reset": "रीसेट करा",
+    "clear": "साफ करा"
+  },
+  "nav": {
+    "home": "होम",
+    "articles": "लेख",
+    "categories": "श्रेणी",
+    "about": "आमच्याबद्दल",
+    "contact": "संपर्क",
+    "login": "लॉगिन",
+    "register": "नोंदणी करा",
+    "profile": "प्रोफाइल",
+    "settings": "सेटिंग्ज",
+    "logout": "लॉगआउट",
+    "dashboard": "डॅशबोर्ड",
+    "write": "लिहा",
+    "myArticles": "माझे लेख",
+    "bookmarks": "बुकमार्क",
+    "readingList": "वाचन यादी",
+    "language": "भाषा"
+  },
+  "home": {
+    "welcome": "क्यूरियो मध्ये आपले स्वागत आहे",
+    "tagline": "आश्चर्यकारक कथा शोधा",
+    "subtitle": "जिथे शब्द जिवंत होतात आणि कथा प्रेरणा देतात",
+    "getStarted": "सुरुवात करा",
+    "exploreArticles": "लेख एक्सप्लोर करा",
+    "featuredArticles": "वैशिष्ट्यीकृत लेख",
+    "trendingNow": "आता ट्रेंडिंग",
+    "popularCategories": "लोकप्रिय श्रेणी",
+    "recentArticles": "अलीकडील लेख",
+    "readMore": "अधिक वाचा",
+    "viewAll": "सर्व पहा"
+  },
+  "articles": {
+    "title": "सर्व लेख",
+    "subtitle": "आमच्या कथांचा संग्रह पहा",
+    "searchPlaceholder": "लेख शोधा...",
+    "noArticles": "कोणतेही लेख सापडले नाहीत",
+    "noResults": "तुमच्या शोधासाठी कोणतेही परिणाम सापडले नाहीत",
+    "readMore": "अधिक वाचा",
+    "readingTime": "{{minutes}} मिनिट वाचण्याचा वेळ",
+    "views": "{{count}} वेळा पाहिले",
+    "likes": "{{count}} आवडले",
+    "comments": "{{count}} टिप्पण्या",
+    "published": "प्रकाशित",
+    "by": "द्वारे",
+    "in": "मध्ये",
+    "filters": {
+      "all": "सर्व",
+      "latest": "नवीनतम",
+      "popular": "लोकप्रिय",
+      "trending": "ट्रेंडिंग"
+    }
+  },
+  "articleDetail": {
+    "backToArticles": "लेखांवर परत जा",
+    "relatedArticles": "संबंधित लेख",
+    "shareArticle": "लेख शेअर करा",
+    "copyLink": "लिंक कॉपी करा",
+    "linkCopied": "लिंक क्लिपबोर्डवर कॉपी केली!",
+    "reportArticle": "लेखाचा अहवाल द्या",
+    "saveArticle": "लेख जतन करा",
+    "addToReadingList": "वाचन यादीत जोडा",
+    "removeFromReadingList": "वाचन यादीतून काढा",
+    "likeArticle": "लेख आवडला",
+    "commentOnArticle": "लेखावर टिप्पणी करा"
+  },
+  "auth": {
+    "login": {
+      "title": "परत आपले स्वागत आहे",
+      "subtitle": "आपल्या खात्यात लॉगिन करा",
+      "email": "ईमेल पत्ता",
+      "emailPlaceholder": "तुमचा ईमेल टाका",
+      "password": "पासवर्ड",
+      "passwordPlaceholder": "तुमचा पासवर्ड टाका",
+      "rememberMe": "मला लक्षात ठेवा",
+      "forgotPassword": "पासवर्ड विसरलात?",
+      "loginButton": "लॉगिन",
+      "noAccount": "खाते नाही?",
+      "signUp": "साइन अप करा",
+      "loginSuccess": "लॉगिन यशस्वी!",
+      "loginError": "लॉगिन अयशस्वी. कृपया तुमची माहिती तपासा."
+    },
+    "register": {
+      "title": "खाते तयार करा",
+      "subtitle": "आमच्या समुदायात सामील व्हा",
+      "fullName": "पूर्ण नाव",
+      "fullNamePlaceholder": "तुमचे पूर्ण नाव टाका",
+      "username": "वापरकर्ता नाव",
+      "usernamePlaceholder": "वापरकर्ता नाव निवडा",
+      "email": "ईमेल पत्ता",
+      "emailPlaceholder": "तुमचा ईमेल टाका",
+      "password": "पासवर्ड",
+      "passwordPlaceholder": "पासवर्ड तयार करा",
+      "confirmPassword": "पासवर्डची पुष्टी करा",
+      "confirmPasswordPlaceholder": "तुमच्या पासवर्डची पुष्टी करा",
+      "terms": "मी अटी आणि शर्तींशी सहमत आहे",
+      "registerButton": "खाते तयार करा",
+      "haveAccount": "आधीच खाते आहे?",
+      "signIn": "साइन इन करा",
+      "registerSuccess": "खाते यशस्वीरित्या तयार केले!",
+      "registerError": "नोंदणी अयशस्वी. कृपया पुन्हा प्रयत्न करा."
+    },
+    "logout": {
+      "confirm": "तुम्हाला खरोखर लॉगआउट करायचे आहे का?",
+      "success": "यशस्वीरित्या लॉगआउट केले"
+    }
+  },
+  "profile": {
+    "title": "माझी प्रोफाइल",
+    "edit": "प्रोफाइल संपादित करा",
+    "stats": {
+      "articles": "लेख",
+      "followers": "फॉलोअर्स",
+      "following": "फॉलोइंग",
+      "likes": "आवडले",
+      "views": "व्ह्यूज",
+      "comments": "टिप्पण्या"
+    },
+    "tabs": {
+      "articles": "लेख",
+      "about": "परिचय",
+      "activity": "क्रियाकलाप"
+    },
+    "noArticles": "अद्याप कोणतेही लेख प्रकाशित केलेले नाहीत",
+    "joined": "सामील झाले",
+    "follow": "फॉलो करा",
+    "unfollow": "अनफॉलो करा",
+    "following": "फॉलोइंग"
+  },
+  "settings": {
+    "title": "सेटिंग्ज",
+    "subtitle": "तुमचे खाते आणि प्राधान्ये व्यवस्थापित करा",
+    "tabs": {
+      "profile": "प्रोफाइल",
+      "password": "पासवर्ड",
+      "appearance": "दिसणे",
+      "notifications": "सूचना",
+      "bankAccount": "बँक खाते"
+    },
+    "profile": {
+      "title": "प्रोफाइल माहिती",
+      "subtitle": "तुमची वैयक्तिक माहिती अद्यतनित करा",
+      "fullName": "पूर्ण नाव",
+      "email": "ईमेल",
+      "bio": "परिचय",
+      "bioPlaceholder": "तुमच्याबद्दल सांगा...",
+      "location": "स्थान",
+      "locationPlaceholder": "उदा., मुंबई, भारत",
+      "profileImage": "प्रोफाइल चित्र",
+      "updateSuccess": "प्रोफाइल यशस्वीरित्या अद्यतनित केली",
+      "updateError": "प्रोफाइल अद्यतनित करण्यात अयशस्वी"
+    },
+    "password": {
+      "title": "पासवर्ड बदला",
+      "subtitle": "तुमचे खाते सुरक्षित ठेवा",
+      "currentPassword": "सध्याचा पासवर्ड",
+      "newPassword": "नवीन पासवर्ड",
+      "confirmPassword": "नवीन पासवर्डची पुष्टी करा",
+      "updateButton": "पासवर्ड अद्यतनित करा",
+      "updateSuccess": "पासवर्ड यशस्वीरित्या बदलला",
+      "updateError": "पासवर्ड बदलण्यात अयशस्वी",
+      "passwordMismatch": "पासवर्ड जुळत नाहीत",
+      "passwordTooShort": "पासवर्ड किमान 6 अक्षरांचा असावा"
+    },
+    "appearance": {
+      "title": "दिसणे",
+      "subtitle": "क्यूरियो कसे दिसावे ते सानुकूलित करा",
+      "theme": "थीम",
+      "light": "लाइट",
+      "dark": "डार्क",
+      "system": "सिस्टम"
+    },
+    "notifications": {
+      "title": "सूचना प्राधान्ये",
+      "subtitle": "तुम्ही काय ऐकू इच्छिता ते नियंत्रित करा",
+      "emailComments": "टिप्पण्या आणि आवडी",
+      "emailCommentsDesc": "जेव्हा कोणी तुमच्या लेखावर टिप्पणी किंवा आवडते तेव्हा सूचित व्हा",
+      "emailFollowers": "नवीन फॉलोअर्स",
+      "emailFollowersDesc": "जेव्हा कोणी तुम्हाला फॉलो करतो तेव्हा सूचित व्हा",
+      "emailRecommendations": "लेख शिफारसी",
+      "emailRecommendationsDesc": "वैयक्तिकृत शिफारसी मिळवा",
+      "savePreferences": "प्राधान्ये जतन करा"
+    },
+    "bankAccount": {
+      "title": "बँक खाते",
+      "subtitle": "देणग्या मिळवण्यासाठी बँक तपशील जोडा",
+      "accountHolder": "खातेधारकाचे नाव",
+      "accountNumber": "खाते क्रमांक",
+      "confirmAccount": "खाते क्रमांकाची पुष्टी करा",
+      "ifscCode": "IFSC कोड",
+      "bankName": "बँकेचे नाव",
+      "branchName": "शाखेचे नाव",
+      "upiId": "UPI ID (पर्यायी)",
+      "addAccount": "बँक खाते जोडा",
+      "accountAdded": "बँक खाते यशस्वीरित्या जोडले",
+      "accountError": "बँक खाते जोडण्यात अयशस्वी",
+      "accountMismatch": "खाते क्रमांक जुळत नाहीत"
+    },
+    "danger": {
+      "title": "धोक्याचे क्षेत्र",
+      "subtitle": "अपरिवर्तनीय कृती",
+      "deleteAccount": "माझे खाते हटवा",
+      "deleteWarning": "एकदा हटविल्यावर, तुमचा सर्व डेटा कायमचा काढला जाईल",
+      "deleteConfirm": "तुम्हाला खरोखर तुमचे खाते हटवायचे आहे का?",
+      "typeDelete": "पुष्टीसाठी DELETE टाइप करा"
+    }
+  },
+  "donations": {
+    "buyMeCoffee": "मला कॉफी विकत घ्या",
+    "supportAuthor": "{{author}} ला समर्थन द्या",
+    "selectAmount": "रक्कम निवडा",
+    "customAmount": "सानुकूल रक्कम",
+    "message": "संदेश सोडा (पर्यायी)",
+    "messagePlaceholder": "काहीतरी छान सांगा...",
+    "proceedToPayment": "पेमेंटसाठी पुढे जा",
+    "donationSuccess": "तुमच्या समर्थनाबद्दल धन्यवाद!",
+    "donationError": "पेमेंट अयशस्वी. कृपया पुन्हा प्रयत्न करा.",
+    "received": {
+      "title": "मिळालेल्या देणग्या",
+      "subtitle": "तुमच्या समर्थकांकडून",
+      "total": "एकूण",
+      "coffees": "कॉफी",
+      "donors": "दात्यांची संख्या"
+    },
+    "made": {
+      "title": "केलेल्या देणग्या",
+      "subtitle": "लेखकांना तुमचा समर्थन",
+      "total": "एकूण",
+      "given": "दिलेले",
+      "authors": "लेखक"
+    },
+    "stats": {
+      "totalSupport": "एकूण समर्थन",
+      "coffeesReceived": "मिळालेली कॉफी",
+      "supporters": "समर्थक",
+      "noDonations": "अद्याप कोणतीही देणगी मिळालेली नाही"
+    }
+  },
+  "comments": {
+    "title": "टिप्पण्या",
+    "writeComment": "टिप्पणी लिहा...",
+    "postComment": "टिप्पणी पोस्ट करा",
+    "reply": "उत्तर द्या",
+    "edit": "संपादित करा",
+    "delete": "हटवा",
+    "noComments": "अद्याप कोणतीही टिप्पणी नाही. पहिले व्हा!",
+    "commentPosted": "टिप्पणी यशस्वीरित्या पोस्ट केली",
+    "commentDeleted": "टिप्पणी हटवली",
+    "deleteConfirm": "तुम्हाला खरोखर ही टिप्पणी हटवायची आहे का?",
+    "loginToComment": "टिप्पणी करण्यासाठी कृपया लॉगिन करा"
+  },
+  "categories": {
+    "title": "श्रेणी",
+    "subtitle": "श्रेणीनुसार ब्राउझ करा",
+    "allCategories": "सर्व श्रेणी",
+    "articlesCount": "{{count}} लेख",
+    "viewCategory": "श्रेणी पहा"
+  },
+  "search": {
+    "title": "शोध परिणाम",
+    "subtitle": "\"{{query}}\" साठी परिणाम",
+    "resultsFound": "{{count}} परिणाम सापडले",
+    "noResults": "कोणतेही परिणाम सापडले नाहीत",
+    "searchPlaceholder": "लेख, लेखक किंवा विषय शोधा..."
+  },
+  "bookmarks": {
+    "title": "बुकमार्क",
+    "subtitle": "तुमचे जतन केलेले लेख",
+    "noBookmarks": "अद्याप कोणतेही बुकमार्क नाहीत",
+    "addBookmark": "बुकमार्कमध्ये जोडा",
+    "removeBookmark": "बुकमार्कमधून काढा",
+    "bookmarkAdded": "बुकमार्कमध्ये जोडले",
+    "bookmarkRemoved": "बुकमार्कमधून काढले"
+  },
+  "readingList": {
+    "title": "वाचन यादी",
+    "subtitle": "तुम्ही वाचू इच्छिता असलेले लेख",
+    "noArticles": "तुमची वाचन यादी रिकामी आहे",
+    "addToList": "यादीत जोडा",
+    "removeFromList": "यादीतून काढा",
+    "added": "वाचन यादीत जोडले",
+    "removed": "वाचन यादीतून काढले"
+  },
+  "footer": {
+    "about": "क्यूरियो बद्दल",
+    "description": "कथा आणि कल्पना सामायिक करण्यासाठी व्यासपीठ",
+    "quickLinks": "द्रुत दुवे",
+    "legal": "कायदेशीर",
+    "terms": "सेवा अटी",
+    "privacy": "गोपनीयता धोरण",
+    "contact": "आमच्याशी संपर्क साधा",
+    "followUs": "आम्हाला फॉलो करा",
+    "copyright": "© {{year}} क्यूरियो. सर्व हक्क राखीव."
+  },
+  "errors": {
+    "generic": "काहीतरी चूक झाली",
+    "network": "नेटवर्क त्रुटी. कृपया तुमचे कनेक्शन तपासा.",
+    "notFound": "पृष्ठ सापडले नाही",
+    "unauthorized": "तुम्ही अधिकृत नाही",
+    "serverError": "सर्व्हर त्रुटी. कृपया नंतर पुन्हा प्रयत्न करा.",
+    "validation": "कृपया तुमचे इनपुट तपासा",
+    "required": "हे फील्ड आवश्यक आहे"
+  },
+  "badges": {
+    "title": "उपलब्धी",
+    "earned": "{{count}} मिळविले",
+    "locked": "लॉक केलेले",
+    "unlockCondition": "अनलॉक करा: {{condition}}",
+    "newBadge": "नवीन बॅज अनलॉक केले!"
+  }
+}

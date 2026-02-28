@@ -16,13 +16,16 @@ import { useAuthStore } from "../../store/authStore";
 import Button from "../common/Button";
 import { getImageUrl } from "../../utils/imageUtils";
 import { BookMarked } from "lucide-react";
-import NotificationBell from "../notification/NotificationBell"; // ✅ NEW IMPORT
+import NotificationBell from "../notification/NotificationBell";
+import { useTranslation } from "react-i18next";
+import LanguageSwitcher from "../common/LanguageSwitcher";
 
 const Navbar = () => {
   const { user, isAuthenticated, logout } = useAuthStore();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const { t } = useTranslation(); // ✅ Already added
 
   // Simple dark mode toggle (uses localStorage + document class)
   const toggleTheme = () => {
@@ -71,26 +74,31 @@ const Navbar = () => {
               to="/articles"
               className="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 px-3 py-2 rounded-md text-sm font-medium transition"
             >
-              Articles
+              {t("nav.articles")} {/* ✅ TRANSLATED */}
             </Link>
             <Link
               to="/categories"
               className="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 px-3 py-2 rounded-md text-sm font-medium transition"
             >
-              Categories
+              {t("nav.categories")} {/* ✅ TRANSLATED */}
             </Link>
             <Link
               to="/search"
               className="flex items-center text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 px-3 py-2 rounded-md text-sm font-medium transition"
             >
               <Search className="h-4 w-4 mr-2" />
-              Search
+              {t("search.title")} {/* ✅ TRANSLATED */}
             </Link>
 
             {/* Theme Toggle */}
             <button
               onClick={toggleTheme}
               className="p-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md transition"
+              aria-label={
+                isDark
+                  ? t("settings.appearance.light")
+                  : t("settings.appearance.dark")
+              }
             >
               {isDark ? (
                 <Sun className="h-5 w-5" />
@@ -98,6 +106,9 @@ const Navbar = () => {
                 <Moon className="h-5 w-5" />
               )}
             </button>
+
+            {/* Language Toggle */}
+            <LanguageSwitcher />
 
             {/* ✅ NOTIFICATION BELL (only show when authenticated) */}
             {isAuthenticated && <NotificationBell />}
@@ -141,7 +152,7 @@ const Navbar = () => {
                         className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                       >
                         <User className="h-4 w-4 mr-2" />
-                        Profile
+                        {t("nav.profile")} {/* ✅ TRANSLATED */}
                       </Link>
                       <Link
                         to="/feed"
@@ -158,7 +169,7 @@ const Navbar = () => {
                           className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                         >
                           <BookMarked className="h-4 w-4 mr-2" />
-                          Reading List
+                          {t("readingList.title")} {/* ✅ TRANSLATED */}
                         </Link>
                       )}
 
@@ -168,7 +179,7 @@ const Navbar = () => {
                           onClick={() => setUserMenuOpen(false)}
                           className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                         >
-                          🔖 Bookmarks
+                          🔖 {t("bookmarks.title")} {/* ✅ TRANSLATED */}
                         </Link>
                       )}
 
@@ -180,7 +191,8 @@ const Navbar = () => {
                           className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                         >
                           <ShieldCheck className="h-4 w-4 mr-2" />
-                          Admin Panel
+                          {t("nav.adminPanel") || "Admin Panel"}{" "}
+                          {/* ✅ TRANSLATED (with fallback) */}
                         </Link>
                       )}
 
@@ -192,7 +204,7 @@ const Navbar = () => {
                           className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                         >
                           <LayoutDashboard className="h-4 w-4 mr-2" />
-                          Dashboard
+                          {t("nav.dashboard")} {/* ✅ TRANSLATED */}
                         </Link>
                       )}
 
@@ -202,7 +214,7 @@ const Navbar = () => {
                         className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                       >
                         <Settings className="h-4 w-4 mr-2" />
-                        Settings
+                        {t("nav.settings")} {/* ✅ TRANSLATED */}
                       </Link>
 
                       <hr className="my-1 border-gray-200 dark:border-gray-700" />
@@ -212,7 +224,7 @@ const Navbar = () => {
                         className="flex items-center w-full px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700"
                       >
                         <LogOut className="h-4 w-4 mr-2" />
-                        Logout
+                        {t("nav.logout")} {/* ✅ TRANSLATED */}
                       </button>
                     </div>
                   </>
@@ -222,12 +234,12 @@ const Navbar = () => {
               <div className="flex items-center space-x-2">
                 <Link to="/login">
                   <Button variant="outline" size="sm">
-                    Login
+                    {t("nav.login")} {/* ✅ TRANSLATED */}
                   </Button>
                 </Link>
                 <Link to="/register">
                   <Button variant="primary" size="sm">
-                    Sign Up
+                    {t("nav.register")} {/* ✅ TRANSLATED */}
                   </Button>
                 </Link>
               </div>
@@ -259,21 +271,21 @@ const Navbar = () => {
               className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
               onClick={() => setMobileMenuOpen(false)}
             >
-              Articles
+              {t("nav.articles")} {/* ✅ TRANSLATED */}
             </Link>
             <Link
               to="/categories"
               className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
               onClick={() => setMobileMenuOpen(false)}
             >
-              Categories
+              {t("nav.categories")} {/* ✅ TRANSLATED */}
             </Link>
             <Link
               to="/search"
               className="block px-3 py-2 text-gray-700 dark:text-gray-300"
               onClick={() => setMobileMenuOpen(false)}
             >
-              🔍 Search
+              🔍 {t("search.title")} {/* ✅ TRANSLATED */}
             </Link>
 
             {/* ✅ Notifications link for mobile */}
@@ -283,7 +295,7 @@ const Navbar = () => {
                 className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                🔔 Notifications
+                🔔 {t("settings.notifications.title")} {/* ✅ TRANSLATED */}
               </Link>
             )}
 
@@ -295,12 +307,12 @@ const Navbar = () => {
               {isDark ? (
                 <>
                   <Sun className="h-5 w-5 mr-2" />
-                  Light Mode
+                  {t("settings.appearance.light")} {/* ✅ TRANSLATED */}
                 </>
               ) : (
                 <>
                   <Moon className="h-5 w-5 mr-2" />
-                  Dark Mode
+                  {t("settings.appearance.dark")} {/* ✅ TRANSLATED */}
                 </>
               )}
             </button>
@@ -312,7 +324,7 @@ const Navbar = () => {
                   className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  Profile
+                  {t("nav.profile")} {/* ✅ TRANSLATED */}
                 </Link>
                 <Link
                   to="/feed"
@@ -328,7 +340,7 @@ const Navbar = () => {
                     className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    Reading List
+                    {t("readingList.title")} {/* ✅ TRANSLATED */}
                   </Link>
                 )}
 
@@ -338,7 +350,7 @@ const Navbar = () => {
                     className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    Bookmarks
+                    {t("bookmarks.title")} {/* ✅ TRANSLATED */}
                   </Link>
                 )}
 
@@ -348,7 +360,8 @@ const Navbar = () => {
                     className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    👑 Admin Panel
+                    👑 {t("nav.adminPanel") || "Admin Panel"}{" "}
+                    {/* ✅ TRANSLATED (with fallback) */}
                   </Link>
                 )}
 
@@ -358,7 +371,7 @@ const Navbar = () => {
                     className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    📊 Dashboard
+                    📊 {t("nav.dashboard")} {/* ✅ TRANSLATED */}
                   </Link>
                 )}
 
@@ -367,7 +380,7 @@ const Navbar = () => {
                   className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  Settings
+                  {t("nav.settings")} {/* ✅ TRANSLATED */}
                 </Link>
 
                 <button
@@ -377,7 +390,7 @@ const Navbar = () => {
                   }}
                   className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-800"
                 >
-                  Logout
+                  {t("nav.logout")} {/* ✅ TRANSLATED */}
                 </button>
               </>
             ) : (
@@ -387,14 +400,14 @@ const Navbar = () => {
                   className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  Login
+                  {t("nav.login")} {/* ✅ TRANSLATED */}
                 </Link>
                 <Link
                   to="/register"
                   className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  Sign Up
+                  {t("nav.register")} {/* ✅ TRANSLATED */}
                 </Link>
               </>
             )}

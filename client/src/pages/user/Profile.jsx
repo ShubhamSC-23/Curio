@@ -16,6 +16,9 @@ import {
   Award,
   TrendingUp,
   Sparkles,
+  Coffee,
+  DollarSign,
+  Gift,
 } from "lucide-react";
 import axios from "axios";
 import { useAuthStore } from "../../store/authStore";
@@ -94,10 +97,14 @@ const Profile = () => {
   const { user } = useAuthStore();
   const navigate = useNavigate();
   const [userStats, setUserStats] = useState(null);
+  const [donationStats, setDonationStats] = useState(null); // ✅ NEW: Donation stats
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (user) fetchUserStats();
+    if (user) {
+      fetchUserStats();
+      fetchDonationStats(); // ✅ NEW: Fetch donation stats
+    }
   }, [user]);
 
   const fetchUserStats = async () => {
@@ -128,6 +135,61 @@ const Profile = () => {
       });
     } finally {
       setLoading(false);
+    }
+  };
+
+  // ✅ NEW: Fetch donation statistics
+  const fetchDonationStats = async () => {
+    try {
+      const userId = user?.user_id || user?.id;
+      if (!userId) return;
+
+      const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
+      const token = localStorage.getItem("token");
+
+      const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
+      // Fetch donations received (if author)
+      let received = { total_amount: 0, total_donations: 0, unique_donors: 0 };
+      if (user?.role === "author") {
+        try {
+          const receivedRes = await axios.get(
+            `${API_URL}/donations/author/${userId}/stats`,
+            { headers },
+          );
+          received = receivedRes.data.data || received;
+        } catch (error) {
+          console.error("Error fetching received donations:", error);
+        }
+      }
+
+      // Fetch donations made (as donor)
+      let made = { total_amount: 0, total_donations: 0, unique_authors: 0 };
+      try {
+        const madeRes = await axios.get(`${API_URL}/donations/my-donations`, {
+          headers,
+        });
+        const donations = madeRes.data.data || [];
+
+        made = {
+          total_amount: donations.reduce(
+            (sum, d) => sum + parseFloat(d.amount || 0),
+            0,
+          ),
+          total_donations: donations.length,
+          unique_authors: new Set(donations.map((d) => d.author_user_id)).size,
+        };
+      } catch (error) {
+        console.error("Error fetching made donations:", error);
+      }
+
+      setDonationStats({ received, made });
+    } catch (error) {
+      console.error("Error fetching donation stats:", error);
+      setDonationStats({
+        received: { total_amount: 0, total_donations: 0, unique_donors: 0 },
+        made: { total_amount: 0, total_donations: 0, unique_authors: 0 },
+      });
     }
   };
 
@@ -349,6 +411,137 @@ const Profile = () => {
           </motion.div>
         )}
 
+        {/* ✅ NEW: Donation Stats Section */}
+        {donationStats && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+            className="mb-10"
+          >
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Donations Received (Authors only) */}
+              {user?.role === "author" && (
+                <Card className="bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 dark:from-amber-900/20 dark:via-orange-900/20 dark:to-red-900/20 border-2 border-amber-200 dark:border-amber-800">
+                  <CardBody className="p-6">
+                    <div className="flex items-center gap-3 mb-5">
+                      <div className="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-500 rounded-xl flex items-center justify-center">
+                        <Coffee className="w-6 h-6 text-white" />
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+                          Donations Received
+                        </h3>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                          From your supporters
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-3 gap-3">
+                      <div className="bg-white dark:bg-gray-800 p-3 rounded-xl border border-amber-200 dark:border-amber-800">
+                        <div className="flex items-center gap-1.5 mb-1">
+                          <DollarSign className="w-4 h-4 text-amber-600 dark:text-amber-400" />
+                          <span className="text-xs text-gray-600 dark:text-gray-400">
+                            Total
+                          </span>
+                        </div>
+                        <p className="text-xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
+                          ₹
+                          {donationStats.received.total_amount?.toLocaleString() ||
+                            0}
+                        </p>
+                      </div>
+
+                      <div className="bg-white dark:bg-gray-800 p-3 rounded-xl border border-amber-200 dark:border-amber-800">
+                        <div className="flex items-center gap-1.5 mb-1">
+                          <Coffee className="w-4 h-4 text-green-600 dark:text-green-400" />
+                          <span className="text-xs text-gray-600 dark:text-gray-400">
+                            Coffees
+                          </span>
+                        </div>
+                        <p className="text-xl font-bold text-gray-900 dark:text-white">
+                          {donationStats.received.total_donations || 0}
+                        </p>
+                      </div>
+
+                      <div className="bg-white dark:bg-gray-800 p-3 rounded-xl border border-amber-200 dark:border-amber-800">
+                        <div className="flex items-center gap-1.5 mb-1">
+                          <Heart className="w-4 h-4 text-pink-600 dark:text-pink-400" />
+                          <span className="text-xs text-gray-600 dark:text-gray-400">
+                            Donors
+                          </span>
+                        </div>
+                        <p className="text-xl font-bold text-gray-900 dark:text-white">
+                          {donationStats.received.unique_donors || 0}
+                        </p>
+                      </div>
+                    </div>
+                  </CardBody>
+                </Card>
+              )}
+
+              {/* Donations Made */}
+              <Card className="bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 dark:from-pink-900/20 dark:via-purple-900/20 dark:to-blue-900/20 border-2 border-pink-200 dark:border-pink-800">
+                <CardBody className="p-6">
+                  <div className="flex items-center gap-3 mb-5">
+                    <div className="w-12 h-12 bg-gradient-to-br from-pink-500 to-purple-500 rounded-xl flex items-center justify-center">
+                      <Gift className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+                        Donations Made
+                      </h3>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        Your support to authors
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-3">
+                    <div className="bg-white dark:bg-gray-800 p-3 rounded-xl border border-pink-200 dark:border-pink-800">
+                      <div className="flex items-center gap-1.5 mb-1">
+                        <DollarSign className="w-4 h-4 text-pink-600 dark:text-pink-400" />
+                        <span className="text-xs text-gray-600 dark:text-gray-400">
+                          Total
+                        </span>
+                      </div>
+                      <p className="text-xl font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
+                        ₹
+                        {donationStats.made.total_amount?.toLocaleString() || 0}
+                      </p>
+                    </div>
+
+                    <div className="bg-white dark:bg-gray-800 p-3 rounded-xl border border-pink-200 dark:border-pink-800">
+                      <div className="flex items-center gap-1.5 mb-1">
+                        <Coffee className="w-4 h-4 text-green-600 dark:text-green-400" />
+                        <span className="text-xs text-gray-600 dark:text-gray-400">
+                          Given
+                        </span>
+                      </div>
+                      <p className="text-xl font-bold text-gray-900 dark:text-white">
+                        {donationStats.made.total_donations || 0}
+                      </p>
+                    </div>
+
+                    <div className="bg-white dark:bg-gray-800 p-3 rounded-xl border border-pink-200 dark:border-pink-800">
+                      <div className="flex items-center gap-1.5 mb-1">
+                        <Users className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                        <span className="text-xs text-gray-600 dark:text-gray-400">
+                          Authors
+                        </span>
+                      </div>
+                      <p className="text-xl font-bold text-gray-900 dark:text-white">
+                        {donationStats.made.unique_authors || 0}
+                      </p>
+                    </div>
+                  </div>
+                </CardBody>
+              </Card>
+            </div>
+          </motion.div>
+        )}
+
         {/* ── Achievements / Badges ── */}
         {userStats && (
           <motion.div
@@ -370,8 +563,7 @@ const Profile = () => {
                       </h2>
                     </div>
                     <p className="text-gray-500 dark:text-gray-400 text-sm ml-10">
-                      {earnedBadges.length} of{" "}
-                      {Object.keys(BADGES).length}{" "}
+                      {earnedBadges.length} of {Object.keys(BADGES).length}{" "}
                       badges earned — keep writing to unlock more!
                     </p>
                   </div>

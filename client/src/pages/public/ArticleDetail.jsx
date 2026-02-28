@@ -26,6 +26,7 @@ import { useAuthStore } from "../../store/authStore";
 import toast from "react-hot-toast";
 import { getImageUrl } from "../../utils/imageUtils";
 import api from "../../api/axios";
+import BuyMeCoffee from "../../components/payment/BuyMeCoffee";
 
 const ArticleDetail = () => {
   const { slug } = useParams();
@@ -421,6 +422,15 @@ const ArticleDetail = () => {
               </div>
             </CardBody>
           </Card>
+
+          <BuyMeCoffee
+            article={article}
+            author={{
+              user_id: article.author_id,
+              username: article.username,
+              full_name: article.full_name,
+            }}
+          />
 
           {/* Comments Section */}
           <div className="mb-16">

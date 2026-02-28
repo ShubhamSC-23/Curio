@@ -1,0 +1,344 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "submit": "Submit",
+    "search": "Search",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "confirm": "Confirm",
+    "yes": "Yes",
+    "no": "No",
+    "ok": "OK",
+    "done": "Done",
+    "view": "View",
+    "share": "Share",
+    "copy": "Copy",
+    "download": "Download",
+    "upload": "Upload",
+    "remove": "Remove",
+    "add": "Add",
+    "update": "Update",
+    "refresh": "Refresh",
+    "filter": "Filter",
+    "sort": "Sort",
+    "reset": "Reset",
+    "clear": "Clear"
+  },
+  "nav": {
+    "home": "Home",
+    "articles": "Articles",
+    "categories": "Categories",
+    "about": "About",
+    "contact": "Contact",
+    "login": "Login",
+    "register": "Register",
+    "profile": "Profile",
+    "settings": "Settings",
+    "logout": "Logout",
+    "dashboard": "Dashboard",
+    "write": "Write",
+    "myArticles": "My Articles",
+    "bookmarks": "Bookmarks",
+    "readingList": "Reading List",
+    "language": "Language"
+  },
+  "home": {
+    "welcome": "Welcome to Curio",
+    "tagline": "Discover Amazing Stories",
+    "subtitle": "Where words come alive and stories inspire",
+    "getStarted": "Get Started",
+    "exploreArticles": "Explore Articles",
+    "featuredArticles": "Featured Articles",
+    "trendingNow": "Trending Now",
+    "popularCategories": "Popular Categories",
+    "recentArticles": "Recent Articles",
+    "readMore": "Read More",
+    "viewAll": "View All"
+  },
+  "articles": {
+    "title": "All Articles",
+    "subtitle": "Browse our collection of stories",
+    "searchPlaceholder": "Search articles...",
+    "noArticles": "No articles found",
+    "noResults": "No results found for your search",
+    "readMore": "Read More",
+    "readingTime": "{{minutes}} min read",
+    "views": "{{count}} views",
+    "likes": "{{count}} likes",
+    "comments": "{{count}} comments",
+    "published": "Published",
+    "by": "by",
+    "in": "in",
+    "filters": {
+      "all": "All",
+      "latest": "Latest",
+      "popular": "Popular",
+      "trending": "Trending"
+    }
+  },
+  "articleDetail": {
+    "backToArticles": "Back to Articles",
+    "relatedArticles": "Related Articles",
+    "shareArticle": "Share Article",
+    "copyLink": "Copy Link",
+    "linkCopied": "Link copied to clipboard!",
+    "reportArticle": "Report Article",
+    "saveArticle": "Save Article",
+    "addToReadingList": "Add to Reading List",
+    "removeFromReadingList": "Remove from Reading List",
+    "likeArticle": "Like Article",
+    "commentOnArticle": "Comment on Article"
+  },
+  "auth": {
+    "login": {
+      "title": "Welcome Back",
+      "subtitle": "Login to your account",
+      "email": "Email Address",
+      "emailPlaceholder": "Enter your email",
+      "password": "Password",
+      "passwordPlaceholder": "Enter your password",
+      "rememberMe": "Remember me",
+      "forgotPassword": "Forgot password?",
+      "loginButton": "Login",
+      "noAccount": "Don't have an account?",
+      "signUp": "Sign up",
+      "loginSuccess": "Login successful!",
+      "loginError": "Login failed. Please check your credentials."
+    },
+    "register": {
+      "title": "Create Account",
+      "subtitle": "Join our community",
+      "fullName": "Full Name",
+      "fullNamePlaceholder": "Enter your full name",
+      "username": "Username",
+      "usernamePlaceholder": "Choose a username",
+      "email": "Email Address",
+      "emailPlaceholder": "Enter your email",
+      "password": "Password",
+      "passwordPlaceholder": "Create a password",
+      "confirmPassword": "Confirm Password",
+      "confirmPasswordPlaceholder": "Confirm your password",
+      "terms": "I agree to the Terms and Conditions",
+      "registerButton": "Create Account",
+      "haveAccount": "Already have an account?",
+      "signIn": "Sign in",
+      "registerSuccess": "Account created successfully!",
+      "registerError": "Registration failed. Please try again."
+    },
+    "logout": {
+      "confirm": "Are you sure you want to logout?",
+      "success": "Logged out successfully"
+    }
+  },
+  "profile": {
+    "title": "My Profile",
+    "edit": "Edit Profile",
+    "stats": {
+      "articles": "Articles",
+      "followers": "Followers",
+      "following": "Following",
+      "likes": "Likes",
+      "views": "Views",
+      "comments": "Comments"
+    },
+    "tabs": {
+      "articles": "Articles",
+      "about": "About",
+      "activity": "Activity"
+    },
+    "noArticles": "No articles published yet",
+    "joined": "Joined",
+    "follow": "Follow",
+    "unfollow": "Unfollow",
+    "following": "Following"
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Manage your account and preferences",
+    "tabs": {
+      "profile": "Profile",
+      "password": "Password",
+      "appearance": "Appearance",
+      "notifications": "Notifications",
+      "bankAccount": "Bank Account"
+    },
+    "profile": {
+      "title": "Profile Information",
+      "subtitle": "Update your personal details",
+      "fullName": "Full Name",
+      "email": "Email",
+      "bio": "Bio",
+      "bioPlaceholder": "Tell us about yourself...",
+      "location": "Location",
+      "locationPlaceholder": "e.g., Mumbai, India",
+      "profileImage": "Profile Image",
+      "updateSuccess": "Profile updated successfully",
+      "updateError": "Failed to update profile"
+    },
+    "password": {
+      "title": "Change Password",
+      "subtitle": "Keep your account secure",
+      "currentPassword": "Current Password",
+      "newPassword": "New Password",
+      "confirmPassword": "Confirm New Password",
+      "updateButton": "Update Password",
+      "updateSuccess": "Password changed successfully",
+      "updateError": "Failed to change password",
+      "passwordMismatch": "Passwords do not match",
+      "passwordTooShort": "Password must be at least 6 characters"
+    },
+    "appearance": {
+      "title": "Appearance",
+      "subtitle": "Customize how Curio looks",
+      "theme": "Theme",
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System"
+    },
+    "notifications": {
+      "title": "Notification Preferences",
+      "subtitle": "Control what you hear about",
+      "emailComments": "Comments & Likes",
+      "emailCommentsDesc": "Get notified when someone comments or likes your articles",
+      "emailFollowers": "New Followers",
+      "emailFollowersDesc": "Get notified when someone follows you",
+      "emailRecommendations": "Article Recommendations",
+      "emailRecommendationsDesc": "Receive personalized recommendations",
+      "savePreferences": "Save Preferences"
+    },
+    "bankAccount": {
+      "title": "Bank Account",
+      "subtitle": "Add bank details to receive donations",
+      "accountHolder": "Account Holder Name",
+      "accountNumber": "Account Number",
+      "confirmAccount": "Confirm Account Number",
+      "ifscCode": "IFSC Code",
+      "bankName": "Bank Name",
+      "branchName": "Branch Name",
+      "upiId": "UPI ID (Optional)",
+      "addAccount": "Add Bank Account",
+      "accountAdded": "Bank account added successfully",
+      "accountError": "Failed to add bank account",
+      "accountMismatch": "Account numbers do not match"
+    },
+    "danger": {
+      "title": "Danger Zone",
+      "subtitle": "Irreversible actions",
+      "deleteAccount": "Delete My Account",
+      "deleteWarning": "Once deleted, all your data will be permanently removed",
+      "deleteConfirm": "Are you sure you want to delete your account?",
+      "typeDelete": "Type DELETE to confirm"
+    }
+  },
+  "donations": {
+    "buyMeCoffee": "Buy Me Coffee",
+    "supportAuthor": "Support {{author}}",
+    "selectAmount": "Select Amount",
+    "customAmount": "Custom Amount",
+    "message": "Leave a message (optional)",
+    "messagePlaceholder": "Say something nice...",
+    "proceedToPayment": "Proceed to Payment",
+    "donationSuccess": "Thank you for your support!",
+    "donationError": "Payment failed. Please try again.",
+    "received": {
+      "title": "Donations Received",
+      "subtitle": "From your supporters",
+      "total": "Total",
+      "coffees": "Coffees",
+      "donors": "Donors"
+    },
+    "made": {
+      "title": "Donations Made",
+      "subtitle": "Your support to authors",
+      "total": "Total",
+      "given": "Given",
+      "authors": "Authors"
+    },
+    "stats": {
+      "totalSupport": "Total Support",
+      "coffeesReceived": "Coffees Received",
+      "supporters": "Supporters",
+      "noDonations": "No donations received yet"
+    }
+  },
+  "comments": {
+    "title": "Comments",
+    "writeComment": "Write a comment...",
+    "postComment": "Post Comment",
+    "reply": "Reply",
+    "edit": "Edit",
+    "delete": "Delete",
+    "noComments": "No comments yet. Be the first!",
+    "commentPosted": "Comment posted successfully",
+    "commentDeleted": "Comment deleted",
+    "deleteConfirm": "Are you sure you want to delete this comment?",
+    "loginToComment": "Please login to comment"
+  },
+  "categories": {
+    "title": "Categories",
+    "subtitle": "Browse by category",
+    "allCategories": "All Categories",
+    "articlesCount": "{{count}} articles",
+    "viewCategory": "View Category"
+  },
+  "search": {
+    "title": "Search Results",
+    "subtitle": "Results for \"{{query}}\"",
+    "resultsFound": "{{count}} results found",
+    "noResults": "No results found",
+    "searchPlaceholder": "Search for articles, authors, or topics..."
+  },
+  "bookmarks": {
+    "title": "Bookmarks",
+    "subtitle": "Your saved articles",
+    "noBookmarks": "No bookmarks yet",
+    "addBookmark": "Add to bookmarks",
+    "removeBookmark": "Remove from bookmarks",
+    "bookmarkAdded": "Added to bookmarks",
+    "bookmarkRemoved": "Removed from bookmarks"
+  },
+  "readingList": {
+    "title": "Reading List",
+    "subtitle": "Articles you want to read",
+    "noArticles": "Your reading list is empty",
+    "addToList": "Add to reading list",
+    "removeFromList": "Remove from list",
+    "added": "Added to reading list",
+    "removed": "Removed from reading list"
+  },
+  "footer": {
+    "about": "About Curio",
+    "description": "A platform for sharing stories and ideas",
+    "quickLinks": "Quick Links",
+    "legal": "Legal",
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy",
+    "contact": "Contact Us",
+    "followUs": "Follow Us",
+    "copyright": "© {{year}} Curio. All rights reserved."
+  },
+  "errors": {
+    "generic": "Something went wrong",
+    "network": "Network error. Please check your connection.",
+    "notFound": "Page not found",
+    "unauthorized": "You are not authorized",
+    "serverError": "Server error. Please try again later.",
+    "validation": "Please check your input",
+    "required": "This field is required"
+  },
+  "badges": {
+    "title": "Achievements",
+    "earned": "{{count}} earned",
+    "locked": "Locked",
+    "unlockCondition": "Unlock by: {{condition}}",
+    "newBadge": "New badge unlocked!"
+  }
+}

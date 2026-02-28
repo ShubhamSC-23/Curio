@@ -1,9 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { BookOpen, Mail, Github, Twitter, Linkedin } from 'lucide-react';
+import { useTranslation } from 'react-i18next'; // ✅ ADDED
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
+  const { t } = useTranslation(); // ✅ ADDED
 
   return (
     <footer className="bg-gray-900 text-gray-300">
@@ -20,24 +22,27 @@ const Footer = () => {
               <span className="text-xl font-bold text-white">CURIO</span>
             </div>
             <p className="text-sm text-gray-400">
-              A modern platform for reading and publishing quality articles.
+              {t("footer.description")} {/* ✅ TRANSLATED */}
             </p>
             <div className="flex space-x-4 mt-4">
               <a
                 href="#"
                 className="text-gray-400 hover:text-primary-400 transition"
+                aria-label="Twitter"
               >
                 <Twitter className="h-5 w-5" />
               </a>
               <a
                 href="#"
                 className="text-gray-400 hover:text-primary-400 transition"
+                aria-label="Github"
               >
                 <Github className="h-5 w-5" />
               </a>
               <a
                 href="#"
                 className="text-gray-400 hover:text-primary-400 transition"
+                aria-label="LinkedIn"
               >
                 <Linkedin className="h-5 w-5" />
               </a>
@@ -46,14 +51,16 @@ const Footer = () => {
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-white font-semibold mb-4">Quick Links</h3>
+            <h3 className="text-white font-semibold mb-4">
+              {t("footer.quickLinks")} {/* ✅ TRANSLATED */}
+            </h3>
             <ul className="space-y-2">
               <li>
                 <Link
                   to="/"
                   className="text-sm hover:text-primary-400 transition"
                 >
-                  Home
+                  {t("nav.home")} {/* ✅ TRANSLATED */}
                 </Link>
               </li>
               <li>
@@ -61,7 +68,7 @@ const Footer = () => {
                   to="/articles"
                   className="text-sm hover:text-primary-400 transition"
                 >
-                  Articles
+                  {t("nav.articles")} {/* ✅ TRANSLATED */}
                 </Link>
               </li>
               <li>
@@ -69,7 +76,7 @@ const Footer = () => {
                   to="/about"
                   className="text-sm hover:text-primary-400 transition"
                 >
-                  About Us
+                  {t("nav.about")} {/* ✅ TRANSLATED */}
                 </Link>
               </li>
               <li>
@@ -77,7 +84,7 @@ const Footer = () => {
                   to="/contact"
                   className="text-sm hover:text-primary-400 transition"
                 >
-                  Contact
+                  {t("nav.contact")} {/* ✅ TRANSLATED */}
                 </Link>
               </li>
             </ul>
@@ -89,7 +96,7 @@ const Footer = () => {
               to="/categories"
               className="text-white font-semibold mb-4 hover:text-primary-400 transition"
             >
-              Categories
+              {t("nav.categories")} {/* ✅ TRANSLATED */}
             </Link>
             <ul className="space-y-2 mt-4">
               <li>
@@ -136,10 +143,13 @@ const Footer = () => {
             <div className="flex">
               <input
                 type="email"
-                placeholder="Your email"
+                placeholder={t("common.search") || "Your email"}
                 className="flex-1 px-4 py-2 rounded-l-lg bg-gray-800 text-white border border-gray-700 focus:outline-none focus:border-primary-500"
               />
-              <button className="px-4 py-2 bg-primary-600 text-white rounded-r-lg hover:bg-primary-700 transition">
+              <button
+                className="px-4 py-2 bg-primary-600 text-white rounded-r-lg hover:bg-primary-700 transition"
+                aria-label="Subscribe to newsletter"
+              >
                 <Mail className="h-5 w-5" />
               </button>
             </div>
@@ -149,20 +159,21 @@ const Footer = () => {
         {/* Bottom Bar */}
         <div className="border-t border-gray-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-sm text-gray-400">
-            © {currentYear} CURIO. All rights reserved.
+            {t("footer.copyright", { year: currentYear })}{" "}
+            {/* ✅ TRANSLATED with variable */}
           </p>
           <div className="flex space-x-6 mt-4 md:mt-0">
             <Link
               to="/privacy"
               className="text-sm text-gray-400 hover:text-primary-400 transition"
             >
-              Privacy Policy
+              {t("footer.privacy")} {/* ✅ TRANSLATED */}
             </Link>
             <Link
               to="/terms"
               className="text-sm text-gray-400 hover:text-primary-400 transition"
             >
-              Terms of Service
+              {t("footer.terms")} {/* ✅ TRANSLATED */}
             </Link>
           </div>
         </div>

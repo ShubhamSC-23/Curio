@@ -14,6 +14,7 @@ import {
   Mail,
   AlertTriangle,
   Check,
+  CreditCard,
 } from "lucide-react";
 import { useAuthStore } from "../../store/authStore";
 import Container from "../../components/layout/Container";
@@ -24,6 +25,7 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import ThemeToggle from "../../components/theme/ThemeToggle";
 import ProfileImageUpload from "../../components/user/ProfileImageUpload";
+import BankAccountForm from "../../components/author/BankAccountForm"; 
 import { getImageUrl } from "../../utils/imageUtils";
 
 const Settings = () => {
@@ -95,10 +97,14 @@ const Settings = () => {
           current_password: passwordData.current_password,
           new_password: passwordData.new_password,
         },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${token}` } },
       );
       toast.success("Password changed successfully");
-      setPasswordData({ current_password: "", new_password: "", confirm_password: "" });
+      setPasswordData({
+        current_password: "",
+        new_password: "",
+        confirm_password: "",
+      });
     } catch (error) {
       console.error("Error changing password:", error);
       toast.error(error.response?.data?.message || "Failed to change password");
@@ -109,10 +115,12 @@ const Settings = () => {
 
   const handleDeleteAccount = async () => {
     const confirmed = window.confirm(
-      "Are you sure you want to delete your account? This action cannot be undone."
+      "Are you sure you want to delete your account? This action cannot be undone.",
     );
     if (!confirmed) return;
-    const doubleConfirm = window.prompt('Type "DELETE" to confirm account deletion:');
+    const doubleConfirm = window.prompt(
+      'Type "DELETE" to confirm account deletion:',
+    );
     if (doubleConfirm !== "DELETE") {
       toast.error("Account deletion cancelled");
       return;
@@ -138,12 +146,53 @@ const Settings = () => {
     if (updateUser) updateUser(updatedUser);
   };
 
-  const tabs = [
-    { id: "profile", label: "Profile", icon: User, description: "Name, bio, location" },
-    { id: "password", label: "Password", icon: Lock, description: "Change your password" },
-    { id: "theme", label: "Appearance", icon: Sun, description: "Light & dark mode" },
-    { id: "notifications", label: "Notifications", icon: Bell, description: "Email preferences" },
+  // ✅ NEW: Callback for bank account form success
+  const handleBankAccountSuccess = (data) => {
+    toast.success("Bank account added successfully!");
+    // Optionally refresh bank accounts list or navigate
+  };
+
+  // ✅ UPDATED: Add Bank Account tab for authors only
+  const baseTabs = [
+    {
+      id: "profile",
+      label: "Profile",
+      icon: User,
+      description: "Name, bio, location",
+    },
+    {
+      id: "password",
+      label: "Password",
+      icon: Lock,
+      description: "Change your password",
+    },
+    {
+      id: "theme",
+      label: "Appearance",
+      icon: Sun,
+      description: "Light & dark mode",
+    },
+    {
+      id: "notifications",
+      label: "Notifications",
+      icon: Bell,
+      description: "Email preferences",
+    },
   ];
+
+  // ✅ NEW: Add Bank Account tab only for authors
+  const tabs =
+    user?.role === "author"
+      ? [
+          ...baseTabs,
+          {
+            id: "bank",
+            label: "Bank Account",
+            icon: CreditCard,
+            description: "Receive donations",
+          },
+        ]
+      : baseTabs;
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300">
@@ -254,7 +303,9 @@ const Settings = () => {
                             />
                           </div>
                           <div className="text-left hidden sm:block md:hidden lg:block">
-                            <p className="font-semibold leading-tight">{tab.label}</p>
+                            <p className="font-semibold leading-tight">
+                              {tab.label}
+                            </p>
                             <p
                               className={`text-xs mt-0.5 ${
                                 isActive
@@ -319,7 +370,10 @@ const Settings = () => {
                           type="text"
                           value={profileData.full_name}
                           onChange={(e) =>
-                            setProfileData({ ...profileData, full_name: e.target.value })
+                            setProfileData({
+                              ...profileData,
+                              full_name: e.target.value,
+                            })
                           }
                           placeholder="Enter your full name"
                         />
@@ -329,7 +383,10 @@ const Settings = () => {
                           type="email"
                           value={profileData.email}
                           onChange={(e) =>
-                            setProfileData({ ...profileData, email: e.target.value })
+                            setProfileData({
+                              ...profileData,
+                              email: e.target.value,
+                            })
                           }
                           placeholder="Enter your email"
                         />
@@ -341,7 +398,10 @@ const Settings = () => {
                           <textarea
                             value={profileData.bio}
                             onChange={(e) =>
-                              setProfileData({ ...profileData, bio: e.target.value })
+                              setProfileData({
+                                ...profileData,
+                                bio: e.target.value,
+                              })
                             }
                             placeholder="Tell us about yourself…"
                             rows={4}
@@ -356,7 +416,10 @@ const Settings = () => {
                             type="text"
                             value={profileData.location}
                             onChange={(e) =>
-                              setProfileData({ ...profileData, location: e.target.value })
+                              setProfileData({
+                                ...profileData,
+                                location: e.target.value,
+                              })
                             }
                             placeholder="e.g., Mumbai, India"
                             className="pl-10"
@@ -422,7 +485,10 @@ const Settings = () => {
                           type="password"
                           value={passwordData.current_password}
                           onChange={(e) =>
-                            setPasswordData({ ...passwordData, current_password: e.target.value })
+                            setPasswordData({
+                              ...passwordData,
+                              current_password: e.target.value,
+                            })
                           }
                           placeholder="Enter current password"
                           required
@@ -432,7 +498,10 @@ const Settings = () => {
                           type="password"
                           value={passwordData.new_password}
                           onChange={(e) =>
-                            setPasswordData({ ...passwordData, new_password: e.target.value })
+                            setPasswordData({
+                              ...passwordData,
+                              new_password: e.target.value,
+                            })
                           }
                           placeholder="Enter new password"
                           required
@@ -442,7 +511,10 @@ const Settings = () => {
                           type="password"
                           value={passwordData.confirm_password}
                           onChange={(e) =>
-                            setPasswordData({ ...passwordData, confirm_password: e.target.value })
+                            setPasswordData({
+                              ...passwordData,
+                              confirm_password: e.target.value,
+                            })
                           }
                           placeholder="Re-enter new password"
                           required
@@ -556,13 +628,19 @@ const Settings = () => {
                                   type="checkbox"
                                   checked={notifData[key]}
                                   onChange={(e) =>
-                                    setNotifData({ ...notifData, [key]: e.target.checked })
+                                    setNotifData({
+                                      ...notifData,
+                                      [key]: e.target.checked,
+                                    })
                                   }
                                   className="sr-only"
                                 />
                                 <div
                                   onClick={() =>
-                                    setNotifData({ ...notifData, [key]: !notifData[key] })
+                                    setNotifData({
+                                      ...notifData,
+                                      [key]: !notifData[key],
+                                    })
                                   }
                                   className={`w-11 h-6 rounded-full transition-colors cursor-pointer ${
                                     notifData[key]
@@ -585,6 +663,43 @@ const Settings = () => {
                           <Save className="h-4 w-4 mr-2" />
                           Save Preferences
                         </Button>
+                      </motion.div>
+                    )}
+
+                    {/* ✅ NEW: Bank Account Tab (Authors Only) */}
+                    {activeTab === "bank" && user?.role === "author" && (
+                      <motion.div
+                        key="bank"
+                        initial={{ opacity: 0, x: 10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -10 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        <div className="flex items-center gap-3 pb-4 border-b border-gray-100 dark:border-gray-700 mb-6">
+                          <div className="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-900/30 flex items-center justify-center">
+                            <CreditCard className="h-5 w-5 text-amber-600 dark:text-amber-400" />
+                          </div>
+                          <div>
+                            <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+                              Bank Account
+                            </h2>
+                            <p className="text-gray-500 dark:text-gray-400 text-sm">
+                              Add your bank details to receive donations
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* Info Banner */}
+                        <div className="mb-6 p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl">
+                          <p className="text-sm text-amber-700 dark:text-amber-400">
+                            💡 Your bank details are encrypted and secure.
+                            Donations will be automatically transferred to this
+                            account.
+                          </p>
+                        </div>
+
+                        {/* Bank Account Form */}
+                        <BankAccountForm onSuccess={handleBankAccountSuccess} />
                       </motion.div>
                     )}
                   </AnimatePresence>
@@ -614,7 +729,9 @@ const Settings = () => {
                     </div>
 
                     <p className="text-gray-600 dark:text-gray-400 text-sm mb-4 p-3 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-100 dark:border-red-900/40">
-                      Once you delete your account, all your data including articles, comments and bookmarks will be permanently removed. This cannot be undone.
+                      Once you delete your account, all your data including
+                      articles, comments and bookmarks will be permanently
+                      removed. This cannot be undone.
                     </p>
 
                     <Button
