@@ -1,5 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next"; // ← Added
 import {
   BookOpen,
   Users,
@@ -16,64 +17,63 @@ import Container from "../../components/layout/Container";
 import Card, { CardBody } from "../../components/common/Card";
 
 const About = () => {
+  const { t } = useTranslation(); // ← Added
+
   const features = [
     {
       icon: BookOpen,
-      title: "Quality Content",
-      description: "Curated articles from talented writers around the world",
+      title: t("about.features.quality.title"),
+      description: t("about.features.quality.description"),
       color: "from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700",
     },
     {
       icon: Users,
-      title: "Vibrant Community",
-      description: "Connect with readers and writers who share your interests",
+      title: t("about.features.community.title"),
+      description: t("about.features.community.description"),
       color:
         "from-purple-500 to-purple-600 dark:from-purple-600 dark:to-purple-700",
     },
     {
       icon: Target,
-      title: "Easy Publishing",
-      description: "Intuitive tools to write, edit, and publish your stories",
+      title: t("about.features.publishing.title"),
+      description: t("about.features.publishing.description"),
       color:
         "from-green-500 to-green-600 dark:from-green-600 dark:to-green-700",
     },
     {
       icon: Award,
-      title: "Recognition",
-      description: "Get discovered and build your audience with our platform",
+      title: t("about.features.recognition.title"),
+      description: t("about.features.recognition.description"),
       color:
         "from-orange-500 to-orange-600 dark:from-orange-600 dark:to-orange-700",
     },
   ];
 
   const stats = [
-    { value: "10K+", label: "Articles Published", icon: BookOpen },
-    { value: "5K+", label: "Active Writers", icon: Users },
-    { value: "50K+", label: "Monthly Readers", icon: TrendingUp },
-    { value: "100+", label: "Topics Covered", icon: Target },
+    { value: "10K+", label: t("about.stats.articles"), icon: BookOpen },
+    { value: "5K+", label: t("about.stats.writers"), icon: Users },
+    { value: "50K+", label: t("about.stats.readers"), icon: TrendingUp },
+    { value: "100+", label: t("about.stats.topics"), icon: Target },
   ];
 
   const values = [
     {
       icon: Heart,
-      title: "Community First",
-      description:
-        "We believe in fostering a supportive community where everyone can share their voice and grow together.",
+      title: t("about.values.community.title"),
+      description: t("about.values.community.description"),
       color: "from-red-500 to-pink-500 dark:from-red-600 dark:to-pink-600",
     },
     {
       icon: Zap,
-      title: "Innovation",
-      description:
-        "We continuously improve our platform with the latest technologies to provide the best writing and reading experience.",
+      title: t("about.values.innovation.title"),
+      description: t("about.values.innovation.description"),
       color:
         "from-yellow-500 to-orange-500 dark:from-yellow-600 dark:to-orange-600",
     },
     {
       icon: Target,
-      title: "Quality Over Quantity",
-      description:
-        "We prioritize meaningful, well-crafted content that educates, inspires, and entertains our readers.",
+      title: t("about.values.quality.title"),
+      description: t("about.values.quality.description"),
       color:
         "from-blue-500 to-indigo-500 dark:from-blue-600 dark:to-indigo-600",
     },
@@ -111,15 +111,16 @@ const About = () => {
               className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 dark:bg-white/5 backdrop-blur-sm rounded-full text-white mb-6 border border-white/20 dark:border-white/10"
             >
               <Sparkles className="w-4 h-4" />
-              <span className="text-sm font-medium">Our Story</span>
+              <span className="text-sm font-medium">
+                {t("about.hero.badge")}
+              </span>
             </motion.div>
 
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-8 leading-tight">
-              About Curio
+              {t("about.hero.title")}
             </h1>
             <p className="text-xl md:text-2xl text-primary-100 dark:text-primary-200 mb-6 leading-relaxed">
-              A modern platform where ideas come to life through the power of
-              words
+              {t("about.hero.subtitle")}
             </p>
           </motion.div>
         </Container>
@@ -153,20 +154,14 @@ const About = () => {
               <div className="flex items-center gap-3 mb-6">
                 <Rocket className="h-8 w-8 text-primary-600 dark:text-primary-400" />
                 <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">
-                  Our Mission
+                  {t("about.mission.title")}
                 </h2>
               </div>
               <p className="text-lg text-gray-600 dark:text-gray-400 leading-relaxed mb-6">
-                Curio is dedicated to empowering writers and connecting them
-                with engaged readers. We believe that everyone has a story to
-                tell, and we're here to provide the platform and tools to share
-                those stories with the world.
+                {t("about.mission.paragraph1")}
               </p>
               <p className="text-lg text-gray-600 dark:text-gray-400 leading-relaxed">
-                Whether you're an experienced author or just starting your
-                writing journey, Curio offers a welcoming space to express
-                yourself, engage with a community of like-minded individuals,
-                and grow your audience.
+                {t("about.mission.paragraph2")}
               </p>
             </CardBody>
           </Card>
@@ -175,7 +170,7 @@ const About = () => {
         {/* Stats Section */}
         <div className="mb-20">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white text-center mb-12">
-            Our Impact
+            {t("about.stats.title")}
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
             {stats.map((stat, index) => (
@@ -206,11 +201,10 @@ const About = () => {
         {/* Features Section */}
         <div className="mb-20">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white text-center mb-4">
-            What Makes Us Different
+            {t("about.features.title")}
           </h2>
           <p className="text-lg text-gray-600 dark:text-gray-400 text-center mb-12 max-w-2xl mx-auto">
-            Discover the features that make Curio the perfect platform for
-            writers and readers
+            {t("about.features.subtitle")}
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {features.map((feature, index) => (
@@ -247,10 +241,10 @@ const About = () => {
         {/* Values Section */}
         <div className="mb-20">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white text-center mb-4">
-            Our Values
+            {t("about.values.title")}
           </h2>
           <p className="text-lg text-gray-600 dark:text-gray-400 text-center mb-12 max-w-2xl mx-auto">
-            The principles that guide everything we do at Curio
+            {t("about.values.subtitle")}
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {values.map((value, index) => (
@@ -303,11 +297,10 @@ const About = () => {
 
           <div className="relative p-12 md:p-16 text-center text-white">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Join Our Community Today
+              {t("about.cta.title")}
             </h2>
             <p className="text-xl text-primary-100 dark:text-primary-200 mb-8 max-w-2xl mx-auto leading-relaxed">
-              Start sharing your stories and connect with thousands of readers
-              around the world
+              {t("about.cta.subtitle")}
             </p>
             <div className="flex gap-4 justify-center flex-wrap">
               <Link
@@ -315,14 +308,14 @@ const About = () => {
                 className="inline-flex items-center gap-2 px-8 py-4 bg-white dark:bg-gray-800 text-primary-600 dark:text-primary-400 rounded-xl font-semibold hover:bg-gray-100 dark:hover:bg-gray-700 transition-all shadow-xl hover:shadow-2xl"
               >
                 <Rocket className="h-5 w-5" />
-                Get Started
+                {t("about.cta.getStarted")}
               </Link>
               <Link
                 to="/articles"
                 className="inline-flex items-center gap-2 px-8 py-4 bg-white/10 dark:bg-white/5 backdrop-blur-sm text-white rounded-xl font-semibold hover:bg-white/20 dark:hover:bg-white/10 transition-all border-2 border-white/20 dark:border-white/10"
               >
                 <BookOpen className="h-5 w-5" />
-                Explore Articles
+                {t("about.cta.exploreArticles")}
               </Link>
             </div>
           </div>

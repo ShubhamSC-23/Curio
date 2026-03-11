@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import {
   ArrowRight,
   TrendingUp,
@@ -17,13 +18,14 @@ import { formatRelativeTime } from "../../utils/formatDate";
 import { getImageUrl } from "../../utils/imageUtils";
 
 const Home = () => {
+  const { t, i18n } = useTranslation();
   const [featuredArticles, setFeaturedArticles] = useState([]);
   const [recentArticles, setRecentArticles] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchArticles();
-  }, []);
+  }, [i18n.language]);
 
   const fetchArticles = async () => {
     try {
@@ -80,19 +82,18 @@ const Home = () => {
               className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 dark:bg-white/5 backdrop-blur-sm rounded-full text-white mb-6 border border-white/20 dark:border-white/10"
             >
               <Sparkles className="w-4 h-4" />
-              <span className="text-sm font-medium">Welcome to Curio</span>
+              <span className="text-sm font-medium">{t("home.welcome")}</span>
             </motion.div>
 
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 text-white leading-tight">
-              Discover Amazing
+              {t("home.hero.title")}
               <span className="block text-primary-200 dark:text-primary-300 mt-2">
-                Articles
+                {t("home.hero.subtitle")}
               </span>
             </h1>
 
             <p className="text-xl md:text-2xl text-primary-100 dark:text-primary-200 mb-10 max-w-2xl leading-relaxed">
-              Read, write, and share stories that matter. Join our community of
-              passionate readers and writers.
+              {t("home.hero.description")}
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4">
@@ -102,7 +103,7 @@ const Home = () => {
                   size="lg"
                   className="w-full sm:w-auto shadow-xl hover:shadow-2xl transition-shadow"
                 >
-                  Explore Articles
+                  {t("home.hero.exploreBtn")}
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
@@ -112,7 +113,7 @@ const Home = () => {
                   size="lg"
                   className="w-full sm:w-auto border-2 border-white/30 dark:border-white/20 text-white hover:bg-white/10 dark:hover:bg-white/5 backdrop-blur-sm"
                 >
-                  Start Writing
+                  {t("home.hero.startWritingBtn")}
                 </Button>
               </Link>
             </div>
@@ -152,10 +153,10 @@ const Home = () => {
                   <TrendingUp className="h-8 w-8 text-primary-600 dark:text-primary-400" />
                 </div>
                 <h3 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
-                  1000+
+                  {t("home.stats.articles.count")}
                 </h3>
                 <p className="text-gray-600 dark:text-gray-400 font-medium">
-                  Articles Published
+                  {t("home.stats.articles.label")}
                 </p>
               </CardBody>
             </Card>
@@ -175,10 +176,10 @@ const Home = () => {
                   <Users className="h-8 w-8 text-secondary-600 dark:text-secondary-400" />
                 </div>
                 <h3 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
-                  500+
+                  {t("home.stats.writers.count")}
                 </h3>
                 <p className="text-gray-600 dark:text-gray-400 font-medium">
-                  Active Writers
+                  {t("home.stats.writers.label")}
                 </p>
               </CardBody>
             </Card>
@@ -198,10 +199,10 @@ const Home = () => {
                   <BookOpen className="h-8 w-8 text-purple-600 dark:text-purple-400" />
                 </div>
                 <h3 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
-                  10k+
+                  {t("home.stats.readers.count")}
                 </h3>
                 <p className="text-gray-600 dark:text-gray-400 font-medium">
-                  Monthly Readers
+                  {t("home.stats.readers.label")}
                 </p>
               </CardBody>
             </Card>
@@ -216,10 +217,10 @@ const Home = () => {
             <div className="flex items-center justify-between mb-10">
               <div>
                 <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
-                  Featured Articles
+                  {t("home.featured.title")}
                 </h2>
                 <p className="text-gray-600 dark:text-gray-400">
-                  Hand-picked stories from our community
+                  {t("home.featured.subtitle")}
                 </p>
               </div>
             </div>
@@ -280,10 +281,10 @@ const Home = () => {
         <div className="flex justify-between items-center mb-10">
           <div>
             <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
-              Recent Articles
+              {t("home.recent.title")}
             </h2>
             <p className="text-gray-600 dark:text-gray-400">
-              Latest stories from our writers
+              {t("home.recent.subtitle")}
             </p>
           </div>
           <Link to="/articles" className="hidden sm:block">
@@ -291,7 +292,7 @@ const Home = () => {
               variant="ghost"
               className="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-gray-100 dark:hover:bg-gray-800"
             >
-              View All
+              {t("home.recent.viewAll")}
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </Link>
@@ -331,19 +332,21 @@ const Home = () => {
                       </div>
                     )}
                     <div className="p-6">
-                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 line-clamp-2 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
-                      {article.title}
-                    </h3>
-                    <p className="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-3 leading-relaxed">
-                      {article.excerpt}
-                    </p>
-                    <div className="flex items-center justify-between text-sm pt-4 border-t border-gray-100 dark:border-gray-700">
-                      <span className="text-gray-700 dark:text-gray-300 font-medium">
-                        {article.full_name || article.username}
-                      </span>
-                      <span className="text-gray-500 dark:text-gray-500">
-                        {article.reading_time} min read
-                      </span>
+                      <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 line-clamp-2 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+                        {article.title}
+                      </h3>
+                      <p className="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-3 leading-relaxed">
+                        {article.excerpt}
+                      </p>
+                      <div className="flex items-center justify-between text-sm pt-4 border-t border-gray-100 dark:border-gray-700">
+                        <span className="text-gray-700 dark:text-gray-300 font-medium">
+                          {article.full_name || article.username}
+                        </span>
+                        <span className="text-gray-500 dark:text-gray-500">
+                          {t("home.recent.minRead", {
+                            minutes: article.reading_time,
+                          })}
+                        </span>
                       </div>
                     </div>
                   </CardBody>
@@ -360,7 +363,7 @@ const Home = () => {
               variant="outline"
               className="w-full border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
             >
-              View All Articles
+              {t("home.recent.viewAllArticles")}
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </Link>
@@ -397,11 +400,10 @@ const Home = () => {
             className="text-center max-w-3xl mx-auto"
           >
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              Ready to Start Writing?
+              {t("home.cta.title")}
             </h2>
             <p className="text-xl text-primary-100 dark:text-primary-200 mb-10 leading-relaxed">
-              Join thousands of writers sharing their stories and insights with
-              the world. It's free, forever.
+              {t("home.cta.description")}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to="/register">
@@ -410,7 +412,7 @@ const Home = () => {
                   size="lg"
                   className="w-full sm:w-auto shadow-xl hover:shadow-2xl transition-shadow"
                 >
-                  Get Started Free
+                  {t("home.cta.getStartedBtn")}
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
@@ -420,7 +422,7 @@ const Home = () => {
                   size="lg"
                   className="w-full sm:w-auto border-2 border-white/30 dark:border-white/20 text-white hover:bg-white/10 dark:hover:bg-white/5 backdrop-blur-sm"
                 >
-                  Browse Articles
+                  {t("home.cta.browseBtn")}
                 </Button>
               </Link>
             </div>

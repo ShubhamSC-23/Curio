@@ -19,7 +19,7 @@ const Footer = () => {
                 alt="Curio Logo"
                 className="h-8 w-8 object-contain"
               />
-              <span className="text-xl font-bold text-white">CURIO</span>
+              <span className="text-xl font-bold text-white">Indian Heritage Hub</span>
             </div>
             <p className="text-sm text-gray-400">
               {t("footer.description")} {/* ✅ TRANSLATED */}

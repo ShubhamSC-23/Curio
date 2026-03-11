@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import {
   Folder,
   FileText,
@@ -17,6 +18,7 @@ import Input from "../../components/common/Input";
 import { PageLoader } from "../../components/common/Spinner";
 
 const Categories = () => {
+  const { t, i18n } = useTranslation();
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
@@ -24,7 +26,7 @@ const Categories = () => {
 
   useEffect(() => {
     fetchCategories();
-  }, []);
+  }, [i18n.language]);
 
   const fetchCategories = async () => {
     try {
@@ -131,18 +133,20 @@ const Categories = () => {
               className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 dark:bg-white/5 backdrop-blur-sm rounded-full text-white mb-6 border border-white/20 dark:border-white/10"
             >
               <Sparkles className="w-4 h-4" />
-              <span className="text-sm font-medium">Explore Topics</span>
+              <span className="text-sm font-medium">
+                {t("categories.badge")}
+              </span>
             </motion.div>
 
             <h1 className="text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">
-              Browse by
+              {t("categories.hero.title")}
               <span className="block text-primary-200 dark:text-primary-300 mt-2">
-                Category
+                {t("categories.hero.subtitle")}
               </span>
             </h1>
 
             <p className="text-xl text-primary-100 dark:text-primary-200 mb-10 max-w-2xl mx-auto leading-relaxed">
-              Discover articles organized by topics that interest you
+              {t("categories.hero.description")}
             </p>
 
             {/* Search Bar */}
@@ -151,7 +155,7 @@ const Categories = () => {
                 <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                 <input
                   type="text"
-                  placeholder="Search categories..."
+                  placeholder={t("categories.search.placeholder")}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full pl-12 pr-4 py-4 bg-white/10 dark:bg-white/5 backdrop-blur-md border-2 border-white/20 dark:border-white/10 rounded-2xl text-white placeholder-white/60 focus:outline-none focus:border-white/40 dark:focus:border-white/20 transition-all"
@@ -189,12 +193,13 @@ const Categories = () => {
             <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
               <Folder className="h-5 w-5" />
               <span className="font-medium">
-                {filteredCategories.length}{" "}
-                {filteredCategories.length === 1 ? "Category" : "Categories"}
+                {t("categories.stats.count", {
+                  count: filteredCategories.length,
+                })}
               </span>
               {searchQuery && (
                 <span className="text-sm">
-                  (filtered from {categories.length})
+                  {t("categories.stats.filtered", { total: categories.length })}
                 </span>
               )}
             </div>
@@ -241,19 +246,19 @@ const Categories = () => {
               <Search className="h-10 w-10 text-gray-400 dark:text-gray-500" />
             </div>
             <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
-              No categories found
+              {t("categories.empty.title")}
             </h3>
             <p className="text-gray-600 dark:text-gray-400 mb-6">
               {searchQuery
-                ? `No categories match "${searchQuery}"`
-                : "No categories available yet"}
+                ? t("categories.empty.noMatch", { query: searchQuery })
+                : t("categories.empty.noCategories")}
             </p>
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery("")}
                 className="px-6 py-3 bg-primary-600 hover:bg-primary-700 dark:bg-primary-700 dark:hover:bg-primary-600 text-white rounded-lg font-medium transition-colors"
               >
-                Clear Search
+                {t("categories.empty.clearSearch")}
               </button>
             )}
           </motion.div>
@@ -321,9 +326,9 @@ const Categories = () => {
                                 {category.article_count || 0}
                               </span>
                               <span className="text-gray-500 dark:text-gray-400">
-                                {category.article_count === 1
-                                  ? "article"
-                                  : "articles"}
+                                {t("categories.card.articles", {
+                                  count: category.article_count || 0,
+                                })}
                               </span>
                             </div>
 
@@ -332,7 +337,7 @@ const Categories = () => {
                               <div className="flex items-center gap-1 text-green-600 dark:text-green-400">
                                 <TrendingUp className="h-4 w-4" />
                                 <span className="text-xs font-medium">
-                                  Popular
+                                  {t("categories.card.popular")}
                                 </span>
                               </div>
                             )}
@@ -382,8 +387,8 @@ const Categories = () => {
                     (sum, cat) => sum + (cat.article_count || 0),
                     0,
                   )}
-                </span>
-                {" total articles across all categories"}
+                </span>{" "}
+                {t("categories.totalStats")}
               </span>
             </div>
           </motion.div>

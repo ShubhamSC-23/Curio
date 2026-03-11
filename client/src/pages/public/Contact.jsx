@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next"; // ← Added
 import { motion } from "framer-motion";
 import {
   Mail,
@@ -17,6 +18,7 @@ import toast from "react-hot-toast";
 import api from "../../api/axios";
 
 const Contact = () => {
+  const { t } = useTranslation(); // ← Added
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -28,22 +30,22 @@ const Contact = () => {
   const contactInfo = [
     {
       icon: Mail,
-      title: "Email",
+      title: t("contact.info.email.title"),
       content: "support@curio.com",
       link: "mailto:support@curio.com",
       color: "from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700",
     },
     {
       icon: MapPin,
-      title: "Address",
-      content: "123 Writing Street, Blog City, BC 12345",
+      title: t("contact.info.address.title"),
+      content: t("contact.info.address.content"),
       link: null,
       color:
         "from-green-500 to-green-600 dark:from-green-600 dark:to-green-700",
     },
     {
       icon: Phone,
-      title: "Phone",
+      title: t("contact.info.phone.title"),
       content: "+1 (555) 123-4567",
       link: "tel:+15551234567",
       color:
@@ -51,8 +53,8 @@ const Contact = () => {
     },
     {
       icon: Clock,
-      title: "Business Hours",
-      content: "Mon-Fri: 9AM - 6PM",
+      title: t("contact.info.hours.title"),
+      content: t("contact.info.hours.content"),
       link: null,
       color:
         "from-orange-500 to-orange-600 dark:from-orange-600 dark:to-orange-700",
@@ -61,24 +63,20 @@ const Contact = () => {
 
   const faqs = [
     {
-      question: "How do I start writing on Curio?",
-      answer:
-        "Simply create an account, and you'll have access to our powerful editor to start writing and publishing your articles immediately.",
+      question: t("contact.faq.q1.question"),
+      answer: t("contact.faq.q1.answer"),
     },
     {
-      question: "Is Curio free to use?",
-      answer:
-        "Yes! Curio is free for all writers and readers. We believe in making quality content accessible to everyone.",
+      question: t("contact.faq.q2.question"),
+      answer: t("contact.faq.q2.answer"),
     },
     {
-      question: "How can I report inappropriate content?",
-      answer:
-        "Each article and comment has a report button. Click it to submit a report, and our team will review it promptly.",
+      question: t("contact.faq.q3.question"),
+      answer: t("contact.faq.q3.answer"),
     },
     {
-      question: "Can I customize my author profile?",
-      answer:
-        "Absolutely! You can upload a profile picture, write a bio, and customize your profile to showcase your work.",
+      question: t("contact.faq.q4.question"),
+      answer: t("contact.faq.q4.answer"),
     },
   ];
 
@@ -98,14 +96,14 @@ const Contact = () => {
       !formData.subject ||
       !formData.message
     ) {
-      toast.error("Please fill in all fields");
+      toast.error(t("contact.form.validation.allFields"));
       return;
     }
 
     try {
       setLoading(true);
       await api.post("/contact", formData);
-      toast.success("Message sent successfully! We'll get back to you soon.");
+      toast.success(t("contact.form.success"));
       setFormData({
         name: "",
         email: "",
@@ -114,10 +112,7 @@ const Contact = () => {
       });
     } catch (error) {
       console.error("Error sending message:", error);
-      toast.error(
-        error.response?.data?.message ||
-          "Failed to send message. Please try again.",
-      );
+      toast.error(error.response?.data?.message || t("contact.form.error"));
     } finally {
       setLoading(false);
     }
@@ -155,14 +150,16 @@ const Contact = () => {
               className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 dark:bg-white/5 backdrop-blur-sm rounded-full text-white mb-6 border border-white/20 dark:border-white/10"
             >
               <Sparkles className="w-4 h-4" />
-              <span className="text-sm font-medium">We're Here to Help</span>
+              <span className="text-sm font-medium">
+                {t("contact.hero.badge")}
+              </span>
             </motion.div>
 
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-8 leading-tight">
-              Get in Touch
+              {t("contact.hero.title")}
             </h1>
             <p className="text-xl md:text-2xl text-primary-100 dark:text-primary-200 leading-relaxed">
-              Have a question or feedback? We'd love to hear from you!
+              {t("contact.hero.subtitle")}
             </p>
           </motion.div>
         </Container>
@@ -195,11 +192,10 @@ const Contact = () => {
             <Card className="bg-white dark:bg-gray-800 border-2 border-gray-100 dark:border-gray-700 shadow-xl h-full">
               <CardBody className="p-8">
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-                  Contact Information
+                  {t("contact.info.title")}
                 </h2>
                 <p className="text-gray-600 dark:text-gray-400 mb-8">
-                  Fill out the form and our team will get back to you within 24
-                  hours.
+                  {t("contact.info.subtitle")}
                 </p>
 
                 <div className="space-y-6">
@@ -240,7 +236,7 @@ const Contact = () => {
                 {/* Social Media */}
                 <div className="mt-12 pt-8 border-t-2 border-gray-100 dark:border-gray-700">
                   <h3 className="font-semibold text-gray-900 dark:text-white mb-4">
-                    Follow Us
+                    {t("contact.social.title")}
                   </h3>
                   <div className="flex gap-3">
                     {[
@@ -292,10 +288,10 @@ const Contact = () => {
                   </div>
                   <div>
                     <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-                      Send us a Message
+                      {t("contact.form.title")}
                     </h2>
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      We typically respond within 24 hours
+                      {t("contact.form.subtitle")}
                     </p>
                   </div>
                 </div>
@@ -304,14 +300,14 @@ const Contact = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                        Your Name
+                        {t("contact.form.name.label")}
                       </label>
                       <input
                         type="text"
                         name="name"
                         value={formData.name}
                         onChange={handleChange}
-                        placeholder="John Doe"
+                        placeholder={t("contact.form.name.placeholder")}
                         className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-600 focus:border-transparent transition-all"
                         required
                       />
@@ -319,14 +315,14 @@ const Contact = () => {
 
                     <div>
                       <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                        Your Email
+                        {t("contact.form.email.label")}
                       </label>
                       <input
                         type="email"
                         name="email"
                         value={formData.email}
                         onChange={handleChange}
-                        placeholder="john@example.com"
+                        placeholder={t("contact.form.email.placeholder")}
                         className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-600 focus:border-transparent transition-all"
                         required
                       />
@@ -335,14 +331,14 @@ const Contact = () => {
 
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                      Subject
+                      {t("contact.form.subject.label")}
                     </label>
                     <input
                       type="text"
                       name="subject"
                       value={formData.subject}
                       onChange={handleChange}
-                      placeholder="How can we help you?"
+                      placeholder={t("contact.form.subject.placeholder")}
                       className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-600 focus:border-transparent transition-all"
                       required
                     />
@@ -350,7 +346,7 @@ const Contact = () => {
 
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                      Message
+                      {t("contact.form.message.label")}
                     </label>
                     <textarea
                       name="message"
@@ -358,7 +354,7 @@ const Contact = () => {
                       onChange={handleChange}
                       rows="6"
                       className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-600 focus:border-transparent transition-all resize-none"
-                      placeholder="Tell us more about your inquiry..."
+                      placeholder={t("contact.form.message.placeholder")}
                       required
                     />
                   </div>
@@ -373,11 +369,11 @@ const Contact = () => {
                     className="bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-700 hover:to-secondary-700 shadow-lg hover:shadow-xl"
                   >
                     {loading ? (
-                      "Sending..."
+                      t("contact.form.sending")
                     ) : (
                       <>
                         <Send className="h-5 w-5 mr-2" />
-                        Send Message
+                        {t("contact.form.send")}
                       </>
                     )}
                   </Button>
@@ -395,10 +391,10 @@ const Contact = () => {
         >
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-              Frequently Asked Questions
+              {t("contact.faq.title")}
             </h2>
             <p className="text-lg text-gray-600 dark:text-gray-400">
-              Quick answers to common questions
+              {t("contact.faq.subtitle")}
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">

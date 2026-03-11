@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSearchParams, Link } from "react-router-dom";
+import { useTranslation } from "react-i18next"; // ← Added
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Search as SearchIcon,
@@ -26,6 +27,7 @@ import { formatRelativeTime } from "../../utils/formatDate";
 import { getImageUrl } from "../../utils/imageUtils";
 
 const Search = () => {
+  const { t, i18n } = useTranslation(); // ← Added
   const [searchParams, setSearchParams] = useSearchParams();
   const [articles, setArticles] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -42,6 +44,7 @@ const Search = () => {
 
   const [inputValue, setInputValue] = useState(filters.search);
 
+  // ✅ Refetch when language changes
   useEffect(() => {
     fetchCategories();
     // Auto-fetch if there's a query in URL on mount
@@ -49,7 +52,7 @@ const Search = () => {
       fetchResults(filters);
       setHasSearched(true);
     }
-  }, []);
+  }, [i18n.language]); // ← Added language dependency
 
   const fetchCategories = async () => {
     try {
@@ -65,7 +68,10 @@ const Search = () => {
       setLoading(true);
       setHasSearched(true);
 
-      const params = { limit: 20 };
+      const params = {
+        limit: 20,
+        lang: i18n.language || "en", // ✅ Add language param
+      };
 
       if (activeFilters.search) params.search = activeFilters.search;
       if (activeFilters.category) params.category = activeFilters.category;
@@ -133,12 +139,13 @@ const Search = () => {
     }
   };
 
-  const hasActiveFilters = filters.search || filters.category || filters.sortBy !== "latest";
+  const hasActiveFilters =
+    filters.search || filters.category || filters.sortBy !== "latest";
 
   const sortOptions = [
-    { value: "latest", label: "Latest", icon: Clock },
-    { value: "popular", label: "Most Viewed", icon: Eye },
-    { value: "trending", label: "Most Liked", icon: TrendingUp },
+    { value: "latest", label: t("search.sort.latest"), icon: Clock }, // ← Translated
+    { value: "popular", label: t("search.sort.popular"), icon: Eye }, // ← Translated
+    { value: "trending", label: t("search.sort.trending"), icon: TrendingUp }, // ← Translated
   ];
 
   return (
@@ -175,18 +182,20 @@ const Search = () => {
               className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 dark:bg-white/5 backdrop-blur-sm rounded-full text-white mb-6 border border-white/20 dark:border-white/10"
             >
               <Sparkles className="w-4 h-4" />
-              <span className="text-sm font-medium">Advanced Search</span>
+              <span className="text-sm font-medium">
+                {t("search.hero.badge")}
+              </span>
             </motion.div>
 
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
-              Discover
+              {t("search.hero.title")}
               <span className="block text-primary-200 dark:text-primary-300 mt-2">
-                Knowledge
+                {t("search.hero.subtitle")}
               </span>
             </h1>
 
             <p className="text-xl text-primary-100 dark:text-primary-200 mb-10 max-w-2xl mx-auto leading-relaxed">
-              Search across our entire collection of Indian heritage articles
+              {t("search.hero.description")}
             </p>
 
             {/* Inline search form in hero */}
@@ -201,7 +210,7 @@ const Search = () => {
                 <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
                 <input
                   type="text"
-                  placeholder="Search articles by title, content, or author..."
+                  placeholder={t("search.placeholder")}
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   className="w-full pl-12 pr-4 py-4 bg-white dark:bg-gray-800 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 border-2 border-transparent focus:border-primary-400 dark:focus:border-primary-500 focus:outline-none shadow-xl text-base transition-all"
@@ -249,15 +258,19 @@ const Search = () => {
                 {/* Category Filter */}
                 <div className="flex-1">
                   <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
-                    Category
+                    {t("search.filters.category")}
                   </label>
                   <div className="relative">
                     <select
                       value={filters.category}
-                      onChange={(e) => handleFilterChange("category", e.target.value)}
+                      onChange={(e) =>
+                        handleFilterChange("category", e.target.value)
+                      }
                       className="w-full pl-4 pr-10 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-600 focus:border-transparent transition-all appearance-none cursor-pointer"
                     >
-                      <option value="">All Categories</option>
+                      <option value="">
+                        {t("search.filters.allCategories")}
+                      </option>
                       {categories.map((cat) => (
                         <option key={cat.category_id} value={cat.slug}>
                           {cat.name}
@@ -271,7 +284,7 @@ const Search = () => {
                 {/* Sort By */}
                 <div className="flex-1">
                   <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
-                    Sort By
+                    {t("search.filters.sortBy")}
                   </label>
                   <div className="flex gap-2">
                     {sortOptions.map(({ value, label, icon: Icon }) => (
@@ -295,11 +308,12 @@ const Search = () => {
                 <div className="flex items-end gap-2">
                   <div>
                     <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
-                      View
+                      {t("search.filters.view")}
                     </label>
                     <div className="flex items-center gap-1 bg-gray-100 dark:bg-gray-900 rounded-lg p-1 border border-gray-200 dark:border-gray-700">
                       <button
                         onClick={() => setViewMode("grid")}
+                        title={t("search.view.grid")}
                         className={`p-2 rounded-md transition-colors ${
                           viewMode === "grid"
                             ? "bg-white dark:bg-gray-700 text-primary-600 dark:text-primary-400 shadow-sm"
@@ -310,6 +324,7 @@ const Search = () => {
                       </button>
                       <button
                         onClick={() => setViewMode("list")}
+                        title={t("search.view.list")}
                         className={`p-2 rounded-md transition-colors ${
                           viewMode === "list"
                             ? "bg-white dark:bg-gray-700 text-primary-600 dark:text-primary-400 shadow-sm"
@@ -324,7 +339,7 @@ const Search = () => {
                   {hasActiveFilters && (
                     <button
                       onClick={clearFilters}
-                      title="Clear all filters"
+                      title={t("search.clearAll")}
                       className="p-3 rounded-lg bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800 hover:bg-red-100 dark:hover:bg-red-900/40 transition-all"
                     >
                       <X className="h-4 w-4" />
@@ -346,7 +361,7 @@ const Search = () => {
               className="flex flex-wrap items-center gap-2 mb-6"
             >
               <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                Active filters:
+                {t("search.activeFilters")}:
               </span>
 
               {filters.search && (
@@ -375,7 +390,9 @@ const Search = () => {
                   className="inline-flex items-center gap-2 px-3 py-1.5 bg-secondary-100 dark:bg-secondary-900/30 text-secondary-700 dark:text-secondary-400 rounded-full text-sm font-medium border border-secondary-200 dark:border-secondary-800"
                 >
                   <Filter className="h-3.5 w-3.5" />
-                  <span>{categories.find((c) => c.slug === filters.category)?.name}</span>
+                  <span>
+                    {categories.find((c) => c.slug === filters.category)?.name}
+                  </span>
                   <button
                     onClick={() => removeFilter("category")}
                     className="hover:text-secondary-900 dark:hover:text-secondary-300 transition-colors"
@@ -393,7 +410,9 @@ const Search = () => {
                   className="inline-flex items-center gap-2 px-3 py-1.5 bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 rounded-full text-sm font-medium border border-amber-200 dark:border-amber-800"
                 >
                   <TrendingUp className="h-3.5 w-3.5" />
-                  <span>{sortOptions.find((s) => s.value === filters.sortBy)?.label}</span>
+                  <span>
+                    {sortOptions.find((s) => s.value === filters.sortBy)?.label}
+                  </span>
                   <button
                     onClick={() => removeFilter("sortBy")}
                     className="hover:text-amber-900 dark:hover:text-amber-300 transition-colors"
@@ -407,7 +426,7 @@ const Search = () => {
                 onClick={clearFilters}
                 className="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 underline transition-colors"
               >
-                Clear all
+                {t("search.clearAll")}
               </button>
             </motion.div>
           )}
@@ -421,11 +440,13 @@ const Search = () => {
             className="flex items-center justify-between mb-6"
           >
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              Found{" "}
+              {t("search.results.found")}{" "}
               <span className="font-bold text-gray-900 dark:text-white">
                 {articles.length}
               </span>{" "}
-              article{articles.length !== 1 ? "s" : ""}
+              {articles.length === 1
+                ? t("search.results.article")
+                : t("search.results.articles")}
             </p>
           </motion.div>
         )}
@@ -435,7 +456,7 @@ const Search = () => {
           <div className="flex flex-col justify-center items-center py-24">
             <Spinner size="lg" />
             <p className="mt-4 text-gray-500 dark:text-gray-400 animate-pulse">
-              Searching...
+              {t("search.loading")}
             </p>
           </div>
         ) : !hasSearched ? (
@@ -449,10 +470,10 @@ const Search = () => {
               <SearchIcon className="h-12 w-12 text-primary-400 dark:text-primary-500" />
             </div>
             <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">
-              Start Exploring
+              {t("search.empty.startTitle")}
             </h3>
             <p className="text-gray-500 dark:text-gray-400 max-w-md mx-auto mb-8 leading-relaxed">
-              Type a keyword above and press Search, or pick a category and sort to discover articles
+              {t("search.empty.startDescription")}
             </p>
             <div className="flex flex-wrap justify-center gap-2">
               {["Architecture", "Festivals", "Art", "History"].map((tag) => (
@@ -483,13 +504,13 @@ const Search = () => {
               <BookOpen className="h-12 w-12 text-gray-400 dark:text-gray-500" />
             </div>
             <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">
-              No Articles Found
+              {t("search.empty.noResultsTitle")}
             </h3>
             <p className="text-gray-500 dark:text-gray-400 mb-6 max-w-md mx-auto">
-              Try adjusting your search terms, changing the category, or clearing filters
+              {t("search.empty.noResultsDescription")}
             </p>
             <Button variant="primary" onClick={clearFilters}>
-              Clear Filters
+              {t("search.clearFilters")}
             </Button>
           </motion.div>
         ) : (
@@ -585,7 +606,9 @@ const Search = () => {
                           {article.reading_time && (
                             <div className="flex items-center gap-1">
                               <Clock className="h-3.5 w-3.5" />
-                              <span>{article.reading_time} min</span>
+                              <span>
+                                {article.reading_time} {t("search.meta.min")}
+                              </span>
                             </div>
                           )}
 
@@ -603,7 +626,9 @@ const Search = () => {
                             </div>
                           )}
 
-                          <span>{formatRelativeTime(article.published_at)}</span>
+                          <span>
+                            {formatRelativeTime(article.published_at)}
+                          </span>
                         </div>
                       </div>
                     </CardBody>

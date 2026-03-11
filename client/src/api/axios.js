@@ -1,5 +1,6 @@
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import i18n from '../i18n/config';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api/v1';
 
@@ -16,6 +17,13 @@ api.interceptors.request.use(
     const token = localStorage.getItem('token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
+    }
+    if (config.method === 'get') {
+      const currentLanguage = i18n.language || 'en';
+      config.params = {
+        ...config.params,
+        lang: currentLanguage
+      };
     }
     return config;
   },

@@ -1,344 +1,418 @@
 {
-  "common": {
-    "loading": "Loading...",
-    "error": "Error",
-    "success": "Success",
-    "save": "Save",
-    "cancel": "Cancel",
-    "delete": "Delete",
-    "edit": "Edit",
-    "close": "Close",
-    "submit": "Submit",
-    "search": "Search",
-    "back": "Back",
-    "next": "Next",
-    "previous": "Previous",
-    "confirm": "Confirm",
-    "yes": "Yes",
-    "no": "No",
-    "ok": "OK",
-    "done": "Done",
-    "view": "View",
-    "share": "Share",
-    "copy": "Copy",
-    "download": "Download",
-    "upload": "Upload",
-    "remove": "Remove",
-    "add": "Add",
-    "update": "Update",
-    "refresh": "Refresh",
-    "filter": "Filter",
-    "sort": "Sort",
-    "reset": "Reset",
-    "clear": "Clear"
-  },
-  "nav": {
-    "home": "Home",
-    "articles": "Articles",
-    "categories": "Categories",
-    "about": "About",
-    "contact": "Contact",
-    "login": "Login",
-    "register": "Register",
-    "profile": "Profile",
-    "settings": "Settings",
-    "logout": "Logout",
-    "dashboard": "Dashboard",
-    "write": "Write",
-    "myArticles": "My Articles",
-    "bookmarks": "Bookmarks",
-    "readingList": "Reading List",
-    "language": "Language"
-  },
-  "home": {
-    "welcome": "Welcome to Curio",
-    "tagline": "Discover Amazing Stories",
-    "subtitle": "Where words come alive and stories inspire",
-    "getStarted": "Get Started",
-    "exploreArticles": "Explore Articles",
-    "featuredArticles": "Featured Articles",
-    "trendingNow": "Trending Now",
-    "popularCategories": "Popular Categories",
-    "recentArticles": "Recent Articles",
-    "readMore": "Read More",
-    "viewAll": "View All"
-  },
-  "articles": {
-    "title": "All Articles",
-    "subtitle": "Browse our collection of stories",
-    "searchPlaceholder": "Search articles...",
-    "noArticles": "No articles found",
-    "noResults": "No results found for your search",
-    "readMore": "Read More",
-    "readingTime": "{{minutes}} min read",
-    "views": "{{count}} views",
-    "likes": "{{count}} likes",
-    "comments": "{{count}} comments",
-    "published": "Published",
-    "by": "by",
-    "in": "in",
-    "filters": {
-      "all": "All",
-      "latest": "Latest",
-      "popular": "Popular",
-      "trending": "Trending"
-    }
-  },
-  "articleDetail": {
-    "backToArticles": "Back to Articles",
-    "relatedArticles": "Related Articles",
-    "shareArticle": "Share Article",
-    "copyLink": "Copy Link",
-    "linkCopied": "Link copied to clipboard!",
-    "reportArticle": "Report Article",
-    "saveArticle": "Save Article",
-    "addToReadingList": "Add to Reading List",
-    "removeFromReadingList": "Remove from Reading List",
-    "likeArticle": "Like Article",
-    "commentOnArticle": "Comment on Article"
-  },
-  "auth": {
-    "login": {
-      "title": "Welcome Back",
-      "subtitle": "Login to your account",
-      "email": "Email Address",
-      "emailPlaceholder": "Enter your email",
-      "password": "Password",
-      "passwordPlaceholder": "Enter your password",
-      "rememberMe": "Remember me",
-      "forgotPassword": "Forgot password?",
-      "loginButton": "Login",
-      "noAccount": "Don't have an account?",
-      "signUp": "Sign up",
-      "loginSuccess": "Login successful!",
-      "loginError": "Login failed. Please check your credentials."
+"common": {
+"loading": "Loading...",
+"error": "Error",
+"success": "Success",
+"save": "Save",
+"cancel": "Cancel",
+"delete": "Delete",
+"edit": "Edit",
+"close": "Close",
+"submit": "Submit",
+"search": "Search",
+"back": "Back",
+"next": "Next",
+"previous": "Previous",
+"confirm": "Confirm",
+"yes": "Yes",
+"no": "No",
+"ok": "OK",
+"done": "Done",
+"view": "View",
+"share": "Share",
+"copy": "Copy",
+"download": "Download",
+"upload": "Upload",
+"remove": "Remove",
+"add": "Add",
+"update": "Update",
+"refresh": "Refresh",
+"filter": "Filter",
+"sort": "Sort",
+"reset": "Reset",
+"clear": "Clear"
+},
+
+"nav": {
+"home": "Home",
+"articles": "Articles",
+"categories": "Categories",
+"about": "About",
+"contact": "Contact",
+"login": "Login",
+"register": "Register",
+"profile": "Profile",
+"settings": "Settings",
+"logout": "Logout",
+"dashboard": "Dashboard",
+"write": "Write",
+"myArticles": "My Articles",
+"bookmarks": "Bookmarks",
+"readingList": "Reading List",
+"language": "Language"
+},
+
+"home": {
+"welcome": "Welcome to Curio",
+"hero": {
+"title": "Discover Amazing",
+"subtitle": "Articles",
+"description": "Read, write, and share stories that matter. Join our community of passionate readers and writers.",
+"exploreBtn": "Explore Articles",
+"startWritingBtn": "Start Writing"
+},
+"stats": {
+"articles": { "count": "1000+", "label": "Articles Published" },
+"writers": { "count": "500+", "label": "Active Writers" },
+"readers": { "count": "10k+", "label": "Monthly Readers" }
+},
+"featured": {
+"title": "Featured Articles",
+"subtitle": "Hand-picked stories from our community"
+},
+"recent": {
+"title": "Recent Articles",
+"subtitle": "Latest stories from our writers",
+"viewAll": "View All",
+"viewAllArticles": "View All Articles",
+"minRead": "{{minutes}} min read"
+},
+"cta": {
+"title": "Ready to Start Writing?",
+"description": "Join thousands of writers sharing their stories and insights with the world. It's free, forever.",
+"getStartedBtn": "Get Started Free",
+"browseBtn": "Browse Articles"
+}
+},
+
+"articles": {
+"badge": "Discover Stories",
+"hero": {
+"title": "Explore",
+"subtitle": "Articles",
+"description": "Discover {{count}} articles from talented writers",
+"descriptionDefault": "Discover amazing articles from talented writers"
+},
+"search": { "placeholder": "Search articles..." },
+"filters": {
+"allCategories": "All Categories",
+"latest": "Latest",
+"popular": "Most Popular",
+"trending": "Most Liked",
+"advanced": "Advanced"
+},
+"activeFilters": "Active filters",
+"clearAll": "Clear all",
+"stats": { "of": "of", "articles": "articles" },
+"loading": "Loading articles...",
+"empty": {
+"title": "No articles found",
+"withFilters": "Try adjusting your filters or search terms",
+"noArticles": "No articles available yet",
+"clearFilters": "Clear Filters"
+},
+"card": { "minRead": "{{minutes}} min" },
+"pagination": {
+"previous": "Previous",
+"next": "Next",
+"pageInfo": "Page {{current}} of {{total}}"
+}
+},
+
+"articleDetail": {
+"backToArticles": "Back to Articles",
+"notFound": {
+"title": "Article not found",
+"message": "The article you're looking for doesn't exist or has been removed."
+},
+"minRead": "min read",
+"views": "views",
+"likes": "Likes",
+"save": "Save",
+"saved": "Saved",
+"readLater": "Read Later",
+"inList": "In List",
+"share": "Share",
+"report": "Report",
+"comments": "Comments",
+"relatedArticles": "Related Articles",
+"messages": {
+"liked": "Article liked!",
+"unliked": "Article unliked",
+"bookmarked": "Added to bookmarks!",
+"unbookmarked": "Removed from bookmarks",
+"addedToList": "Added to reading list!",
+"removedFromList": "Removed from reading list",
+"reported": "Article reported. Thank you for helping keep our community safe.",
+"linkCopied": "Link copied to clipboard!",
+"loginRequired": "Please login to {{action}} articles",
+"reportPrompt": "Please provide a reason for reporting this article:",
+"reportFailed": "Failed to report article"
+}
+},
+
+"comments": {
+"title": "Comments",
+"writeComment": "Write a comment...",
+"postComment": "Post Comment",
+"reply": "Reply",
+"edit": "Edit",
+"delete": "Delete",
+"noComments": "No comments yet. Be the first!",
+"commentPosted": "Comment posted successfully",
+"commentDeleted": "Comment deleted",
+"deleteConfirm": "Are you sure you want to delete this comment?",
+"loginToComment": "Please login to comment"
+},
+
+"bookmarks": {
+"title": "Bookmarks",
+"subtitle": "Your saved articles",
+"noBookmarks": "No bookmarks yet",
+"addBookmark": "Add to bookmarks",
+"removeBookmark": "Remove from bookmarks",
+"bookmarkAdded": "Added to bookmarks",
+"bookmarkRemoved": "Removed from bookmarks"
+},
+
+"readingList": {
+"title": "Reading List",
+"subtitle": "Articles you want to read",
+"noArticles": "Your reading list is empty",
+"addToList": "Add to reading list",
+"removeFromList": "Remove from list",
+"added": "Added to reading list",
+"removed": "Removed from reading list"
+},
+
+"footer": {
+"about": "About Curio",
+"description": "A platform for sharing stories and ideas",
+"quickLinks": "Quick Links",
+"legal": "Legal",
+"terms": "Terms of Service",
+"privacy": "Privacy Policy",
+"contact": "Contact Us",
+"followUs": "Follow Us",
+"copyright": "© {{year}} Curio. All rights reserved."
+},
+
+"errors": {
+"generic": "Something went wrong",
+"network": "Network error. Please check your connection.",
+"notFound": "Page not found",
+"unauthorized": "You are not authorized",
+"serverError": "Server error. Please try again later.",
+"validation": "Please check your input",
+"required": "This field is required"
+},
+  "about": {
+    "hero": {
+      "badge": "Our Story",
+      "title": "About Curio",
+      "subtitle": "A modern platform where ideas come to life through the power of words"
     },
-    "register": {
-      "title": "Create Account",
-      "subtitle": "Join our community",
-      "fullName": "Full Name",
-      "fullNamePlaceholder": "Enter your full name",
-      "username": "Username",
-      "usernamePlaceholder": "Choose a username",
-      "email": "Email Address",
-      "emailPlaceholder": "Enter your email",
-      "password": "Password",
-      "passwordPlaceholder": "Create a password",
-      "confirmPassword": "Confirm Password",
-      "confirmPasswordPlaceholder": "Confirm your password",
-      "terms": "I agree to the Terms and Conditions",
-      "registerButton": "Create Account",
-      "haveAccount": "Already have an account?",
-      "signIn": "Sign in",
-      "registerSuccess": "Account created successfully!",
-      "registerError": "Registration failed. Please try again."
-    },
-    "logout": {
-      "confirm": "Are you sure you want to logout?",
-      "success": "Logged out successfully"
-    }
-  },
-  "profile": {
-    "title": "My Profile",
-    "edit": "Edit Profile",
-    "stats": {
-      "articles": "Articles",
-      "followers": "Followers",
-      "following": "Following",
-      "likes": "Likes",
-      "views": "Views",
-      "comments": "Comments"
-    },
-    "tabs": {
-      "articles": "Articles",
-      "about": "About",
-      "activity": "Activity"
-    },
-    "noArticles": "No articles published yet",
-    "joined": "Joined",
-    "follow": "Follow",
-    "unfollow": "Unfollow",
-    "following": "Following"
-  },
-  "settings": {
-    "title": "Settings",
-    "subtitle": "Manage your account and preferences",
-    "tabs": {
-      "profile": "Profile",
-      "password": "Password",
-      "appearance": "Appearance",
-      "notifications": "Notifications",
-      "bankAccount": "Bank Account"
-    },
-    "profile": {
-      "title": "Profile Information",
-      "subtitle": "Update your personal details",
-      "fullName": "Full Name",
-      "email": "Email",
-      "bio": "Bio",
-      "bioPlaceholder": "Tell us about yourself...",
-      "location": "Location",
-      "locationPlaceholder": "e.g., Mumbai, India",
-      "profileImage": "Profile Image",
-      "updateSuccess": "Profile updated successfully",
-      "updateError": "Failed to update profile"
-    },
-    "password": {
-      "title": "Change Password",
-      "subtitle": "Keep your account secure",
-      "currentPassword": "Current Password",
-      "newPassword": "New Password",
-      "confirmPassword": "Confirm New Password",
-      "updateButton": "Update Password",
-      "updateSuccess": "Password changed successfully",
-      "updateError": "Failed to change password",
-      "passwordMismatch": "Passwords do not match",
-      "passwordTooShort": "Password must be at least 6 characters"
-    },
-    "appearance": {
-      "title": "Appearance",
-      "subtitle": "Customize how Curio looks",
-      "theme": "Theme",
-      "light": "Light",
-      "dark": "Dark",
-      "system": "System"
-    },
-    "notifications": {
-      "title": "Notification Preferences",
-      "subtitle": "Control what you hear about",
-      "emailComments": "Comments & Likes",
-      "emailCommentsDesc": "Get notified when someone comments or likes your articles",
-      "emailFollowers": "New Followers",
-      "emailFollowersDesc": "Get notified when someone follows you",
-      "emailRecommendations": "Article Recommendations",
-      "emailRecommendationsDesc": "Receive personalized recommendations",
-      "savePreferences": "Save Preferences"
-    },
-    "bankAccount": {
-      "title": "Bank Account",
-      "subtitle": "Add bank details to receive donations",
-      "accountHolder": "Account Holder Name",
-      "accountNumber": "Account Number",
-      "confirmAccount": "Confirm Account Number",
-      "ifscCode": "IFSC Code",
-      "bankName": "Bank Name",
-      "branchName": "Branch Name",
-      "upiId": "UPI ID (Optional)",
-      "addAccount": "Add Bank Account",
-      "accountAdded": "Bank account added successfully",
-      "accountError": "Failed to add bank account",
-      "accountMismatch": "Account numbers do not match"
-    },
-    "danger": {
-      "title": "Danger Zone",
-      "subtitle": "Irreversible actions",
-      "deleteAccount": "Delete My Account",
-      "deleteWarning": "Once deleted, all your data will be permanently removed",
-      "deleteConfirm": "Are you sure you want to delete your account?",
-      "typeDelete": "Type DELETE to confirm"
-    }
-  },
-  "donations": {
-    "buyMeCoffee": "Buy Me Coffee",
-    "supportAuthor": "Support {{author}}",
-    "selectAmount": "Select Amount",
-    "customAmount": "Custom Amount",
-    "message": "Leave a message (optional)",
-    "messagePlaceholder": "Say something nice...",
-    "proceedToPayment": "Proceed to Payment",
-    "donationSuccess": "Thank you for your support!",
-    "donationError": "Payment failed. Please try again.",
-    "received": {
-      "title": "Donations Received",
-      "subtitle": "From your supporters",
-      "total": "Total",
-      "coffees": "Coffees",
-      "donors": "Donors"
-    },
-    "made": {
-      "title": "Donations Made",
-      "subtitle": "Your support to authors",
-      "total": "Total",
-      "given": "Given",
-      "authors": "Authors"
+    "mission": {
+      "title": "Our Mission",
+      "paragraph1": "Curio is dedicated to empowering writers and connecting them with engaged readers. We believe that everyone has a story to tell, and we're here to provide the platform and tools to share those stories with the world.",
+      "paragraph2": "Whether you're an experienced author or just starting your writing journey, Curio offers a welcoming space to express yourself, engage with a community of like-minded individuals, and grow your audience."
     },
     "stats": {
-      "totalSupport": "Total Support",
-      "coffeesReceived": "Coffees Received",
-      "supporters": "Supporters",
-      "noDonations": "No donations received yet"
+      "title": "Our Impact",
+      "articles": "Articles Published",
+      "writers": "Active Writers",
+      "readers": "Monthly Readers",
+      "topics": "Topics Covered"
+    },
+    "features": {
+      "title": "What Makes Us Different",
+      "subtitle": "Discover the features that make Curio the perfect platform for writers and readers",
+      "quality": {
+        "title": "Quality Content",
+        "description": "Curated articles from talented writers around the world"
+      },
+      "community": {
+        "title": "Vibrant Community",
+        "description": "Connect with readers and writers who share your interests"
+      },
+      "publishing": {
+        "title": "Easy Publishing",
+        "description": "Intuitive tools to write, edit, and publish your stories"
+      },
+      "recognition": {
+        "title": "Recognition",
+        "description": "Get discovered and build your audience with our platform"
+      }
+    },
+    "values": {
+      "title": "Our Values",
+      "subtitle": "The principles that guide everything we do at Curio",
+      "community": {
+        "title": "Community First",
+        "description": "We believe in fostering a supportive community where everyone can share their voice and grow together."
+      },
+      "innovation": {
+        "title": "Innovation",
+        "description": "We continuously improve our platform with the latest technologies to provide the best writing and reading experience."
+      },
+      "quality": {
+        "title": "Quality Over Quantity",
+        "description": "We prioritize meaningful, well-crafted content that educates, inspires, and entertains our readers."
+      }
+    },
+    "cta": {
+      "title": "Join Our Community Today",
+      "subtitle": "Start sharing your stories and connect with thousands of readers around the world",
+      "getStarted": "Get Started",
+      "exploreArticles": "Explore Articles"
     }
   },
-  "comments": {
-    "title": "Comments",
-    "writeComment": "Write a comment...",
-    "postComment": "Post Comment",
-    "reply": "Reply",
-    "edit": "Edit",
-    "delete": "Delete",
-    "noComments": "No comments yet. Be the first!",
-    "commentPosted": "Comment posted successfully",
-    "commentDeleted": "Comment deleted",
-    "deleteConfirm": "Are you sure you want to delete this comment?",
-    "loginToComment": "Please login to comment"
-  },
-  "categories": {
-    "title": "Categories",
-    "subtitle": "Browse by category",
-    "allCategories": "All Categories",
-    "articlesCount": "{{count}} articles",
-    "viewCategory": "View Category"
-  },
+
   "search": {
-    "title": "Search Results",
-    "subtitle": "Results for \"{{query}}\"",
-    "resultsFound": "{{count}} results found",
-    "noResults": "No results found",
-    "searchPlaceholder": "Search for articles, authors, or topics..."
+    "hero": {
+      "badge": "Advanced Search",
+      "title": "Discover",
+      "subtitle": "Knowledge",
+      "description": "Search across our entire collection of Indian heritage articles"
+    },
+    "placeholder": "Search articles by title, content, or author...",
+    "filters": {
+      "category": "Category",
+      "allCategories": "All Categories",
+      "sortBy": "Sort By",
+      "view": "View"
+    },
+    "sort": {
+      "latest": "Latest",
+      "popular": "Most Viewed",
+      "trending": "Most Liked"
+    },
+    "view": {
+      "grid": "Grid View",
+      "list": "List View"
+    },
+    "activeFilters": "Active filters",
+    "clearAll": "Clear all",
+    "clearFilters": "Clear Filters",
+    "loading": "Searching...",
+    "results": {
+      "found": "Found",
+      "article": "article",
+      "articles": "articles"
+    },
+    "empty": {
+      "startTitle": "Start Exploring",
+      "startDescription": "Type a keyword above and press Search, or pick a category and sort to discover articles",
+      "noResultsTitle": "No Articles Found",
+      "noResultsDescription": "Try adjusting your search terms, changing the category, or clearing filters"
+    },
+    "meta": {
+      "min": "min"
+    }
   },
-  "bookmarks": {
-    "title": "Bookmarks",
-    "subtitle": "Your saved articles",
-    "noBookmarks": "No bookmarks yet",
-    "addBookmark": "Add to bookmarks",
-    "removeBookmark": "Remove from bookmarks",
-    "bookmarkAdded": "Added to bookmarks",
-    "bookmarkRemoved": "Removed from bookmarks"
+
+  "categories": {
+    "badge": "Explore Topics",
+    "hero": {
+      "title": "Browse",
+      "subtitle": "By Category",
+      "description": "Find articles organized by topics that interest you"
+    },
+    "search": {
+      "placeholder": "Search categories..."
+    },
+    "stats": {
+      "count_one": "{{count}} category",
+      "count_other": "{{count}} categories",
+      "filtered": "(filtered from {{total}})"
+    },
+    "empty": {
+      "title": "No categories found",
+      "noMatch": "No categories match \"{{query}}\"",
+      "noCategories": "No categories available yet",
+      "clearSearch": "Clear Search"
+    },
+    "card": {
+      "articles_one": "article",
+      "articles_other": "articles",
+      "popular": "Popular"
+    },
+    "totalStats": "total articles across all categories"
   },
-  "readingList": {
-    "title": "Reading List",
-    "subtitle": "Articles you want to read",
-    "noArticles": "Your reading list is empty",
-    "addToList": "Add to reading list",
-    "removeFromList": "Remove from list",
-    "added": "Added to reading list",
-    "removed": "Removed from reading list"
-  },
-  "footer": {
-    "about": "About Curio",
-    "description": "A platform for sharing stories and ideas",
-    "quickLinks": "Quick Links",
-    "legal": "Legal",
-    "terms": "Terms of Service",
-    "privacy": "Privacy Policy",
-    "contact": "Contact Us",
-    "followUs": "Follow Us",
-    "copyright": "© {{year}} Curio. All rights reserved."
-  },
-  "errors": {
-    "generic": "Something went wrong",
-    "network": "Network error. Please check your connection.",
-    "notFound": "Page not found",
-    "unauthorized": "You are not authorized",
-    "serverError": "Server error. Please try again later.",
-    "validation": "Please check your input",
-    "required": "This field is required"
-  },
-  "badges": {
-    "title": "Achievements",
-    "earned": "{{count}} earned",
-    "locked": "Locked",
-    "unlockCondition": "Unlock by: {{condition}}",
-    "newBadge": "New badge unlocked!"
+
+  "contact": {
+    "hero": {
+      "badge": "We're Here to Help",
+      "title": "Get in Touch",
+      "subtitle": "Have a question or feedback? We'd love to hear from you!"
+    },
+    "info": {
+      "title": "Contact Information",
+      "subtitle": "Fill out the form and our team will get back to you within 24 hours.",
+      "email": {
+        "title": "Email"
+      },
+      "address": {
+        "title": "Address",
+        "content": "123 Writing Street, Blog City, BC 12345"
+      },
+      "phone": {
+        "title": "Phone"
+      },
+      "hours": {
+        "title": "Business Hours",
+        "content": "Mon-Fri: 9AM - 6PM"
+      }
+    },
+    "social": {
+      "title": "Follow Us"
+    },
+    "form": {
+      "title": "Send us a Message",
+      "subtitle": "We typically respond within 24 hours",
+      "name": {
+        "label": "Your Name",
+        "placeholder": "John Doe"
+      },
+      "email": {
+        "label": "Your Email",
+        "placeholder": "john@example.com"
+      },
+      "subject": {
+        "label": "Subject",
+        "placeholder": "How can we help you?"
+      },
+      "message": {
+        "label": "Message",
+        "placeholder": "Tell us more about your inquiry..."
+      },
+      "send": "Send Message",
+      "sending": "Sending...",
+      "success": "Message sent successfully! We'll get back to you soon.",
+      "error": "Failed to send message. Please try again.",
+      "validation": {
+        "allFields": "Please fill in all fields"
+      }
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "subtitle": "Quick answers to common questions",
+      "q1": {
+        "question": "How do I start writing on Curio?",
+        "answer": "Simply create an account, and you'll have access to our powerful editor to start writing and publishing your articles immediately."
+      },
+      "q2": {
+        "question": "Is Curio free to use?",
+        "answer": "Yes! Curio is free for all writers and readers. We believe in making quality content accessible to everyone."
+      },
+      "q3": {
+        "question": "How can I report inappropriate content?",
+        "answer": "Each article and comment has a report button. Click it to submit a report, and our team will review it promptly."
+      },
+      "q4": {
+        "question": "Can I customize my author profile?",
+        "answer": "Absolutely! You can upload a profile picture, write a bio, and customize your profile to showcase your work."
+      }
+    }
   }
 }

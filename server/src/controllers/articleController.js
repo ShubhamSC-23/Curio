@@ -2,9 +2,58 @@ const db = require('../config/database');
 const { createSlug, createUniqueSlug } = require('../utils/slugify');
 const { getPagination } = require('../utils/pagination');
 
+// ============================================
+// HELPER FUNCTION: Get Article with Translation
+// ============================================
+async function getArticleWithTranslation(article, lang = 'en') {
+  // If requesting English or no translation needed, return original
+  if (lang === 'en' || !lang) {
+    return {
+      ...article,
+      translated: false,
+      translation_language: null
+    };
+  }
+
+  try {
+    // Try to get translation
+    const [translations] = await db.query(
+      'SELECT * FROM article_translations WHERE article_id = ? AND language_code = ?',
+      [article.article_id, lang]
+    );
+
+    if (translations.length > 0) {
+      // Translation exists - merge with original article
+      const translation = translations[0];
+      return {
+        ...article,
+        title: translation.title,
+        excerpt: translation.excerpt || article.excerpt,
+        content: translation.content,
+        slug: translation.slug,
+        meta_description: translation.meta_description || article.meta_description,
+        translated: true,
+        translation_language: lang,
+        original_slug: article.slug,
+        original_title: article.title
+      };
+    }
+
+    // No translation - return original with flag
+    return {
+      ...article,
+      translated: false,
+      translation_language: null
+    };
+  } catch (error) {
+    console.error('Translation error:', error);
+    return article; // Fallback to original
+  }
+}
+
 /**
- * @desc    Get all published articles
- * @route   GET /api/v1/articles
+ * @desc    Get all published articles (with translation support)
+ * @route   GET /api/v1/articles?lang=hi
  * @access  Public
  */
 exports.getArticles = async (req, res, next) => {
@@ -17,7 +66,8 @@ exports.getArticles = async (req, res, next) => {
       author, 
       search,
       featured,
-      status = 'published' 
+      status = 'published',
+      lang = 'en' // ✅ Language parameter
     } = req.query;
 
     let query = `
@@ -33,7 +83,6 @@ exports.getArticles = async (req, res, next) => {
       WHERE a.status = ?
     `;
 
-    // INITIALIZE params array HERE at the beginning
     const params = [status];
 
     // Filter by category
@@ -83,10 +132,15 @@ exports.getArticles = async (req, res, next) => {
     // Execute main query
     const [articles] = await db.query(query, params);
 
+    // ✅ APPLY TRANSLATIONS TO ALL ARTICLES
+    const translatedArticles = await Promise.all(
+      articles.map(article => getArticleWithTranslation(article, lang))
+    );
+
     res.json({
       success: true,
-      count: articles.length,
-      data: articles,
+      count: translatedArticles.length,
+      data: translatedArticles,
       pagination: {
         currentPage: pagination.page,
         itemsPerPage: pagination.limit,
@@ -95,6 +149,7 @@ exports.getArticles = async (req, res, next) => {
         hasNextPage: pagination.hasNextPage,
         hasPrevPage: pagination.hasPrevPage,
       },
+      language: lang // ✅ Return language used
     });
   } catch (error) {
     console.error('Get articles error:', error);
@@ -103,14 +158,113 @@ exports.getArticles = async (req, res, next) => {
 };
 
 /**
- * @desc    Get single article by slug
- * @route   GET /api/v1/articles/:slug
+ * @desc    Get single article by slug (with translation support)
+ * @route   GET /api/v1/articles/:slug?lang=hi
+ * @access  Public
+ */
+/**
+ * @desc    Get single article by slug (with translation support) - FIXED GROUP BY
+ * @route   GET /api/v1/articles/:slug?lang=hi
  * @access  Public
  */
 exports.getArticle = async (req, res, next) => {
   try {
     const { slug } = req.params;
+    const { lang = 'en' } = req.query;
 
+    // Decode URL-encoded slug (for Hindi/Marathi characters)
+    const decodedSlug = decodeURIComponent(slug);
+
+    // ✅ FIRST: Try to find by translated slug if not English
+    if (lang !== 'en') {
+      const [translatedArticles] = await db.query(
+        `SELECT 
+          a.*, 
+          u.username, u.full_name, u.profile_image, u.bio,
+          c.name as category_name, c.slug as category_slug,
+          tr.title as translated_title,
+          tr.excerpt as translated_excerpt,
+          tr.content as translated_content,
+          tr.slug as translated_slug,
+          tr.meta_description as translated_meta_description,
+          (SELECT GROUP_CONCAT(DISTINCT t.name) 
+           FROM article_tags at 
+           LEFT JOIN tags t ON at.tag_id = t.tag_id 
+           WHERE at.article_id = a.article_id) as tags
+        FROM articles a
+        INNER JOIN article_translations tr ON a.article_id = tr.article_id
+        INNER JOIN users u ON a.author_id = u.user_id
+        LEFT JOIN categories c ON a.category_id = c.category_id
+        WHERE tr.slug = ? AND tr.language_code = ?
+        LIMIT 1`,
+        [decodedSlug, lang]
+      );
+
+      if (translatedArticles.length > 0) {
+        const article = translatedArticles[0];
+        
+        // Convert tags string to array
+        article.tags = article.tags ? article.tags.split(',') : [];
+
+        // ✅ ACCESS CONTROL LOGIC
+        if (article.status === 'published') {
+          // Increment view count (not for author)
+          if (!req.user || req.user.user_id !== article.author_id) {
+            await db.query(
+              'UPDATE articles SET view_count = view_count + 1 WHERE article_id = ?',
+              [article.article_id]
+            );
+            article.view_count = (article.view_count || 0) + 1;
+          }
+
+          // Return translated version
+          return res.json({
+            success: true,
+            data: {
+              ...article,
+              title: article.translated_title,
+              excerpt: article.translated_excerpt,
+              content: article.translated_content,
+              slug: article.translated_slug,
+              meta_description: article.translated_meta_description || article.meta_description,
+              translated: true,
+              translation_language: lang,
+              original_slug: article.slug,
+              original_title: article.title
+            }
+          });
+        }
+
+        // Not published - check access
+        if (
+          req.user &&
+          (req.user.user_id === article.author_id || req.user.role === 'admin')
+        ) {
+          return res.json({
+            success: true,
+            data: {
+              ...article,
+              title: article.translated_title,
+              excerpt: article.translated_excerpt,
+              content: article.translated_content,
+              slug: article.translated_slug,
+              meta_description: article.translated_meta_description || article.meta_description,
+              translated: true,
+              translation_language: lang,
+              original_slug: article.slug,
+              original_title: article.title
+            }
+          });
+        }
+
+        return res.status(403).json({
+          success: false,
+          message: 'You are not allowed to view this article'
+        });
+      }
+    }
+
+    // ✅ SECOND: Try original slug (both encoded and decoded)
     const [articles] = await db.query(
       `SELECT 
         a.*, 
@@ -122,12 +276,93 @@ exports.getArticle = async (req, res, next) => {
       LEFT JOIN categories c ON a.category_id = c.category_id
       LEFT JOIN article_tags at ON a.article_id = at.article_id
       LEFT JOIN tags t ON at.tag_id = t.tag_id
-      WHERE a.slug = ?
-      GROUP BY a.article_id`,
-      [slug]
+      WHERE (a.slug = ? OR a.slug = ?)
+      GROUP BY a.article_id, u.user_id, u.username, u.full_name, u.profile_image, u.bio,
+               c.category_id, c.name, c.slug`,
+      [slug, decodedSlug]
     );
 
     if (articles.length === 0) {
+      // ✅ THIRD: Try searching translated slugs with original slug - FIXED GROUP BY
+      const [translatedArticles] = await db.query(
+        `SELECT 
+          a.*, 
+          u.username, u.full_name, u.profile_image, u.bio,
+          c.name as category_name, c.slug as category_slug,
+          tr.title as translated_title,
+          tr.excerpt as translated_excerpt,
+          tr.content as translated_content,
+          tr.slug as translated_slug,
+          tr.language_code,
+          tr.meta_description as translated_meta_description,
+          (SELECT GROUP_CONCAT(DISTINCT t.name) 
+           FROM article_tags at 
+           LEFT JOIN tags t ON at.tag_id = t.tag_id 
+           WHERE at.article_id = a.article_id) as tags
+        FROM articles a
+        INNER JOIN article_translations tr ON a.article_id = tr.article_id
+        INNER JOIN users u ON a.author_id = u.user_id
+        LEFT JOIN categories c ON a.category_id = c.category_id
+        WHERE (tr.slug = ? OR tr.slug = ?)
+        LIMIT 1`,
+        [slug, decodedSlug]
+      );
+
+      if (translatedArticles.length > 0) {
+        const article = translatedArticles[0];
+        article.tags = article.tags ? article.tags.split(',') : [];
+
+        // Check if published
+        if (article.status === 'published') {
+          // Increment view count
+          if (!req.user || req.user.user_id !== article.author_id) {
+            await db.query(
+              'UPDATE articles SET view_count = view_count + 1 WHERE article_id = ?',
+              [article.article_id]
+            );
+            article.view_count = (article.view_count || 0) + 1;
+          }
+
+          return res.json({
+            success: true,
+            data: {
+              ...article,
+              title: article.translated_title,
+              excerpt: article.translated_excerpt,
+              content: article.translated_content,
+              slug: article.translated_slug,
+              meta_description: article.translated_meta_description || article.meta_description,
+              translated: true,
+              translation_language: article.language_code,
+              original_slug: article.slug,
+              original_title: article.title
+            }
+          });
+        }
+
+        // Check access for unpublished
+        if (req.user && (req.user.user_id === article.author_id || req.user.role === 'admin')) {
+          return res.json({
+            success: true,
+            data: {
+              ...article,
+              title: article.translated_title,
+              excerpt: article.translated_excerpt,
+              content: article.translated_content,
+              slug: article.translated_slug,
+              translated: true,
+              translation_language: article.language_code
+            }
+          });
+        }
+
+        return res.status(403).json({
+          success: false,
+          message: 'You are not allowed to view this article'
+        });
+      }
+
+      // Not found anywhere
       return res.status(404).json({
         success: false,
         message: 'Article not found'
@@ -140,20 +375,22 @@ exports.getArticle = async (req, res, next) => {
     article.tags = article.tags ? article.tags.split(',') : [];
 
     // ✅ ACCESS CONTROL LOGIC
-
-    // If published → allow everyone
     if (article.status === 'published') {
-      // Increment view count (not author)
+      // Increment view count (not for author)
       if (!req.user || req.user.user_id !== article.author_id) {
         await db.query(
           'UPDATE articles SET view_count = view_count + 1 WHERE article_id = ?',
           [article.article_id]
         );
+        article.view_count = (article.view_count || 0) + 1;
       }
+
+      // Get translation if requested
+      const translatedArticle = await getArticleWithTranslation(article, lang);
 
       return res.json({
         success: true,
-        data: article
+        data: translatedArticle
       });
     }
 
@@ -162,9 +399,10 @@ exports.getArticle = async (req, res, next) => {
       req.user &&
       (req.user.user_id === article.author_id || req.user.role === 'admin')
     ) {
+      const translatedArticle = await getArticleWithTranslation(article, lang);
       return res.json({
         success: true,
-        data: article
+        data: translatedArticle
       });
     }
 
@@ -224,8 +462,8 @@ exports.createArticle = async (req, res, next) => {
     // Insert article
     const [result] = await db.query(
       `INSERT INTO articles 
-        (author_id, category_id, title, slug, excerpt, content, featured_image, reading_time, status, published_at)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        (author_id, category_id, title, slug, excerpt, content, featured_image, reading_time, status, published_at, default_language)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         req.user.user_id,
         category_id || null,
@@ -236,7 +474,8 @@ exports.createArticle = async (req, res, next) => {
         featured_image || null,
         reading_time,
         status,
-        status === 'published' ? new Date() : null
+        status === 'published' ? new Date() : null,
+        'en' // ✅ Default language
       ]
     );
 
@@ -454,6 +693,7 @@ exports.deleteArticle = async (req, res, next) => {
     }
 
     // Delete using article_id internally (safer for relations)
+    // ✅ Translations will cascade delete automatically
     await db.query(
       'DELETE FROM articles WHERE article_id = ?',
       [article.article_id]
@@ -566,8 +806,8 @@ exports.bookmarkArticle = async (req, res, next) => {
 
 
 /**
- * @desc    Get articles from users you follow
- * @route   GET /api/v1/articles/following-feed
+ * @desc    Get articles from users you follow (with translation support)
+ * @route   GET /api/v1/articles/following-feed?lang=hi
  * @access  Private
  */
 exports.getFollowingFeed = async (req, res, next) => {
@@ -576,6 +816,7 @@ exports.getFollowingFeed = async (req, res, next) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 20;
     const offset = (page - 1) * limit;
+    const lang = req.query.lang || 'en'; // ✅ Language parameter
 
     const query = `
       SELECT 
@@ -594,6 +835,11 @@ exports.getFollowingFeed = async (req, res, next) => {
 
     const [articles] = await db.query(query, [userId, limit, offset]);
 
+    // ✅ APPLY TRANSLATIONS
+    const translatedArticles = await Promise.all(
+      articles.map(article => getArticleWithTranslation(article, lang))
+    );
+
     // Get total count
     const [countResult] = await db.query(
       `SELECT COUNT(*) as total 
@@ -607,11 +853,12 @@ exports.getFollowingFeed = async (req, res, next) => {
 
     res.json({
       success: true,
-      count: articles.length,
+      count: translatedArticles.length,
       total,
       page,
       totalPages: Math.ceil(total / limit),
-      data: articles,
+      data: translatedArticles,
+      language: lang // ✅ Return language used
     });
   } catch (error) {
     console.error('Get following feed error:', error);
@@ -620,8 +867,11 @@ exports.getFollowingFeed = async (req, res, next) => {
 };
 
 
-// GET /api/v1/articles/:id/like-status
-// GET /api/v1/articles/:id/like-status
+/**
+ * @desc    Get like status
+ * @route   GET /api/v1/articles/:id/like-status
+ * @access  Private
+ */
 exports.getLikeStatus = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -658,7 +908,11 @@ exports.getLikeStatus = async (req, res, next) => {
 
 
 
-// POST /api/v1/articles/:id/report
+/**
+ * @desc    Report article
+ * @route   POST /api/v1/articles/:id/report
+ * @access  Private
+ */
 exports.reportArticle = async (req, res, next) => {
   try {
     const { id } = req.params;

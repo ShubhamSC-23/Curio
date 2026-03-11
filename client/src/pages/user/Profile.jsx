@@ -298,8 +298,8 @@ const Profile = () => {
               <h1 className="text-3xl md:text-4xl font-bold text-white mb-1">
                 {user?.full_name || user?.username}
               </h1>
-              <p className="text-primary-200 dark:text-primary-300 text-lg mb-3">
-                @{user?.username}
+              <p className="text-3xl md:text-4xl font-bold text-white mb-1">
+                {user?.username}
               </p>
               {user?.bio && (
                 <p className="text-white/80 max-w-lg mx-auto leading-relaxed text-sm md:text-base">

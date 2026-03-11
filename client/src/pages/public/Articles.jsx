@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import {
   Search,
   Filter,
@@ -27,6 +28,7 @@ import { formatRelativeTime } from "../../utils/formatDate";
 import { getImageUrl } from "../../utils/imageUtils";
 
 const Articles = () => {
+  const { t, i18n } = useTranslation();
   const [articles, setArticles] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -46,7 +48,7 @@ const Articles = () => {
 
   useEffect(() => {
     fetchArticles();
-  }, [filters]);
+  }, [filters, i18n.language]);
 
   const fetchCategories = async () => {
     try {
@@ -148,20 +150,22 @@ const Articles = () => {
               className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 dark:bg-white/5 backdrop-blur-sm rounded-full text-white mb-6 border border-white/20 dark:border-white/10"
             >
               <Sparkles className="w-4 h-4" />
-              <span className="text-sm font-medium">Discover Stories</span>
+              <span className="text-sm font-medium">{t("articles.badge")}</span>
             </motion.div>
 
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
-              Explore
+              {t("articles.hero.title")}
               <span className="block text-primary-200 dark:text-primary-300 mt-2">
-                Articles
+                {t("articles.hero.subtitle")}
               </span>
             </h1>
 
             <p className="text-xl text-primary-100 dark:text-primary-200 mb-10 max-w-2xl mx-auto leading-relaxed">
               {pagination
-                ? `Discover ${pagination.totalItems} articles from talented writers`
-                : "Discover amazing articles from talented writers"}
+                ? t("articles.hero.description", {
+                    count: pagination.totalItems,
+                  })
+                : t("articles.hero.descriptionDefault")}
             </p>
           </motion.div>
         </Container>
@@ -198,7 +202,7 @@ const Articles = () => {
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 dark:text-gray-500" />
                     <input
                       type="text"
-                      placeholder="Search articles..."
+                      placeholder={t("articles.search.placeholder")}
                       value={filters.search}
                       onChange={handleSearchChange}
                       className="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-600 focus:border-transparent transition-all"
@@ -213,7 +217,9 @@ const Articles = () => {
                     onChange={(e) => handleCategoryChange(e.target.value)}
                     className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-600 focus:border-transparent transition-all"
                   >
-                    <option value="">All Categories</option>
+                    <option value="">
+                      {t("articles.filters.allCategories")}
+                    </option>
                     {categories.map((cat) => (
                       <option key={cat.category_id} value={cat.slug}>
                         {cat.name}
@@ -229,9 +235,15 @@ const Articles = () => {
                     onChange={(e) => handleSortChange(e.target.value)}
                     className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-600 focus:border-transparent transition-all"
                   >
-                    <option value="latest">Latest</option>
-                    <option value="popular">Most Popular</option>
-                    <option value="trending">Most Liked</option>
+                    <option value="latest">
+                      {t("articles.filters.latest")}
+                    </option>
+                    <option value="popular">
+                      {t("articles.filters.popular")}
+                    </option>
+                    <option value="trending">
+                      {t("articles.filters.trending")}
+                    </option>
                   </select>
                 </div>
 
@@ -244,7 +256,7 @@ const Articles = () => {
                       className="h-full border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700"
                     >
                       <SlidersHorizontal className="h-4 w-4 mr-2" />
-                      Advanced
+                      {t("articles.filters.advanced")}
                     </Button>
                   </Link>
                 </div>
@@ -260,7 +272,7 @@ const Articles = () => {
             {hasActiveFilters && (
               <>
                 <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Active filters:
+                  {t("articles.activeFilters")}:
                 </span>
                 <AnimatePresence>
                   {filters.search && (
@@ -307,7 +319,7 @@ const Articles = () => {
                   onClick={clearFilters}
                   className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 underline"
                 >
-                  Clear all
+                  {t("articles.clearAll")}
                 </button>
               </>
             )}
@@ -321,11 +333,11 @@ const Articles = () => {
                 <span className="font-semibold text-gray-900 dark:text-white">
                   {articles.length}
                 </span>{" "}
-                of{" "}
+                {t("articles.stats.of")}{" "}
                 <span className="font-semibold text-gray-900 dark:text-white">
                   {pagination.totalItems}
                 </span>{" "}
-                articles
+                {t("articles.stats.articles")}
               </div>
             )}
 
@@ -360,7 +372,7 @@ const Articles = () => {
           <div className="flex flex-col justify-center items-center py-20">
             <Spinner size="lg" />
             <p className="mt-4 text-gray-600 dark:text-gray-400">
-              Loading articles...
+              {t("articles.loading")}
             </p>
           </div>
         ) : articles.length === 0 ? (
@@ -373,16 +385,16 @@ const Articles = () => {
               <Search className="h-10 w-10 text-gray-400 dark:text-gray-500" />
             </div>
             <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-              No articles found
+              {t("articles.empty.title")}
             </h3>
             <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-md mx-auto">
               {hasActiveFilters
-                ? "Try adjusting your filters or search terms"
-                : "No articles available yet"}
+                ? t("articles.empty.withFilters")
+                : t("articles.empty.noArticles")}
             </p>
             {hasActiveFilters && (
               <Button variant="primary" onClick={clearFilters}>
-                Clear Filters
+                {t("articles.empty.clearFilters")}
               </Button>
             )}
           </motion.div>
@@ -478,7 +490,11 @@ const Articles = () => {
                           <div className="flex items-center gap-4 text-gray-500 dark:text-gray-400">
                             <div className="flex items-center gap-1">
                               <Clock className="h-3.5 w-3.5" />
-                              <span>{article.reading_time} min</span>
+                              <span>
+                                {t("articles.card.minRead", {
+                                  minutes: article.reading_time,
+                                })}
+                              </span>
                             </div>
 
                             {article.view_count > 0 && (
@@ -488,10 +504,10 @@ const Articles = () => {
                               </div>
                             )}
 
-                            {article.likes_count > 0 && (
+                            {article.like_count > 0 && (
                               <div className="flex items-center gap-1">
                                 <Heart className="h-3.5 w-3.5" />
-                                <span>{article.likes_count}</span>
+                                <span>{article.like_count}</span>
                               </div>
                             )}
                           </div>
@@ -523,7 +539,7 @@ const Articles = () => {
                     className="border-gray-300 dark:border-gray-600"
                   >
                     <ChevronLeft className="h-4 w-4 mr-1" />
-                    Previous
+                    {t("articles.pagination.previous")}
                   </Button>
 
                   <div className="flex items-center gap-2">
@@ -567,20 +583,16 @@ const Articles = () => {
                     onClick={() => handlePageChange(pagination.currentPage + 1)}
                     className="border-gray-300 dark:border-gray-600"
                   >
-                    Next
+                    {t("articles.pagination.next")}
                     <ChevronRight className="h-4 w-4 ml-1" />
                   </Button>
                 </div>
 
                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Page{" "}
-                  <span className="font-semibold text-gray-900 dark:text-white">
-                    {pagination.currentPage}
-                  </span>{" "}
-                  of{" "}
-                  <span className="font-semibold text-gray-900 dark:text-white">
-                    {pagination.totalPages}
-                  </span>
+                  {t("articles.pagination.pageInfo", {
+                    current: pagination.currentPage,
+                    total: pagination.totalPages,
+                  })}
                 </p>
               </motion.div>
             )}

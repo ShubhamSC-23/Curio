@@ -102,7 +102,7 @@ const bookmarkRoutes = require('./routes/bookmarkRoutes');
 const contactRoutes = require('./routes/contactRoutes');
 const donationRoutes = require('./routes/donations');
 const authorBankRoutes = require('./routes/author-bank');
-
+const articleTranslationRoutes = require('./routes/articleTranslationRoutes');
 
 
 // Mount API routes
@@ -119,6 +119,7 @@ app.use(`/api/${API_VERSION}/notifications`, notificationRoutes);
 app.use(`/api/${API_VERSION}/reading-list`, readingListRoutes);
 app.use(`/api/${API_VERSION}/bookmarks`, bookmarkRoutes);
 app.use(`/api/${API_VERSION}/contact`, contactRoutes);
+app.use(`/api/${API_VERSION}/article-translations`, articleTranslationRoutes);
 app.use('/api/donations', donationRoutes);
 app.use('/api/author', authorBankRoutes);
 

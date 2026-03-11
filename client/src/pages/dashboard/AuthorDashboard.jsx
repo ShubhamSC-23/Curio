@@ -12,6 +12,8 @@ import {
   FileText,
   Clock,
   CheckCircle,
+  Languages,
+  Globe,
 } from "lucide-react";
 import axios from "axios";
 import { useAuthStore } from "../../store/authStore";
@@ -19,6 +21,7 @@ import Container from "../../components/layout/Container";
 import Card, { CardBody } from "../../components/common/Card";
 import Button from "../../components/common/Button";
 import Spinner from "../../components/common/Spinner";
+import TranslationStatsWidget from "../../components/dashboard/TranslationStatsWidget";
 import { formatDate, formatRelativeTime } from "../../utils/formatDate";
 import { getImageUrl } from "../../utils/imageUtils";
 import toast from "react-hot-toast";
@@ -38,28 +41,22 @@ const AuthorDashboard = () => {
   const fetchDashboardData = async () => {
     try {
       setLoading(true);
-      const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000/";
+      const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000/api/v1";
       const token = localStorage.getItem("token");
 
-      // Fetch dashboard statistics - using YOUR existing endpoint
+      // Fetch dashboard statistics
       const dashboardRes = await axios.get(
         `${API_URL}/author/dashboard`,
         { headers: { Authorization: `Bearer ${token}` } },
       );
 
-      // Your backend returns:
-      // {
-      //   statistics: { total, published, draft, totalViews, totalLikes, totalComments },
-      //   recentViews: [...],
-      //   topArticles: [...]
-      // }
       setStats(dashboardRes.data.data.statistics);
 
-      // Fetch author's articles - using YOUR existing endpoint
+      // Fetch author's articles
       const articlesRes = await axios.get(`${API_URL}/author/articles`, {
         params: {
           status: filter === "all" ? undefined : filter,
-          limit: 50, // Get more articles
+          limit: 50,
         },
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -120,17 +117,25 @@ const AuthorDashboard = () => {
                 Manage your articles and track performance
               </p>
             </div>
-            <Link to="/dashboard/articles/create">
-              <Button variant="primary">
-                <PlusCircle className="h-4 w-4 mr-2" />
-                New Article
-              </Button>
-            </Link>
+            <div className="flex gap-3">
+              <Link to="/dashboard/translations">
+                <Button variant="outline">
+                  <Globe className="h-4 w-4 mr-2" />
+                  Translations
+                </Button>
+              </Link>
+              <Link to="/dashboard/articles/create">
+                <Button variant="primary">
+                  <PlusCircle className="h-4 w-4 mr-2" />
+                  New Article
+                </Button>
+              </Link>
+            </div>
           </div>
 
-          {/* Stats Cards */}
+          {/* Stats Cards - 4 columns */}
           {stats && (
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
               <Card>
                 <CardBody className="text-center py-6">
                   <FileText className="h-8 w-8 text-primary-600 dark:text-primary-400 mx-auto mb-2" />
@@ -183,6 +188,11 @@ const AuthorDashboard = () => {
               </Card>
             </div>
           )}
+
+          {/* Translation Widget - Horizontal below stats */}
+          <div className="mb-8">
+            <TranslationStatsWidget horizontal={true} />
+          </div>
 
           {/* Filters */}
           <div className="mb-6 flex gap-2">
@@ -305,7 +315,7 @@ const AuthorDashboard = () => {
                         </div>
 
                         {/* Actions */}
-                        <div className="flex gap-2">
+                        <div className="flex flex-wrap gap-2">
                           <Link to={`/articles/${article.slug}`}>
                             <Button variant="outline" size="sm">
                               <Eye className="h-4 w-4 mr-1" />
@@ -316,6 +326,12 @@ const AuthorDashboard = () => {
                             <Button variant="outline" size="sm">
                               <Edit className="h-4 w-4 mr-1" />
                               Edit
+                            </Button>
+                          </Link>
+                          <Link to={`/dashboard/translations?article=${article.article_id}`}>
+                            <Button variant="outline" size="sm" className="border-primary-300 dark:border-primary-700 text-primary-600 dark:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/20">
+                              <Languages className="h-4 w-4 mr-1" />
+                              Translate
                             </Button>
                           </Link>
                           <Button
