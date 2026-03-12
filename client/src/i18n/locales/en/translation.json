@@ -414,5 +414,226 @@
         "answer": "Absolutely! You can upload a profile picture, write a bio, and customize your profile to showcase your work."
       }
     }
+  },
+
+  "dashboard": {
+    "title": "Author Dashboard",
+    "subtitle": "Manage your articles and track performance",
+    "buttons": {
+      "translations": "Translations",
+      "newArticle": "New Article",
+      "createArticle": "Create Article"
+    },
+    "stats": {
+      "totalArticles": "Total Articles",
+      "published": "published",
+      "drafts": "drafts",
+      "totalViews": "Total Views",
+      "totalLikes": "Total Likes",
+      "totalComments": "Total Comments"
+    },
+    "filters": {
+      "all": "All Articles",
+      "published": "Published",
+      "drafts": "Drafts"
+    },
+    "empty": {
+      "title": "No articles found",
+      "noDrafts": "You have no draft articles",
+      "noArticles": "Start writing your first article!"
+    },
+    "status": {
+      "published": "Published",
+      "draft": "Draft"
+    },
+    "meta": {
+      "views": "views",
+      "likes": "likes",
+      "comments": "comments",
+      "published": "Published",
+      "updated": "Updated"
+    },
+    "actions": {
+      "view": "View",
+      "edit": "Edit",
+      "translate": "Translate",
+      "delete": "Delete"
+    },
+    "deleteConfirm": "Are you sure you want to delete \"{{title}}\"?",
+    "deleteSuccess": "Article deleted successfully",
+    "error": {
+      "loadFailed": "Failed to load dashboard",
+      "deleteFailed": "Failed to delete article"
+    }
+  },
+
+  "login": {
+    "title": "Welcome Back",
+    "subtitle": "Sign in to continue your journey",
+    "form": {
+      "identifier": {
+        "label": "Email or Username",
+        "placeholder": "Enter your email or username"
+      },
+      "password": {
+        "label": "Password",
+        "placeholder": "Enter your password"
+      },
+      "rememberMe": "Remember me",
+      "forgotPassword": "Forgot password?",
+      "signIn": "Sign In",
+      "signingIn": "Signing in..."
+    },
+    "noAccount": "Don't have an account?",
+    "createAccount": "Create your account",
+    "footer": {
+      "text": "By signing in, you agree to our",
+      "terms": "Terms of Service",
+      "and": "and",
+      "privacy": "Privacy Policy"
+    },
+    "success": "Login successful!",
+    "validation": {
+      "allFields": "Please fill in all fields"
+    },
+    "error": {
+      "failed": "Login failed"
+    }
+  },
+
+  "register": {
+    "title": "Create Account",
+    "subtitle": "Join our community today",
+    "form": {
+      "fullName": {
+        "label": "Full Name",
+        "placeholder": "John Doe"
+      },
+      "username": {
+        "label": "Username",
+        "placeholder": "johndoe"
+      },
+      "email": {
+        "label": "Email Address",
+        "placeholder": "john@example.com"
+      },
+      "password": {
+        "label": "Password"
+      },
+      "confirmPassword": {
+        "label": "Confirm Password"
+      },
+      "role": {
+        "label": "I want to",
+        "reader": {
+          "title": "Read articles",
+          "description": "Explore and save articles"
+        },
+        "author": {
+          "title": "Write & publish",
+          "description": "Share your stories"
+        }
+      },
+      "createAccount": "Create Account",
+      "creating": "Creating account..."
+    },
+    "haveAccount": "Already have an account?",
+    "signInInstead": "Sign in instead",
+    "footer": {
+      "text": "By creating an account, you agree to our",
+      "terms": "Terms of Service",
+      "and": "and",
+      "privacy": "Privacy Policy"
+    },
+    "success": "Account created successfully!",
+    "validation": {
+      "emailRequired": "Email is required",
+      "emailInvalid": "Email is invalid",
+      "usernameRequired": "Username is required",
+      "usernameMinLength": "Username must be at least 3 characters",
+      "fullNameRequired": "Full name is required",
+      "passwordRequired": "Password is required",
+      "passwordMinLength": "Password must be at least 6 characters",
+      "passwordMismatch": "Passwords do not match"
+    }
+  },
+
+  "forgotPassword": {
+    "title": "Forgot Password?",
+    "subtitle": "No worries! Enter your email and we'll send you reset instructions.",
+    "form": {
+      "email": {
+        "label": "Email Address",
+        "placeholder": "you@example.com"
+      },
+      "sendLink": "Send Reset Link",
+      "sending": "Sending..."
+    },
+    "backToLogin": "Back to Login",
+    "emailSent": {
+      "title": "Check Your Email",
+      "message": "If an account exists for <1>{{email}}</1>, you'll receive password reset instructions shortly.",
+      "noEmail": {
+        "title": "Didn't receive the email?",
+        "message": "Check your spam folder or try again in a few minutes."
+      },
+      "tryAnother": "Try Another Email"
+    },
+    "footer": {
+      "needHelp": "Need help?",
+      "contactSupport": "Contact Support"
+    },
+    "validation": {
+      "emailRequired": "Please enter your email address",
+      "emailInvalid": "Please enter a valid email address"
+    },
+    "success": "Check your email for reset instructions"
+  },
+
+  "resetPassword": {
+    "title": "Reset Password",
+    "subtitle": "Enter your new password below",
+    "verifying": "Verifying reset link...",
+    "form": {
+      "newPassword": {
+        "label": "New Password",
+        "placeholder": "Enter new password"
+      },
+      "confirmPassword": {
+        "label": "Confirm Password",
+        "placeholder": "Confirm new password"
+      },
+      "resetButton": "Reset Password",
+      "resetting": "Resetting..."
+    },
+    "requirements": {
+      "title": "Password Requirements:",
+      "minLength": "At least 6 characters",
+      "match": "Passwords match"
+    },
+    "invalidToken": {
+      "title": "Invalid Reset Link",
+      "message": "This password reset link is invalid or has expired. Please request a new one.",
+      "button": "Request New Link",
+      "toast": "Invalid or expired reset link"
+    },
+    "success": {
+      "title": "Password Reset Successful!",
+      "message": "Your password has been changed successfully. Redirecting to login...",
+      "button": "Go to Login",
+      "toast": "Password reset successfully!"
+    },
+    "footer": {
+      "remember": "Remember your password?",
+      "backToLogin": "Back to Login"
+    },
+    "validation": {
+      "passwordRequired": "Please enter a new password",
+      "passwordMinLength": "Password must be at least 6 characters",
+      "passwordMismatch": "Passwords do not match"
+    },
+    "error": {
+      "failed": "Failed to reset password"
+    }
   }
 }

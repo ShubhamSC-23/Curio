@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next"; // ← Added
 import { motion } from "framer-motion";
 import { Mail, Lock, Eye, EyeOff, LogIn, Sparkles } from "lucide-react";
 import { useAuthStore } from "../../store/authStore";
@@ -9,6 +10,7 @@ import Card, { CardBody } from "../../components/common/Card";
 import toast from "react-hot-toast";
 
 const Login = () => {
+  const { t } = useTranslation(); // ← Added
   const navigate = useNavigate();
   const { login } = useAuthStore();
   const [loading, setLoading] = useState(false);
@@ -23,7 +25,7 @@ const Login = () => {
     e.preventDefault();
 
     if (!formData.identifier || !formData.password) {
-      toast.error("Please fill in all fields");
+      toast.error(t("login.validation.allFields"));
       return;
     }
 
@@ -39,7 +41,7 @@ const Login = () => {
       const response = await login(loginData);
       const user = response.user;
 
-      toast.success("Login successful!");
+      toast.success(t("login.success"));
 
       if (user.role === "admin") {
         navigate("/admin");
@@ -53,7 +55,7 @@ const Login = () => {
       const message =
         error?.response?.data?.message ||
         error?.response?.data?.error ||
-        "Login failed";
+        t("login.error.failed");
       toast.error(message);
     } finally {
       setLoading(false);
@@ -97,10 +99,10 @@ const Login = () => {
             transition={{ delay: 0.3 }}
           >
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-3">
-              Welcome Back
+              {t("login.title")}
             </h2>
             <p className="text-lg text-gray-600 dark:text-gray-400">
-              Sign in to continue your journey
+              {t("login.subtitle")}
             </p>
           </motion.div>
         </div>
@@ -112,7 +114,7 @@ const Login = () => {
               {/* Email/Username Input */}
               <div className="relative">
                 <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                  Email or Username
+                  {t("login.form.identifier.label")}
                 </label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 dark:text-gray-500" />
@@ -125,7 +127,7 @@ const Login = () => {
                         identifier: e.target.value,
                       })
                     }
-                    placeholder="Enter your email or username"
+                    placeholder={t("login.form.identifier.placeholder")}
                     className="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-600 focus:border-transparent transition-all"
                     required
                   />
@@ -135,7 +137,7 @@ const Login = () => {
               {/* Password Input */}
               <div className="relative">
                 <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                  Password
+                  {t("login.form.password.label")}
                 </label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 dark:text-gray-500" />
@@ -148,7 +150,7 @@ const Login = () => {
                         password: e.target.value,
                       })
                     }
-                    placeholder="Enter your password"
+                    placeholder={t("login.form.password.placeholder")}
                     className="w-full pl-10 pr-12 py-3 bg-gray-50 dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-600 focus:border-transparent transition-all"
                     required
                   />
@@ -174,14 +176,14 @@ const Login = () => {
                     className="w-4 h-4 text-primary-600 bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded focus:ring-primary-500 dark:focus:ring-primary-600"
                   />
                   <span className="ml-2 text-sm text-gray-700 dark:text-gray-300">
-                    Remember me
+                    {t("login.form.rememberMe")}
                   </span>
                 </label>
                 <Link
                   to="/forgot-password"
                   className="text-sm font-medium text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 transition-colors"
                 >
-                  Forgot password?
+                  {t("login.form.forgotPassword")}
                 </Link>
               </div>
 
@@ -196,11 +198,11 @@ const Login = () => {
                 className="bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-700 hover:to-secondary-700 shadow-lg hover:shadow-xl transition-all"
               >
                 {loading ? (
-                  "Signing in..."
+                  t("login.form.signingIn")
                 ) : (
                   <>
                     <LogIn className="h-5 w-5 mr-2" />
-                    Sign In
+                    {t("login.form.signIn")}
                   </>
                 )}
               </Button>
@@ -214,7 +216,7 @@ const Login = () => {
                 </div>
                 <div className="relative flex justify-center text-sm">
                   <span className="px-4 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 font-medium">
-                    Don't have an account?
+                    {t("login.noAccount")}
                   </span>
                 </div>
               </div>
@@ -225,7 +227,7 @@ const Login = () => {
                   className="inline-flex items-center gap-2 text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 font-semibold transition-colors"
                 >
                   <Sparkles className="h-4 w-4" />
-                  Create your account
+                  {t("login.createAccount")}
                 </Link>
               </div>
             </div>
@@ -234,19 +236,19 @@ const Login = () => {
 
         {/* Footer */}
         <p className="mt-8 text-center text-sm text-gray-600 dark:text-gray-400">
-          By signing in, you agree to our{" "}
+          {t("login.footer.text")}{" "}
           <Link
             to="/terms"
             className="text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300"
           >
-            Terms of Service
+            {t("login.footer.terms")}
           </Link>{" "}
-          and{" "}
+          {t("login.footer.and")}{" "}
           <Link
             to="/privacy"
             className="text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300"
           >
-            Privacy Policy
+            {t("login.footer.privacy")}
           </Link>
         </p>
       </motion.div>

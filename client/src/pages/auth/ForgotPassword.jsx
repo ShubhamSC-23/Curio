@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next"; // ← Added
 import { motion } from "framer-motion";
 import { Mail, ArrowLeft, Check } from "lucide-react";
 import axios from "axios";
@@ -10,6 +11,7 @@ import Input from "../../components/common/Input";
 import toast from "react-hot-toast";
 
 const ForgotPassword = () => {
+  const { t } = useTranslation(); // ← Added
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -18,14 +20,14 @@ const ForgotPassword = () => {
     e.preventDefault();
 
     if (!email) {
-      toast.error("Please enter your email address");
+      toast.error(t("forgotPassword.validation.emailRequired"));
       return;
     }
 
     // Basic email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      toast.error("Please enter a valid email address");
+      toast.error(t("forgotPassword.validation.emailInvalid"));
       return;
     }
 
@@ -36,7 +38,7 @@ const ForgotPassword = () => {
       await axios.post(`${API_URL}/auth/forgot-password`, { email });
 
       setSubmitted(true);
-      toast.success("Check your email for reset instructions");
+      toast.success(t("forgotPassword.success"));
     } catch (error) {
       console.error("Forgot password error:", error);
       // Always show success message for security (don't reveal if email exists)
@@ -63,20 +65,19 @@ const ForgotPassword = () => {
                     <Mail className="h-8 w-8 text-primary-600 dark:text-primary-400" />
                   </div>
                   <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-                    Forgot Password?
+                    {t("forgotPassword.title")}
                   </h1>
                   <p className="text-gray-600 dark:text-gray-400">
-                    No worries! Enter your email and we'll send you reset
-                    instructions.
+                    {t("forgotPassword.subtitle")}
                   </p>
                 </div>
 
                 {/* Form */}
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <Input
-                    label="Email Address"
+                    label={t("forgotPassword.form.email.label")}
                     type="email"
-                    placeholder="you@example.com"
+                    placeholder={t("forgotPassword.form.email.placeholder")}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     icon={Mail}
@@ -90,7 +91,9 @@ const ForgotPassword = () => {
                     fullWidth
                     disabled={loading}
                   >
-                    {loading ? "Sending..." : "Send Reset Link"}
+                    {loading
+                      ? t("forgotPassword.form.sending")
+                      : t("forgotPassword.form.sendLink")}
                   </Button>
                 </form>
 
@@ -101,7 +104,7 @@ const ForgotPassword = () => {
                     className="inline-flex items-center text-sm text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 font-medium"
                   >
                     <ArrowLeft className="h-4 w-4 mr-1" />
-                    Back to Login
+                    {t("forgotPassword.backToLogin")}
                   </Link>
                 </div>
               </CardBody>
@@ -115,18 +118,19 @@ const ForgotPassword = () => {
                     <Check className="h-8 w-8 text-green-600 dark:text-green-400" />
                   </div>
                   <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-                    Check Your Email
+                    {t("forgotPassword.emailSent.title")}
                   </h1>
                   <p className="text-gray-600 dark:text-gray-400 mb-6">
-                    If an account exists for <strong>{email}</strong>, you'll
-                    receive password reset instructions shortly.
+                    {t("forgotPassword.emailSent.message", { email })}
                   </p>
 
                   <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-6">
                     <p className="text-sm text-blue-800 dark:text-blue-300">
-                      <strong>Didn't receive the email?</strong>
+                      <strong>
+                        {t("forgotPassword.emailSent.noEmail.title")}
+                      </strong>
                       <br />
-                      Check your spam folder or try again in a few minutes.
+                      {t("forgotPassword.emailSent.noEmail.message")}
                     </p>
                   </div>
 
@@ -137,11 +141,11 @@ const ForgotPassword = () => {
                       fullWidth
                       onClick={() => setSubmitted(false)}
                     >
-                      Try Another Email
+                      {t("forgotPassword.emailSent.tryAnother")}
                     </Button>
                     <Link to="/login">
                       <Button variant="outline" size="lg" fullWidth>
-                        Back to Login
+                        {t("forgotPassword.backToLogin")}
                       </Button>
                     </Link>
                   </div>
@@ -153,12 +157,12 @@ const ForgotPassword = () => {
           {/* Help Text */}
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              Need help?{" "}
+              {t("forgotPassword.footer.needHelp")}{" "}
               <Link
                 to="/contact"
                 className="text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 font-medium"
               >
-                Contact Support
+                {t("forgotPassword.footer.contactSupport")}
               </Link>
             </p>
           </div>

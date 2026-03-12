@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next"; // ← Added
 import { motion } from "framer-motion";
 import {
   Mail,
@@ -17,6 +18,7 @@ import Card from "../../components/common/Card";
 import toast from "react-hot-toast";
 
 const Register = () => {
+  const { t } = useTranslation(); // ← Added
   const navigate = useNavigate();
   const { register, isLoading } = useAuthStore();
   const [showPassword, setShowPassword] = useState(false);
@@ -49,29 +51,29 @@ const Register = () => {
     const newErrors = {};
 
     if (!formData.email) {
-      newErrors.email = "Email is required";
+      newErrors.email = t("register.validation.emailRequired");
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Email is invalid";
+      newErrors.email = t("register.validation.emailInvalid");
     }
 
     if (!formData.username) {
-      newErrors.username = "Username is required";
+      newErrors.username = t("register.validation.usernameRequired");
     } else if (formData.username.length < 3) {
-      newErrors.username = "Username must be at least 3 characters";
+      newErrors.username = t("register.validation.usernameMinLength");
     }
 
     if (!formData.full_name) {
-      newErrors.full_name = "Full name is required";
+      newErrors.full_name = t("register.validation.fullNameRequired");
     }
 
     if (!formData.password) {
-      newErrors.password = "Password is required";
+      newErrors.password = t("register.validation.passwordRequired");
     } else if (formData.password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters";
+      newErrors.password = t("register.validation.passwordMinLength");
     }
 
     if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match";
+      newErrors.confirmPassword = t("register.validation.passwordMismatch");
     }
 
     setErrors(newErrors);
@@ -86,7 +88,7 @@ const Register = () => {
     try {
       const { confirmPassword, ...registerData } = formData;
       await register(registerData);
-      toast.success("Account created successfully!");
+      toast.success(t("register.success"));
       navigate("/");
     } catch (error) {
       console.error("Registration error:", error);
@@ -130,10 +132,10 @@ const Register = () => {
             transition={{ delay: 0.3 }}
           >
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-3">
-              Create Account
+              {t("register.title")}
             </h2>
             <p className="text-lg text-gray-600 dark:text-gray-400">
-              Join our community today
+              {t("register.subtitle")}
             </p>
           </motion.div>
         </div>
@@ -147,7 +149,7 @@ const Register = () => {
                 {/* Full Name */}
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                    Full Name
+                    {t("register.form.fullName.label")}
                   </label>
                   <div className="relative">
                     <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 dark:text-gray-500" />
@@ -156,7 +158,7 @@ const Register = () => {
                       name="full_name"
                       value={formData.full_name}
                       onChange={handleChange}
-                      placeholder="John Doe"
+                      placeholder={t("register.form.fullName.placeholder")}
                       className={`w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-900 border-2 ${
                         errors.full_name
                           ? "border-red-500 dark:border-red-500"
@@ -175,7 +177,7 @@ const Register = () => {
                 {/* Username */}
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                    Username
+                    {t("register.form.username.label")}
                   </label>
                   <div className="relative">
                     <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 dark:text-gray-500" />
@@ -184,7 +186,7 @@ const Register = () => {
                       name="username"
                       value={formData.username}
                       onChange={handleChange}
-                      placeholder="johndoe"
+                      placeholder={t("register.form.username.placeholder")}
                       className={`w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-900 border-2 ${
                         errors.username
                           ? "border-red-500 dark:border-red-500"
@@ -204,7 +206,7 @@ const Register = () => {
               {/* Email */}
               <div>
                 <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                  Email Address
+                  {t("register.form.email.label")}
                 </label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 dark:text-gray-500" />
@@ -213,7 +215,7 @@ const Register = () => {
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    placeholder="john@example.com"
+                    placeholder={t("register.form.email.placeholder")}
                     className={`w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-900 border-2 ${
                       errors.email
                         ? "border-red-500 dark:border-red-500"
@@ -234,7 +236,7 @@ const Register = () => {
                 {/* Password */}
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                    Password
+                    {t("register.form.password.label")}
                   </label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 dark:text-gray-500" />
@@ -273,7 +275,7 @@ const Register = () => {
                 {/* Confirm Password */}
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                    Confirm Password
+                    {t("register.form.confirmPassword.label")}
                   </label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 dark:text-gray-500" />
@@ -315,7 +317,7 @@ const Register = () => {
               {/* Role Selection */}
               <div>
                 <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
-                  I want to
+                  {t("register.form.role.label")}
                 </label>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <label
@@ -336,14 +338,14 @@ const Register = () => {
                     <div className="flex-1">
                       <div className="flex items-center justify-between">
                         <span className="text-sm font-semibold text-gray-900 dark:text-white">
-                          Read articles
+                          {t("register.form.role.reader.title")}
                         </span>
                         {formData.role === "user" && (
                           <Check className="h-5 w-5 text-primary-600 dark:text-primary-400" />
                         )}
                       </div>
                       <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
-                        Explore and save articles
+                        {t("register.form.role.reader.description")}
                       </p>
                     </div>
                   </label>
@@ -366,14 +368,14 @@ const Register = () => {
                     <div className="flex-1">
                       <div className="flex items-center justify-between">
                         <span className="text-sm font-semibold text-gray-900 dark:text-white">
-                          Write & publish
+                          {t("register.form.role.author.title")}
                         </span>
                         {formData.role === "author" && (
                           <Check className="h-5 w-5 text-primary-600 dark:text-primary-400" />
                         )}
                       </div>
                       <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
-                        Share your stories
+                        {t("register.form.role.author.description")}
                       </p>
                     </div>
                   </label>
@@ -390,11 +392,11 @@ const Register = () => {
                 className="bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-700 hover:to-secondary-700 shadow-lg hover:shadow-xl transition-all"
               >
                 {isLoading ? (
-                  "Creating account..."
+                  t("register.form.creating")
                 ) : (
                   <>
                     <UserPlus className="h-5 w-5 mr-2" />
-                    Create Account
+                    {t("register.form.createAccount")}
                   </>
                 )}
               </Button>
@@ -408,7 +410,7 @@ const Register = () => {
                 </div>
                 <div className="relative flex justify-center text-sm">
                   <span className="px-4 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 font-medium">
-                    Already have an account?
+                    {t("register.haveAccount")}
                   </span>
                 </div>
               </div>
@@ -419,7 +421,7 @@ const Register = () => {
                   className="inline-flex items-center gap-2 text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 font-semibold transition-colors"
                 >
                   <Sparkles className="h-4 w-4" />
-                  Sign in instead
+                  {t("register.signInInstead")}
                 </Link>
               </div>
             </div>
@@ -428,19 +430,19 @@ const Register = () => {
 
         {/* Footer */}
         <p className="mt-8 text-center text-sm text-gray-600 dark:text-gray-400">
-          By creating an account, you agree to our{" "}
+          {t("register.footer.text")}{" "}
           <Link
             to="/terms"
             className="text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300"
           >
-            Terms of Service
+            {t("register.footer.terms")}
           </Link>{" "}
-          and{" "}
+          {t("register.footer.and")}{" "}
           <Link
             to="/privacy"
             className="text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300"
           >
-            Privacy Policy
+            {t("register.footer.privacy")}
           </Link>
         </p>
       </motion.div>

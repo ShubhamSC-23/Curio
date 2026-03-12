@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next"; // ← Added
 import { motion } from "framer-motion";
 import {
   PlusCircle,
@@ -27,6 +28,7 @@ import { getImageUrl } from "../../utils/imageUtils";
 import toast from "react-hot-toast";
 
 const AuthorDashboard = () => {
+  const { t } = useTranslation(); // ← Added
   const { user } = useAuthStore();
   const navigate = useNavigate();
   const [articles, setArticles] = useState([]);
@@ -41,14 +43,14 @@ const AuthorDashboard = () => {
   const fetchDashboardData = async () => {
     try {
       setLoading(true);
-      const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000/api/v1";
+      const API_URL =
+        process.env.REACT_APP_API_URL || "http://localhost:5000/api/v1";
       const token = localStorage.getItem("token");
 
       // Fetch dashboard statistics
-      const dashboardRes = await axios.get(
-        `${API_URL}/author/dashboard`,
-        { headers: { Authorization: `Bearer ${token}` } },
-      );
+      const dashboardRes = await axios.get(`${API_URL}/author/dashboard`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
       setStats(dashboardRes.data.data.statistics);
 
@@ -64,14 +66,14 @@ const AuthorDashboard = () => {
       setArticles(articlesRes.data.data || []);
     } catch (error) {
       console.error("Error fetching dashboard data:", error);
-      toast.error("Failed to load dashboard");
+      toast.error(t("dashboard.error.loadFailed"));
     } finally {
       setLoading(false);
     }
   };
 
   const handleDelete = async (slug, title) => {
-    if (!window.confirm(`Are you sure you want to delete "${title}"?`)) {
+    if (!window.confirm(t("dashboard.deleteConfirm", { title }))) {
       return;
     }
 
@@ -84,11 +86,11 @@ const AuthorDashboard = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      toast.success("Article deleted successfully");
+      toast.success(t("dashboard.deleteSuccess"));
       fetchDashboardData();
     } catch (error) {
       console.error("Error deleting article:", error);
-      toast.error("Failed to delete article");
+      toast.error(t("dashboard.error.deleteFailed"));
     }
   };
 
@@ -111,23 +113,23 @@ const AuthorDashboard = () => {
           <div className="flex justify-between items-center mb-8">
             <div>
               <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
-                Author Dashboard
+                {t("dashboard.title")}
               </h1>
               <p className="text-gray-600 dark:text-gray-400">
-                Manage your articles and track performance
+                {t("dashboard.subtitle")}
               </p>
             </div>
             <div className="flex gap-3">
               <Link to="/dashboard/translations">
                 <Button variant="outline">
                   <Globe className="h-4 w-4 mr-2" />
-                  Translations
+                  {t("dashboard.buttons.translations")}
                 </Button>
               </Link>
               <Link to="/dashboard/articles/create">
                 <Button variant="primary">
                   <PlusCircle className="h-4 w-4 mr-2" />
-                  New Article
+                  {t("dashboard.buttons.newArticle")}
                 </Button>
               </Link>
             </div>
@@ -143,10 +145,11 @@ const AuthorDashboard = () => {
                     {stats.total || 0}
                   </div>
                   <div className="text-sm text-gray-600 dark:text-gray-400">
-                    Total Articles
+                    {t("dashboard.stats.totalArticles")}
                   </div>
                   <div className="text-xs text-gray-500 dark:text-gray-500 mt-1">
-                    {stats.published || 0} published • {stats.draft || 0} drafts
+                    {stats.published || 0} {t("dashboard.stats.published")} •{" "}
+                    {stats.draft || 0} {t("dashboard.stats.drafts")}
                   </div>
                 </CardBody>
               </Card>
@@ -158,7 +161,7 @@ const AuthorDashboard = () => {
                     {stats.totalViews || 0}
                   </div>
                   <div className="text-sm text-gray-600 dark:text-gray-400">
-                    Total Views
+                    {t("dashboard.stats.totalViews")}
                   </div>
                 </CardBody>
               </Card>
@@ -170,7 +173,7 @@ const AuthorDashboard = () => {
                     {stats.totalLikes || 0}
                   </div>
                   <div className="text-sm text-gray-600 dark:text-gray-400">
-                    Total Likes
+                    {t("dashboard.stats.totalLikes")}
                   </div>
                 </CardBody>
               </Card>
@@ -182,7 +185,7 @@ const AuthorDashboard = () => {
                     {stats.totalComments || 0}
                   </div>
                   <div className="text-sm text-gray-600 dark:text-gray-400">
-                    Total Comments
+                    {t("dashboard.stats.totalComments")}
                   </div>
                 </CardBody>
               </Card>
@@ -201,7 +204,7 @@ const AuthorDashboard = () => {
               onClick={() => setFilter("all")}
               size="sm"
             >
-              All Articles
+              {t("dashboard.filters.all")}
             </Button>
             <Button
               variant={filter === "published" ? "primary" : "outline"}
@@ -209,7 +212,7 @@ const AuthorDashboard = () => {
               size="sm"
             >
               <CheckCircle className="h-4 w-4 mr-1" />
-              Published
+              {t("dashboard.filters.published")}
             </Button>
             <Button
               variant={filter === "draft" ? "primary" : "outline"}
@@ -217,7 +220,7 @@ const AuthorDashboard = () => {
               size="sm"
             >
               <Clock className="h-4 w-4 mr-1" />
-              Drafts
+              {t("dashboard.filters.drafts")}
             </Button>
           </div>
 
@@ -227,17 +230,17 @@ const AuthorDashboard = () => {
               <CardBody className="text-center py-20">
                 <FileText className="h-16 w-16 text-gray-400 mx-auto mb-4" />
                 <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
-                  No articles found
+                  {t("dashboard.empty.title")}
                 </h3>
                 <p className="text-gray-600 dark:text-gray-400 mb-6">
                   {filter === "draft"
-                    ? "You have no draft articles"
-                    : "Start writing your first article!"}
+                    ? t("dashboard.empty.noDrafts")
+                    : t("dashboard.empty.noArticles")}
                 </p>
                 <Link to="/dashboard/articles/create">
                   <Button variant="primary">
                     <PlusCircle className="h-4 w-4 mr-2" />
-                    Create Article
+                    {t("dashboard.buttons.createArticle")}
                   </Button>
                 </Link>
               </CardBody>
@@ -286,8 +289,7 @@ const AuthorDashboard = () => {
                                   : "bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400"
                             }`}
                           >
-                            {article.status.charAt(0).toUpperCase() +
-                              article.status.slice(1)}
+                            {t(`dashboard.status.${article.status}`)}
                           </span>
                         </div>
 
@@ -295,22 +297,25 @@ const AuthorDashboard = () => {
                         <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500 dark:text-gray-400 mb-3">
                           <span className="flex items-center">
                             <Eye className="h-4 w-4 mr-1" />
-                            {article.view_count || 0} views
+                            {article.view_count || 0}{" "}
+                            {t("dashboard.meta.views")}
                           </span>
                           <span className="flex items-center">
                             <Heart className="h-4 w-4 mr-1" />
-                            {article.like_count || 0} likes
+                            {article.like_count || 0}{" "}
+                            {t("dashboard.meta.likes")}
                           </span>
                           <span className="flex items-center">
                             <MessageCircle className="h-4 w-4 mr-1" />
-                            {article.comment_count || 0} comments
+                            {article.comment_count || 0}{" "}
+                            {t("dashboard.meta.comments")}
                           </span>
                           <span>•</span>
                           <span>
                             {article.status === "published" &&
                             article.published_at
-                              ? `Published ${formatRelativeTime(article.published_at)}`
-                              : `Updated ${formatRelativeTime(article.updated_at)}`}
+                              ? `${t("dashboard.meta.published")} ${formatRelativeTime(article.published_at)}`
+                              : `${t("dashboard.meta.updated")} ${formatRelativeTime(article.updated_at)}`}
                           </span>
                         </div>
 
@@ -319,19 +324,25 @@ const AuthorDashboard = () => {
                           <Link to={`/articles/${article.slug}`}>
                             <Button variant="outline" size="sm">
                               <Eye className="h-4 w-4 mr-1" />
-                              View
+                              {t("dashboard.actions.view")}
                             </Button>
                           </Link>
                           <Link to={`/dashboard/articles/edit/${article.slug}`}>
                             <Button variant="outline" size="sm">
                               <Edit className="h-4 w-4 mr-1" />
-                              Edit
+                              {t("dashboard.actions.edit")}
                             </Button>
                           </Link>
-                          <Link to={`/dashboard/translations?article=${article.article_id}`}>
-                            <Button variant="outline" size="sm" className="border-primary-300 dark:border-primary-700 text-primary-600 dark:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/20">
+                          <Link
+                            to={`/dashboard/translations?article=${article.article_id}`}
+                          >
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="border-primary-300 dark:border-primary-700 text-primary-600 dark:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/20"
+                            >
                               <Languages className="h-4 w-4 mr-1" />
-                              Translate
+                              {t("dashboard.actions.translate")}
                             </Button>
                           </Link>
                           <Button
@@ -343,7 +354,7 @@ const AuthorDashboard = () => {
                             className="text-red-600 hover:text-red-700 hover:border-red-600"
                           >
                             <Trash2 className="h-4 w-4 mr-1" />
-                            Delete
+                            {t("dashboard.actions.delete")}
                           </Button>
                         </div>
                       </div>

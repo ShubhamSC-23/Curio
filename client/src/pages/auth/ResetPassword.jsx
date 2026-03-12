@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
+import { useTranslation } from "react-i18next"; // ← Added
 import { motion } from "framer-motion";
 import { Lock, Eye, EyeOff, Check, AlertCircle } from "lucide-react";
 import axios from "axios";
@@ -11,9 +12,10 @@ import Spinner from "../../components/common/Spinner";
 import toast from "react-hot-toast";
 
 const ResetPassword = () => {
+  const { t } = useTranslation(); // ← Added
   const { token } = useParams();
   const navigate = useNavigate();
-  
+
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -36,7 +38,7 @@ const ResetPassword = () => {
     } catch (error) {
       console.error("Token verification error:", error);
       setValidToken(false);
-      toast.error("Invalid or expired reset link");
+      toast.error(t("resetPassword.invalidToken.toast"));
     } finally {
       setVerifying(false);
     }
@@ -44,17 +46,17 @@ const ResetPassword = () => {
 
   const validatePassword = () => {
     if (!password) {
-      toast.error("Please enter a new password");
+      toast.error(t("resetPassword.validation.passwordRequired"));
       return false;
     }
 
     if (password.length < 6) {
-      toast.error("Password must be at least 6 characters");
+      toast.error(t("resetPassword.validation.passwordMinLength"));
       return false;
     }
 
     if (password !== confirmPassword) {
-      toast.error("Passwords do not match");
+      toast.error(t("resetPassword.validation.passwordMismatch"));
       return false;
     }
 
@@ -73,7 +75,7 @@ const ResetPassword = () => {
       await axios.post(`${API_URL}/auth/reset-password/${token}`, { password });
 
       setSuccess(true);
-      toast.success("Password reset successfully!");
+      toast.success(t("resetPassword.success.toast"));
 
       // Redirect to login after 3 seconds
       setTimeout(() => {
@@ -81,7 +83,8 @@ const ResetPassword = () => {
       }, 3000);
     } catch (error) {
       console.error("Reset password error:", error);
-      const message = error.response?.data?.message || "Failed to reset password";
+      const message =
+        error.response?.data?.message || t("resetPassword.error.failed");
       toast.error(message);
     } finally {
       setLoading(false);
@@ -95,7 +98,7 @@ const ResetPassword = () => {
         <div className="text-center">
           <Spinner size="lg" />
           <p className="mt-4 text-gray-600 dark:text-gray-400">
-            Verifying reset link...
+            {t("resetPassword.verifying")}
           </p>
         </div>
       </div>
@@ -118,15 +121,14 @@ const ResetPassword = () => {
                   <AlertCircle className="h-8 w-8 text-red-600 dark:text-red-400" />
                 </div>
                 <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-                  Invalid Reset Link
+                  {t("resetPassword.invalidToken.title")}
                 </h1>
                 <p className="text-gray-600 dark:text-gray-400 mb-6">
-                  This password reset link is invalid or has expired. Please
-                  request a new one.
+                  {t("resetPassword.invalidToken.message")}
                 </p>
                 <Link to="/forgot-password">
                   <Button variant="primary" size="lg" fullWidth>
-                    Request New Link
+                    {t("resetPassword.invalidToken.button")}
                   </Button>
                 </Link>
               </CardBody>
@@ -153,15 +155,14 @@ const ResetPassword = () => {
                   <Check className="h-8 w-8 text-green-600 dark:text-green-400" />
                 </div>
                 <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-                  Password Reset Successful!
+                  {t("resetPassword.success.title")}
                 </h1>
                 <p className="text-gray-600 dark:text-gray-400 mb-6">
-                  Your password has been changed successfully. Redirecting to
-                  login...
+                  {t("resetPassword.success.message")}
                 </p>
                 <Link to="/login">
                   <Button variant="primary" size="lg" fullWidth>
-                    Go to Login
+                    {t("resetPassword.success.button")}
                   </Button>
                 </Link>
               </CardBody>
@@ -189,10 +190,10 @@ const ResetPassword = () => {
                   <Lock className="h-8 w-8 text-primary-600 dark:text-primary-400" />
                 </div>
                 <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-                  Reset Password
+                  {t("resetPassword.title")}
                 </h1>
                 <p className="text-gray-600 dark:text-gray-400">
-                  Enter your new password below
+                  {t("resetPassword.subtitle")}
                 </p>
               </div>
 
@@ -201,9 +202,11 @@ const ResetPassword = () => {
                 {/* New Password */}
                 <div>
                   <Input
-                    label="New Password"
+                    label={t("resetPassword.form.newPassword.label")}
                     type={showPassword ? "text" : "password"}
-                    placeholder="Enter new password"
+                    placeholder={t(
+                      "resetPassword.form.newPassword.placeholder",
+                    )}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     icon={Lock}
@@ -225,9 +228,11 @@ const ResetPassword = () => {
                 {/* Confirm Password */}
                 <div className="relative">
                   <Input
-                    label="Confirm Password"
+                    label={t("resetPassword.form.confirmPassword.label")}
                     type={showConfirmPassword ? "text" : "password"}
-                    placeholder="Confirm new password"
+                    placeholder={t(
+                      "resetPassword.form.confirmPassword.placeholder",
+                    )}
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     icon={Lock}
@@ -249,14 +254,28 @@ const ResetPassword = () => {
                 {/* Password Requirements */}
                 <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
                   <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Password Requirements:
+                    {t("resetPassword.requirements.title")}
                   </p>
                   <ul className="space-y-1 text-sm text-gray-600 dark:text-gray-400">
-                    <li className={password.length >= 6 ? "text-green-600 dark:text-green-400" : ""}>
-                      • At least 6 characters
+                    <li
+                      className={
+                        password.length >= 6
+                          ? "text-green-600 dark:text-green-400"
+                          : ""
+                      }
+                    >
+                      • {t("resetPassword.requirements.minLength")}
                     </li>
-                    <li className={password && confirmPassword && password === confirmPassword ? "text-green-600 dark:text-green-400" : ""}>
-                      • Passwords match
+                    <li
+                      className={
+                        password &&
+                        confirmPassword &&
+                        password === confirmPassword
+                          ? "text-green-600 dark:text-green-400"
+                          : ""
+                      }
+                    >
+                      • {t("resetPassword.requirements.match")}
                     </li>
                   </ul>
                 </div>
@@ -268,7 +287,9 @@ const ResetPassword = () => {
                   fullWidth
                   disabled={loading}
                 >
-                  {loading ? "Resetting..." : "Reset Password"}
+                  {loading
+                    ? t("resetPassword.form.resetting")
+                    : t("resetPassword.form.resetButton")}
                 </Button>
               </form>
             </CardBody>
@@ -277,12 +298,12 @@ const ResetPassword = () => {
           {/* Help Text */}
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              Remember your password?{" "}
+              {t("resetPassword.footer.remember")}{" "}
               <Link
                 to="/login"
                 className="text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 font-medium"
               >
-                Back to Login
+                {t("resetPassword.footer.backToLogin")}
               </Link>
             </p>
           </div>
