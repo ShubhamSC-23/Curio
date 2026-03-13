@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, Link, useSearchParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useTranslation } from "react-i18next"; // ← Added
 import { motion } from "framer-motion";
 import {
@@ -15,14 +15,14 @@ import {
   TrendingUp,
   ArrowLeft,
 } from "lucide-react";
-import { articlesAPI } from "../../api/articles";
+import { articlesAPI } from "../../api/articles"; // ← Fixed: named import
 import Container from "../../components/layout/Container";
 import Button from "../../components/common/Button";
 import Card, { CardBody } from "../../components/common/Card";
 import { PageLoader } from "../../components/common/Spinner";
-import CommentList from "../../components/comment/CommentList";
+import CommentList from "../../components/comment/CommentList"; // ← Your actual component
 import { formatDate, formatRelativeTime } from "../../utils/formatDate";
-import { useAuthStore } from "../../store/authStore";
+import { useAuthStore } from "../../store/authStore"; // ← Your actual store
 import toast from "react-hot-toast";
 import { getImageUrl } from "../../utils/imageUtils";
 import api from "../../api/axios";
@@ -30,10 +30,9 @@ import BuyMeCoffee from "../../components/payment/BuyMeCoffee";
 
 const ArticleDetail = () => {
   const { slug } = useParams();
-  const [searchParams] = useSearchParams();
   const { t, i18n } = useTranslation(); // ← Added
 
-  // ✅ Get language from i18n (which is controlled by language selector)
+  // ✅ Get language from i18n (NOT from URL params)
   const lang = i18n.language || "en";
 
   const { isAuthenticated } = useAuthStore();
@@ -47,20 +46,25 @@ const ArticleDetail = () => {
   const [inReadingList, setInReadingList] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
 
-  // ✅ FIXED: Refetch when slug OR language changes
+  // ✅ CRITICAL FIX: Refetch when slug OR language changes
   useEffect(() => {
+    console.log("🔍 ArticleDetail useEffect triggered:", { slug, lang });
     fetchArticle();
-  }, [slug, lang, i18n.language]); // ← Added i18n.language
+  }, [slug, i18n.language]); // ← CRITICAL: Added i18n.language
 
   const fetchArticle = async () => {
     try {
       setLoading(true);
 
-      // ✅ Use current language from i18n
+      // ✅ CRITICAL FIX: Use current language from i18n and pass to API
       const currentLang = i18n.language || "en";
-      const res = await articlesAPI.getArticle(slug, currentLang);
+      console.log("📡 Fetching article:", slug, "with lang:", currentLang);
+
+      // ✅ Pass lang as query parameter
+      const res = await articlesAPI.getArticle(slug, { lang: currentLang });
 
       const data = res.data;
+      console.log("📦 Received article:", data.title);
 
       setArticle(data);
       setLikeCount(data.like_count || 0);
@@ -115,7 +119,7 @@ const ArticleDetail = () => {
 
   const handleLike = async () => {
     if (!isAuthenticated) {
-      toast.error(t("article.loginToLike")); // ← Translated
+      toast.error(t("articleDetail.loginToLike")); // ← Translated
       return;
     }
 
@@ -125,7 +129,9 @@ const ArticleDetail = () => {
       setLiked(!liked);
       setLikeCount(liked ? likeCount - 1 : likeCount + 1);
 
-      toast.success(liked ? t("article.unliked") : t("article.liked")); // ← Translated
+      toast.success(
+        liked ? t("articleDetail.unliked") : t("articleDetail.liked"),
+      ); // ← Translated
     } catch (error) {
       console.error("Error liking article:", error);
     }
@@ -133,7 +139,7 @@ const ArticleDetail = () => {
 
   const handleBookmark = async () => {
     if (!isAuthenticated) {
-      toast.error(t("article.loginToBookmark")); // ← Translated
+      toast.error(t("articleDetail.loginToBookmark")); // ← Translated
       return;
     }
 
@@ -143,7 +149,9 @@ const ArticleDetail = () => {
       setBookmarked(!bookmarked);
 
       toast.success(
-        bookmarked ? t("article.bookmarkRemoved") : t("article.bookmarkAdded"), // ← Translated
+        bookmarked
+          ? t("articleDetail.bookmarkRemoved")
+          : t("articleDetail.bookmarkAdded"), // ← Translated
       );
     } catch (error) {
       console.error("Error bookmarking article:", error);
@@ -152,7 +160,7 @@ const ArticleDetail = () => {
 
   const handleReadingList = async () => {
     if (!isAuthenticated) {
-      toast.error(t("article.loginToReadingList")); // ← Translated
+      toast.error(t("articleDetail.loginToReadingList")); // ← Translated
       return;
     }
 
@@ -160,25 +168,25 @@ const ArticleDetail = () => {
       if (inReadingList) {
         await api.delete(`/reading-list/${article.article_id}`);
         setInReadingList(false);
-        toast.success(t("article.readingListRemoved")); // ← Translated
+        toast.success(t("articleDetail.readingListRemoved")); // ← Translated
       } else {
         await api.post(`/reading-list/${article.article_id}`);
         setInReadingList(true);
-        toast.success(t("article.readingListAdded")); // ← Translated
+        toast.success(t("articleDetail.readingListAdded")); // ← Translated
       }
     } catch (error) {
       console.error("Error updating reading list:", error);
-      toast.error(t("article.readingListError")); // ← Translated
+      toast.error(t("articleDetail.readingListError")); // ← Translated
     }
   };
 
   const handleReport = async () => {
     if (!isAuthenticated) {
-      toast.error(t("article.loginToReport")); // ← Translated
+      toast.error(t("articleDetail.loginToReport")); // ← Translated
       return;
     }
 
-    const reason = window.prompt(t("article.reportPrompt")); // ← Translated
+    const reason = window.prompt(t("articleDetail.reportPrompt")); // ← Translated
 
     if (!reason || !reason.trim()) return;
 
@@ -187,9 +195,11 @@ const ArticleDetail = () => {
         reason: reason.trim(),
       });
 
-      toast.success(t("article.reportSuccess")); // ← Translated
+      toast.success(t("articleDetail.reportSuccess")); // ← Translated
     } catch (error) {
-      toast.error(error.response?.data?.message || t("article.reportError")); // ← Translated
+      toast.error(
+        error.response?.data?.message || t("articleDetail.reportError"),
+      ); // ← Translated
     }
   };
 
@@ -204,7 +214,7 @@ const ArticleDetail = () => {
       } catch (error) {}
     } else {
       navigator.clipboard.writeText(window.location.href);
-      toast.success(t("article.linkCopied")); // ← Translated
+      toast.success(t("articleDetail.linkCopied")); // ← Translated
     }
   };
 
@@ -214,12 +224,12 @@ const ArticleDetail = () => {
     return (
       <Container className="py-20 text-center">
         <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
-          {t("article.notFound")} {/* ← Translated */}
+          {t("articleDetail.notFound")} {/* ← Translated */}
         </h2>
         <Link to="/articles">
           <Button className="mt-6">
             <ArrowLeft className="h-4 w-4 mr-2" />
-            {t("article.backToArticles")} {/* ← Translated */}
+            {t("articleDetail.backToArticles")} {/* ← Translated */}
           </Button>
         </Link>
       </Container>
@@ -238,7 +248,7 @@ const ArticleDetail = () => {
           {article.translated && (
             <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
               <p className="text-sm text-blue-900 dark:text-blue-300">
-                {t("article.translatedFrom")} {article.original_title}
+                {t("articleDetail.translatedFrom")} {article.original_title}
               </p>
             </div>
           )}
@@ -261,11 +271,13 @@ const ArticleDetail = () => {
             </div>
             <div className="flex items-center gap-2">
               <Clock className="h-4 w-4" />
-              {article.reading_time} {t("articleDetail.minRead")} {/* ← Translated */}
+              {article.reading_time} {t("articleDetail.minRead")}{" "}
+              {/* ← Translated */}
             </div>
             <div className="flex items-center gap-2">
               <Eye className="h-4 w-4" />
-              {article.view_count} {t("articleDetail.views")} {/* ← Translated */}
+              {article.view_count} {t("articleDetail.views")}{" "}
+              {/* ← Translated */}
             </div>
           </div>
 
